@@ -10,4 +10,23 @@
 		<servlet-name>datastore</servlet-name>
 		<url-pattern>/datastore</url-pattern>
 	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>enqueue</servlet-name>
+		<servlet-class>ordermypizza.Enqueue</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>enqueue</servlet-name>
+		<url-pattern>/task</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>worker</servlet-name>
+		<servlet-class>ordermypizza.Worker</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>worker</servlet-name>
+		<url-pattern>/worker</url-pattern>
+	</servlet-mapping>
+
 </web-app>
