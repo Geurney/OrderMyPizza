@@ -2,11 +2,11 @@
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-	
+
 	<welcome-file-list>
 		<welcome-file>ordermypizza.jsp</welcome-file>
 	</welcome-file-list>
-	
+
 	<servlet>
 		<servlet-name>datastore</servlet-name>
 		<servlet-class>ordermypizza.DatastoreServlet</servlet-class>
@@ -35,12 +35,21 @@
 	</servlet-mapping>
 
 	<servlet>
-		<servlet-name>signin</servlet-name>
-		<servlet-class>ordermypizza.SignIn</servlet-class>
+		<servlet-name>customersignin</servlet-name>
+		<servlet-class>ordermypizza.CustomerSignIn</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>signin</servlet-name>
-		<url-pattern>/signin</url-pattern>
+		<servlet-name>customersignin</servlet-name>
+		<url-pattern>/customersignin</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>customerprofile</servlet-name>
+		<servlet-class>servelts.CustomerProfile</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>customerprofile</servlet-name>
+		<url-pattern>/customerprofile</url-pattern>
 	</servlet-mapping>
 
 	<security-constraint>

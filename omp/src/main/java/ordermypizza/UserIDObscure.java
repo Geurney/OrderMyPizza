@@ -32,11 +32,17 @@ public class UserIDObscure {
 	 * @throws NoSuchAlgorithmException
 	 *             Hash function not available.
 	 */
-	public static String obsecure(String uid) throws NoSuchAlgorithmException {
-		MessageDigest digest = MessageDigest.getInstance(HASH_FUNCTION);
-		String message = SECRET_STRING + uid;
-		byte[] result = digest.digest(message.getBytes());
-		return toHex(result);
+	public static String obsecure(String uid) {
+		MessageDigest digest;
+		try {
+			digest = MessageDigest.getInstance(HASH_FUNCTION);
+			String message = SECRET_STRING + uid;
+			byte[] result = digest.digest(message.getBytes());
+			return toHex(result);
+		} catch (NoSuchAlgorithmException e) {
+			System.out.println("UID Obscure: No such hash algorithm!");
+		}
+		return null;
 	}
 
 	/**
