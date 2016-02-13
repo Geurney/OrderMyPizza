@@ -37,6 +37,7 @@ import com.google.appengine.api.users.UserServiceFactory;
  */
 public class PizzaFactoryDatastoreServlet extends HttpServlet {
 
+	@SuppressWarnings("unchecked")
 	private String pizzaComponentToHtml(EmbeddedEntity component) {
 		if (component == null) {
 			return null;
@@ -45,14 +46,16 @@ public class PizzaFactoryDatastoreServlet extends HttpServlet {
 		sb.append("<p>");
 		sb.append(component.getProperty("description"));
 		sb.append("</p>\n<p>");
-		float[] costs = (float[]) component.getProperty("costs");
-		for (float i : costs) {
-			sb.append(i + " ");
+		ArrayList<String> costs = (ArrayList<String>) component
+				.getProperty("costs");
+		for (int i = 0; i < costs.size(); i++) {
+			sb.append(costs.get(i) + " ");
 		}
 		sb.append("</p>\n<p>");
-		float[] prices = (float[]) component.getProperty("prices");
-		for (float i : prices) {
-			sb.append(i + " ");
+		ArrayList<String> prices = (ArrayList<String>) component
+				.getProperty("prices");
+		for (int i = 0; i < costs.size(); i++) {
+			sb.append(prices.get(i) + " ");
 		}
 		sb.append("</p>");
 		return sb.toString();
@@ -88,40 +91,65 @@ public class PizzaFactoryDatastoreServlet extends HttpServlet {
 
 			try {
 				Entity pizzaFactory = datastore.get(key);
+				String type = req.getParameter("type");
+				if (type != null) {
+					List<EmbeddedEntity> list = (List<EmbeddedEntity>) pizzaFactory
+							.getProperty(type);
+					resp.getWriter().println(
+							"<h3>" + type + ":" + "</h3>\n");
+					if (list != null) {
+						for (EmbeddedEntity i : list) {
+							resp.getWriter().println(pizzaComponentToHtml(i));
+						}
+					}
+					return;
+				}
 				List<EmbeddedEntity> crusts = (List<EmbeddedEntity>) pizzaFactory
 						.getProperty("crust");
 				List<EmbeddedEntity> cheeses = (List<EmbeddedEntity>) pizzaFactory
 						.getProperty("cheese");
 				List<EmbeddedEntity> sauces = (List<EmbeddedEntity>) pizzaFactory
 						.getProperty("sauce");
-				List<EmbeddedEntity> toppings_meat = (List<EmbeddedEntity>) pizzaFactory
+				List<EmbeddedEntity> topping_meat = (List<EmbeddedEntity>) pizzaFactory
 						.getProperty("topping_meat");
-				List<EmbeddedEntity> toppings_veg = (List<EmbeddedEntity>) pizzaFactory
+				List<EmbeddedEntity> topping_veg = (List<EmbeddedEntity>) pizzaFactory
 						.getProperty("topping_veg");
 
-				resp.getWriter().println("<h3>" + "crust:" + "</h3>\n");
-				for (EmbeddedEntity i : crusts) {
-					resp.getWriter().println(pizzaComponentToHtml(i));
+				if (crusts != null) {
+					resp.getWriter().println("<h3>" + "crust:" + "</h3>\n");
+					for (EmbeddedEntity i : crusts) {
+						resp.getWriter().println(pizzaComponentToHtml(i));
+					}
 				}
-				resp.getWriter().println("<h3>" + "cheese:" + "</h3>\n");
-				for (EmbeddedEntity i : cheeses) {
-					resp.getWriter().println(pizzaComponentToHtml(i));
+				if (cheeses != null) {
+					resp.getWriter().println("<h3>" + "cheese:" + "</h3>\n");
+					for (EmbeddedEntity i : cheeses) {
+						resp.getWriter().println(pizzaComponentToHtml(i));
+					}
 				}
-				resp.getWriter().println("<h3>" + "sauce:" + "</h3>\n");
-				for (EmbeddedEntity i : sauces) {
-					resp.getWriter().println(pizzaComponentToHtml(i));
+				if (sauces != null) {
+					resp.getWriter().println("<h3>" + "sauce:" + "</h3>\n");
+					for (EmbeddedEntity i : sauces) {
+						resp.getWriter().println(pizzaComponentToHtml(i));
+					}
 				}
-				resp.getWriter().println("<h3>" + "topping meat:" + "</h3>\n");
-				for (EmbeddedEntity i : toppings_meat) {
-					resp.getWriter().println(pizzaComponentToHtml(i));
+				if (topping_meat != null) {
+					resp.getWriter().println(
+							"<h3>" + "topping meat:" + "</h3>\n");
+					for (EmbeddedEntity i : topping_meat) {
+						resp.getWriter().println(pizzaComponentToHtml(i));
+					}
 				}
-				resp.getWriter().println("<h3>" + "topping veg:" + "</h3>\n");
-				for (EmbeddedEntity i : toppings_veg) {
-					resp.getWriter().println(pizzaComponentToHtml(i));
+				if (topping_veg != null) {
+					resp.getWriter().println(
+							"<h3>" + "topping veg:" + "</h3>\n");
+					for (EmbeddedEntity i : topping_veg) {
+						resp.getWriter().println(pizzaComponentToHtml(i));
+					}
 				}
 			} catch (EntityNotFoundException e) {
-				resp.getWriter()
-						.println("<h2>Error: PizzaFactory not found!</h2>");
+				resp.getWriter().println(
+						"<h2>Error: PizzaFactory not found!</h2>");
 			}
 		} else {
 			resp.getWriter().println(
@@ -163,22 +191,28 @@ public class PizzaFactoryDatastoreServlet extends HttpServlet {
 			try {
 				pizzaFactory = datastore.get(key);
 				resp.getWriter().println(
-						"<h2>" + "PizzaShop updating..." + "</h2>");
+						"<h2>" + "PizzaFactory updating..." + "</h2>");
 			} catch (EntityNotFoundException e) {
-				pizzaFactory = new Entity("PizzaShop", hash_uid);
+				pizzaFactory = new Entity("PizzaFactory", hash_uid);
 				resp.getWriter().println(
-						"<h2>" + "PizzaShop storing..." + "</h2>");
+						"<h2>" + "PizzaFactory storing..." + "</h2>");
 			} finally {
 				String type = req.getParameter("type");
 				String description = req.getParameter("description");
-				float[] costs = new float[] {Float.parseFloat(req.getParameter("cost1")), Float.parseFloat(req.getParameter("cost2")), Float.parseFloat(req.getParameter("cost3"))};
-				float[] prices = new float[] {Float.parseFloat(req.getParameter("price1")), Float.parseFloat(req.getParameter("price2")), Float.parseFloat(req.getParameter("price3"))};
-				
+				ArrayList<String> costs = new ArrayList<String>();
+				costs.add(req.getParameter("cost1"));
+				costs.add(req.getParameter("cost2"));
+				costs.add(req.getParameter("cost3"));
+				ArrayList<String> prices = new ArrayList<String>();
+				prices.add(req.getParameter("price1"));
+				prices.add(req.getParameter("price2"));
+				prices.add(req.getParameter("price3"));
+
 				EmbeddedEntity component = new EmbeddedEntity();
 				component.setProperty("description", description);
 				component.setProperty("costs", costs);
 				component.setProperty("prices", prices);
-					
+
 				List<EmbeddedEntity> list = (List<EmbeddedEntity>) pizzaFactory
 						.getProperty(type);
 				if (list == null) {
@@ -187,6 +221,8 @@ public class PizzaFactoryDatastoreServlet extends HttpServlet {
 				list.add(component);
 				pizzaFactory.setProperty(type, list);
 				datastore.put(pizzaFactory);
+				resp.getWriter().println("<h3>" + type + ":" + "</h3>\n");
+				resp.getWriter().println(pizzaComponentToHtml(component));
 			}
 		} else {
 			resp.getWriter().println(
@@ -234,15 +270,15 @@ public class PizzaFactoryDatastoreServlet extends HttpServlet {
 			String hash_uid = UserIDObscure.obsecure(user.getUserId());
 			DatastoreService datastore = DatastoreServiceFactory
 					.getDatastoreService();
-			Key key = KeyFactory.createKey("PizzaShop", hash_uid);
+			Key key = KeyFactory.createKey("PizzaFactory", hash_uid);
 			try {
-				Entity pizzaShop = datastore.get(key);
+				Entity pizzaFactory = datastore.get(key);
 				datastore.delete(key);
 				resp.getWriter().println(
-						"<h2>" + "PizzaShop is deleted!" + "</h2>");
+						"<h2>" + "PizzaFactory is deleted!" + "</h2>");
 			} catch (EntityNotFoundException e) {
-				resp.getWriter()
-						.println("<h2>Error: PizzaShop not found!</h2>");
+				resp.getWriter().println(
+						"<h2>Error: PizzaFactory not found!</h2>");
 			}
 		} else {
 			resp.getWriter().println(

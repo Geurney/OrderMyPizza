@@ -9,7 +9,7 @@
 
 	<servlet>
 		<servlet-name>datastore</servlet-name>
-		<servlet-class>ordermypizza.DatastoreServlet</servlet-class>
+		<servlet-class>servlets.DatastoreServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>datastore</servlet-name>
@@ -18,7 +18,7 @@
 
 	<servlet>
 		<servlet-name>enqueue</servlet-name>
-		<servlet-class>ordermypizza.Enqueue</servlet-class>
+		<servlet-class>servlets.Enqueue</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>enqueue</servlet-name>
@@ -27,7 +27,7 @@
 
 	<servlet>
 		<servlet-name>worker</servlet-name>
-		<servlet-class>ordermypizza.Worker</servlet-class>
+		<servlet-class>servlets.Worker</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>worker</servlet-name>
@@ -36,7 +36,7 @@
 
 	<servlet>
 		<servlet-name>customersignin</servlet-name>
-		<servlet-class>ordermypizza.CustomerSignIn</servlet-class>
+		<servlet-class>servlets.CustomerSignIn</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>customersignin</servlet-name>
@@ -45,7 +45,7 @@
 
 	<servlet>
 		<servlet-name>customerprofile</servlet-name>
-		<servlet-class>servelts.CustomerDatastoreServlet</servlet-class>
+		<servlet-class>servlets.CustomerDatastoreServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>customerprofile</servlet-name>
@@ -54,7 +54,7 @@
 
 	<servlet>
 		<servlet-name>pizzashopprofile</servlet-name>
-		<servlet-class>servelts.PizzaShopDatastoreServlet</servlet-class>
+		<servlet-class>servlets.PizzaShopDatastoreServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>pizzashopprofile</servlet-name>
@@ -63,7 +63,7 @@
 
 	<servlet>
 		<servlet-name>pizzafactoryprofile</servlet-name>
-		<servlet-class>servelts.PizzaFactoryDatastoreServlet</servlet-class>
+		<servlet-class>servlets.PizzaFactoryDatastoreServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>pizzafactoryprofile</servlet-name>
