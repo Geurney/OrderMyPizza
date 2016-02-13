@@ -8,6 +8,8 @@ package servlets;
  *
  */
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +20,7 @@ import ordermypizza.UserIDObscure;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.EmbeddedEntity;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
@@ -34,6 +37,27 @@ import com.google.appengine.api.users.UserServiceFactory;
  */
 public class PizzaFactoryDatastoreServlet extends HttpServlet {
 
+	private String pizzaComponentToHtml(EmbeddedEntity component) {
+		if (component == null) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append("<p>");
+		sb.append(component.getProperty("description"));
+		sb.append("</p>\n<p>");
+		float[] costs = (float[]) component.getProperty("costs");
+		for (float i : costs) {
+			sb.append(i + " ");
+		}
+		sb.append("</p>\n<p>");
+		float[] prices = (float[]) component.getProperty("prices");
+		for (float i : prices) {
+			sb.append(i + " ");
+		}
+		sb.append("</p>");
+		return sb.toString();
+	}
+
 	/*
 	 * Handle get request
 	 * 
@@ -41,6 +65,7 @@ public class PizzaFactoryDatastoreServlet extends HttpServlet {
 	 * javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest
 	 * , javax.servlet.http.HttpServletResponse)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -63,16 +88,40 @@ public class PizzaFactoryDatastoreServlet extends HttpServlet {
 
 			try {
 				Entity pizzaFactory = datastore.get(key);
-				String name = (String) pizzaFactory.getProperty("crust");
-				String address = (String) pizzaFactory.getProperty("cheese");
-				String phone = (String) pizzaFactory.getProperty("sauce");
-				resp.getWriter()
-						.println(
-								"<h2>" + name + ": " + address + " " + phone
-										+ " </h2>");
+				List<EmbeddedEntity> crusts = (List<EmbeddedEntity>) pizzaFactory
+						.getProperty("crust");
+				List<EmbeddedEntity> cheeses = (List<EmbeddedEntity>) pizzaFactory
+						.getProperty("cheese");
+				List<EmbeddedEntity> sauces = (List<EmbeddedEntity>) pizzaFactory
+						.getProperty("sauce");
+				List<EmbeddedEntity> toppings_meat = (List<EmbeddedEntity>) pizzaFactory
+						.getProperty("topping_meat");
+				List<EmbeddedEntity> toppings_veg = (List<EmbeddedEntity>) pizzaFactory
+						.getProperty("topping_veg");
+
+				resp.getWriter().println("<h3>" + "crust:" + "</h3>\n");
+				for (EmbeddedEntity i : crusts) {
+					resp.getWriter().println(pizzaComponentToHtml(i));
+				}
+				resp.getWriter().println("<h3>" + "cheese:" + "</h3>\n");
+				for (EmbeddedEntity i : cheeses) {
+					resp.getWriter().println(pizzaComponentToHtml(i));
+				}
+				resp.getWriter().println("<h3>" + "sauce:" + "</h3>\n");
+				for (EmbeddedEntity i : sauces) {
+					resp.getWriter().println(pizzaComponentToHtml(i));
+				}
+				resp.getWriter().println("<h3>" + "topping meat:" + "</h3>\n");
+				for (EmbeddedEntity i : toppings_meat) {
+					resp.getWriter().println(pizzaComponentToHtml(i));
+				}
+				resp.getWriter().println("<h3>" + "topping veg:" + "</h3>\n");
+				for (EmbeddedEntity i : toppings_veg) {
+					resp.getWriter().println(pizzaComponentToHtml(i));
+				}
 			} catch (EntityNotFoundException e) {
 				resp.getWriter()
-						.println("<h2>Error: PizzaShop not found!</h2>");
+						.println("<h2>Error: PizzaFactory not found!</h2>");
 			}
 		} else {
 			resp.getWriter().println(
@@ -89,6 +138,7 @@ public class PizzaFactoryDatastoreServlet extends HttpServlet {
 	 * javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest
 	 * , javax.servlet.http.HttpServletResponse)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -107,35 +157,36 @@ public class PizzaFactoryDatastoreServlet extends HttpServlet {
 			String hash_uid = UserIDObscure.obsecure(user.getUserId());
 			DatastoreService datastore = DatastoreServiceFactory
 					.getDatastoreService();
-			Key key = KeyFactory.createKey("PizzaShop", hash_uid);
+			Key key = KeyFactory.createKey("PizzaFactory", hash_uid);
 
-			Entity customer = null;
+			Entity pizzaFactory = null;
 			try {
-				customer = datastore.get(key);
+				pizzaFactory = datastore.get(key);
 				resp.getWriter().println(
 						"<h2>" + "PizzaShop updating..." + "</h2>");
 			} catch (EntityNotFoundException e) {
-				customer = new Entity("PizzaShop", hash_uid);
+				pizzaFactory = new Entity("PizzaShop", hash_uid);
 				resp.getWriter().println(
 						"<h2>" + "PizzaShop storing..." + "</h2>");
 			} finally {
-				String name = req.getParameter("name");
-				if (name != null) {
-					customer.setProperty("name", name);
+				String type = req.getParameter("type");
+				String description = req.getParameter("description");
+				float[] costs = new float[] {Float.parseFloat(req.getParameter("cost1")), Float.parseFloat(req.getParameter("cost2")), Float.parseFloat(req.getParameter("cost3"))};
+				float[] prices = new float[] {Float.parseFloat(req.getParameter("price1")), Float.parseFloat(req.getParameter("price2")), Float.parseFloat(req.getParameter("price3"))};
+				
+				EmbeddedEntity component = new EmbeddedEntity();
+				component.setProperty("description", description);
+				component.setProperty("costs", costs);
+				component.setProperty("prices", prices);
+					
+				List<EmbeddedEntity> list = (List<EmbeddedEntity>) pizzaFactory
+						.getProperty(type);
+				if (list == null) {
+					list = new ArrayList<EmbeddedEntity>();
 				}
-				String address = req.getParameter("address");
-				if (address != null) {
-					customer.setProperty("address", address);
-				}
-				String phone = req.getParameter("phone");
-				if (phone != null) {
-					customer.setProperty("phone", phone);
-				}
-				datastore.put(customer);
-				resp.getWriter()
-						.println(
-								"<h2>" + name + ": " + address + " " + phone
-										+ " </h2>");
+				list.add(component);
+				pizzaFactory.setProperty(type, list);
+				datastore.put(pizzaFactory);
 			}
 		} else {
 			resp.getWriter().println(

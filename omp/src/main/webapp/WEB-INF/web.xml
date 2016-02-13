@@ -45,11 +45,29 @@
 
 	<servlet>
 		<servlet-name>customerprofile</servlet-name>
-		<servlet-class>servelts.CustomerProfile</servlet-class>
+		<servlet-class>servelts.CustomerDatastoreServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>customerprofile</servlet-name>
 		<url-pattern>/customerprofile</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>pizzashopprofile</servlet-name>
+		<servlet-class>servelts.PizzaShopDatastoreServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>pizzashopprofile</servlet-name>
+		<url-pattern>/pizzashopprofile</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>pizzafactoryprofile</servlet-name>
+		<servlet-class>servelts.PizzaFactoryDatastoreServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>pizzafactoryprofile</servlet-name>
+		<url-pattern>/pizzafactoryprofile</url-pattern>
 	</servlet-mapping>
 
 	<security-constraint>
