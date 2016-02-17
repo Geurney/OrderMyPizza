@@ -51,8 +51,8 @@
         </header>
 
         <div style="height:100px"></div>
-			<%
-			if (user == null) {
+      	  	<%
+        	if (user == null) {
 			%>
 				<p>You must sign in before proceeding <a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a></p>
 			<%
@@ -60,16 +60,16 @@
 				String hash_uid = UserIDObscure.obsecure(user.getUserId());
 				DatastoreService datastore = DatastoreServiceFactory
 						.getDatastoreService();
-				Key key = KeyFactory.createKey("Customer", hash_uid);
-				Entity customer = null;
+				Key key = KeyFactory.createKey("PizzaShop", hash_uid);
+				Entity pizzaShop = null;
 				String name = null;
 				String address = null;
 				String phone = null;
 				try {
-					customer = datastore.get(key);
-					name = (String)customer.getProperty("name");
-					address = (String)customer.getProperty("address");
-					phone = (String)customer.getProperty("phone");
+					pizzaShop = datastore.get(key);
+					name = (String)pizzaShop.getProperty("name");
+					address = (String)pizzaShop.getProperty("address");
+					phone = (String)pizzaShop.getProperty("phone");
 					%>
 					 <p>My Profile</p>
 					 <%
@@ -79,7 +79,7 @@
 					<%
 				} finally {
 				%>
-			    <form action="/customerprofile" method="post">
+			    <form action="/pizzashopprofile" method="post">
 			    <fieldset id="fieldset" <% if (!(name == null || phone == null || address == null)) {%> disabled <% } %>>
 			    <style>
 			    #fieldset {
@@ -126,13 +126,9 @@
 			    function deleteMethod() {
 			    	if (confirm('Are you sure to delete?')) {
 			    		$.ajax({
-			    			url: '/customerprofile',
+			    			url: '/pizzashopprofile',
 			    			method: 'DELETE',
 			    			success:function(data){
-	/* 		    				var newp = document.createElement('P');
-					          	var t = document.createTextNode("Delete successfully!");
-					          	newp.appendChild(t);
-					          	document.body.appendChild(t); */
 			    				window.location.replace("./ordermypizza.jsp");
 					          }, 
 			    			error: function(data){
@@ -150,6 +146,7 @@
     <div id="botinfo">
         <p>Order My Pizza!<br>Geurney 2016</p>
     </div> 
-			
+    
+
 </body>
 </html>

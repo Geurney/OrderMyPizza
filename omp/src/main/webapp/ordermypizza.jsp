@@ -25,13 +25,17 @@
    						User user = userService.getCurrentUser();
     					if (user != null) {
         					pageContext.setAttribute("user", user);
-						%>
-						<a href="/customerprofile.jsp">${fn:escapeXml(user.nickname)}</a></li>
+					%>
+						<a href="/pizzashopprofile.jsp">${fn:escapeXml(user.nickname)}</a></li>
 						<li><a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">Sign out</a>
 					<%
-					} else {
+						} else {
 					%>
-					<a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a>
+					<a href="javascript:%20div_display()">Sign in</a>
+					<div id="signin" style="display: none">
+						<a href="<%=userService.createLoginURL("/customerprofile.jsp") %>">Sign in as Customer</a><br>
+						<a href="<%=userService.createLoginURL("/pizzashopprofile.jsp") %>">Sign in as PizzaShop</a>
+					</div>
 					<%
 					    }
 					%>
@@ -76,7 +80,15 @@
             </div>
         </div>
 
-
+	<script>
+	function div_display() {
+		if (document.getElementById('signin').style.display == "block") {
+			document.getElementById('signin').style.display = "none";	
+		} else {
+			document.getElementById('signin').style.display = "block";
+		}
+	}
+	</script>
     <div id="botinfo">
         <p>Order My Pizza!<br>Geurney 2016</p>
     </div> 
