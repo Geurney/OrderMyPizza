@@ -1,7 +1,7 @@
 package ordermypizza;
 /**
  * Order (viewed as tasks for task queues)
- * @author geurney
+ * @author Geurney
  *
  */
 public class Order {

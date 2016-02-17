@@ -1,0 +1,126 @@
+#body {
+    margin: 0 auto;
+    width: 100%;
+    clear: both;
+	width: 1024px;
+}
+#navigation {
+	text-align: right;
+	float: right;
+	font-size:0.8em;
+	list-style-type:none;
+	margin:18px 20px 20px 20px;
+	padding:0;
+	width:580px;
+}
+#navigation ul{
+    margin: 10px 0 0;
+    padding: 0
+}
+#navigation ul li {
+    display: inline;
+    font-size: 12px !important
+}
+#navigation ul li a {
+    color: #fffffff;
+    font-family: 'Handlee', cursive;
+    font-size: 15px;
+    margin-top: 10px;
+    padding: 0 0 0 13px;
+    text-decoration: none;
+    text-transform: uppercase
+}
+#navigation ul li a:hover {
+    text-decoration: underline
+}
+#logo {
+	float: left;
+	margin: 10px 25px;
+}
+#store-locator {
+	margin: 0 auto;
+    width: 985px;
+    padding-bottom: 75px
+}
+#store-locator h1 {
+	font-family: 'Architects Daughter', cursive;
+    padding: 3px;
+    position: relative;
+    text-align: center;
+	color: #ff0000;
+}
+
+#store-locator-body {
+    background-color: #303030;
+    border-radius: 7px 7px 7px 7px;
+    -moz-border-radius: 7px;
+    -ms-border-radius: 7px;
+    -o-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    color: #fff;
+    margin: 5px 0 0;
+    padding: 15px 14px 29px;
+    width: 940px;
+    min-height: 477px
+}
+#store-locator-body hr {
+    background: none repeat scroll 0 0 #999;
+    border: medium none;
+    height: 1px;
+    margin: 29px 0
+}
+.data input {
+	font-family: 'Quicksand', sans-serif;
+    font-size: 14px;
+    padding: 9px 9px;
+}
+
+#submit {
+	box-shadow: none;
+    border: none !important;
+	border-radius: 5px;
+    font-size: 18px;
+    letter-spacing: -0.55px;
+	background: none repeat scroll 0 0 #ed1c24;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+    text-transform: uppercase;
+    font-family: 'Maven Pro', sans-serif;
+	margin: 9px 0 0 10px;
+    padding: 9px 20px;
+	min-width: 0px !important
+}
+
+#store-result p {
+	font-family: 'Raleway', sans-serif;
+    display: block;
+    font-size: 16px;
+    line-height: 22px;
+    padding: 45px 0;
+    text-align: center
+}
+#store-result p span {
+    font-weight: normal
+}
+
+#map {
+    border: 1px solid #CCCCCC;
+    float: left;
+    margin-right: 27px;
+	margin-top: 0;
+	margin-right: 0px; 
+	width: 454px; 
+	height: 351px;
+}
+
+#botinfo,
+#botinfo p {
+    color: #8d8d8c;
+    font-family: 'Indie Flower', cursive;
+    font-size: 10px;
+    line-height: 18px;
+    text-align: center
+}

@@ -30,9 +30,6 @@ public class CustomerSignIn extends HttpServlet {
 
 		resp.setContentType("text/html");
 		if (req.getUserPrincipal() != null) {
-	        MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
-			syncCache.setErrorHandler(ErrorHandlers
-					.getConsistentLogAndContinue(Level.INFO));
 			User user = userService.getCurrentUser();
 			
 			resp.getWriter().println(

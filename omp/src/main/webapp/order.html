@@ -1,0 +1,51 @@
+	<html>
+	
+	<body>
+		<p>Place Order</p>
+		<form action="/OrderDatastoreServlet" method="post">
+			<input type="radio" name="size" value="small" checked> Small<br>
+			<input type="radio" name="size" value="medium"> Medium<br>
+			<input type="radio" name="size" value="large"> Large<br>
+			<select name="crust">
+				<option value="crust1">Crust1</option>
+				<option value="crust2">Crust2</option>
+				<option value="crust3">Crust3</option>
+			</select> <br>
+			<input type="text" name="cheese"><br>
+			<input type="text" name="sauce"><br>
+			<div id="topping_meat">
+			<input type="text" name="topping_meat">
+			</div>
+			<button value="Add another text input" onclick="addInput('topping_meat');">Add</button><br> 
+			<div id="topping_veg">
+			<input type="text" name="topping_veg">
+			</div>
+			<button value="Add another text input" onclick="addInput('topping_veg');">Add</button><br>
+			<input type="text" name="name"><br>
+			<input type="text" name="address"><br>
+			<input type="text" name="phone"><br>
+			<input type="submit">
+		</form>
+		
+	
+		<script>
+		var counter = 1;
+		var limit = 5;
+		function addInput(divName){
+		     if (counter == limit)  {
+		          alert("You have reached the limit of adding " + counter + " inputs");
+		     }
+		     else {
+		          var newdiv = document.createElement('div');
+		          newdiv.innerHTML = divName + (counter + 1) + " <br><input type='text' name='topping_meat'>";
+		          document.getElementById(divName).appendChild(newdiv);
+		          counter++;
+		     }
+		}
+	</script>
+	
+	
+	
+	</body>
+	
+	</html>
