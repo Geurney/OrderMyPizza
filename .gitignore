@@ -1,2 +1,8 @@
 *.class
 /omp/target
+.metadata
+pages
+omptest
+omp/.classpath
+omp/.project
+omp/.settings
