@@ -33,14 +33,14 @@ import com.google.appengine.api.users.UserServiceFactory;
  *
  */
 public class OrderDatastoreServlet extends HttpServlet {
-
-	/*
+/*
+	
 	 * Handle get request
 	 * 
 	 * @see
 	 * javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest
 	 * , javax.servlet.http.HttpServletResponse)
-	 */
+	 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -48,7 +48,7 @@ public class OrderDatastoreServlet extends HttpServlet {
 		String thisURL = req.getRequestURI();
 
 		resp.setContentType("text/html");
-		req.getParameterValues(arg0);
+		//req.getParameterValues(arg0);
 		if (req.getUserPrincipal() != null) {
 			User user = userService.getCurrentUser();
 			resp.getWriter().println(
@@ -83,13 +83,13 @@ public class OrderDatastoreServlet extends HttpServlet {
 		}
 	}
 
-	/*
+	
 	 * Handle post request
 	 * 
 	 * @see
 	 * javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest
 	 * , javax.servlet.http.HttpServletResponse)
-	 */
+	 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -146,26 +146,26 @@ public class OrderDatastoreServlet extends HttpServlet {
 		}
 	}
 
-	/*
+	
 	 * Handle put request
 	 * 
 	 * @see
 	 * javax.servlet.http.HttpServlet#doPut(javax.servlet.http.HttpServletRequest
 	 * , javax.servlet.http.HttpServletResponse)
-	 */
+	 
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		this.doPost(req, resp);
 	}
 
-	/*
+	
 	 * Handle delete request
 	 * 
 	 * @see
 	 * javax.servlet.http.HttpServlet#doDelete(javax.servlet.http.HttpServletRequest
 	 * , javax.servlet.http.HttpServletResponse)
-	 */
+	 
 	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -200,5 +200,5 @@ public class OrderDatastoreServlet extends HttpServlet {
 							+ userService.createLoginURL(thisURL)
 							+ "\">sign in</a>.</p>");
 		}
-	}
+	}*/
 }
