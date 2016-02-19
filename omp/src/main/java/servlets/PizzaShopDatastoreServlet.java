@@ -3,10 +3,6 @@
  */
 package servlets;
 
-/**
- * @author user
- *
- */
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -29,7 +25,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 /**
  * Handle pizza shop datastore requests
  * 
- * @author DQ
+ * @author Geurney
  *
  */
 public class PizzaShopDatastoreServlet extends HttpServlet {

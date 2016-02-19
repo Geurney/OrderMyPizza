@@ -124,3 +124,25 @@
     line-height: 18px;
     text-align: center
 }
+
+#profile_fieldset {
+	width: 40%;
+}
+#profile_fieldset input[type="text"] {
+	display: block;
+	margin: 0;
+	width: 90%;
+	font-family: sans-serif;
+	font-size: 18px;
+	appearance: none;
+	box-shadow: none;
+	border-radius: none;
+	padding: 10px;
+	border: solid 1px #dcdcdc;
+	transition: box-shadow 0.3s, border 0.3s;
+}
+#profile_fieldset input[type="text"]:focus {
+	outline: none;
+	border: solid 1px #707070;
+	box-shadow: 0 0 5px 1px #969696;
+}
