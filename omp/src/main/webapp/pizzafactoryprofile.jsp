@@ -10,7 +10,7 @@
 <%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
 <%@ page import="com.google.appengine.api.datastore.EmbeddedEntity" %>
 <%@ page import="java.util.List" %>
-<%@ page import="ordermypizza.UserIDObscure" %>
+<%@ page import="user.UserUtils"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -60,7 +60,7 @@
 	</p>
 	<%
 		} else {
-			String hash_uid = UserIDObscure.obsecure(user.getUserId());
+			String hash_uid = UserUtils.obsecure(user.getUserId());
 			DatastoreService datastore = DatastoreServiceFactory
 					.getDatastoreService();
 			Key key = KeyFactory.createKey("PizzaFactory", hash_uid);

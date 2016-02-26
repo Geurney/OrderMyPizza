@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ordermypizza.UserIDObscure;
+import user.UserUtils;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -52,7 +52,7 @@ public class PizzaShopDatastoreServlet extends HttpServlet {
 							+ userService.createLogoutURL(thisURL)
 							+ "\">sign out</a>.</p>");
 
-			String hash_uid = UserIDObscure.obsecure(user.getUserId());
+			String hash_uid = UserUtils.obsecure(user.getUserId());
 			DatastoreService datastore = DatastoreServiceFactory
 					.getDatastoreService();
 			Key key = KeyFactory.createKey("PizzaShop", hash_uid);
@@ -100,7 +100,7 @@ public class PizzaShopDatastoreServlet extends HttpServlet {
 							+ userService.createLogoutURL(thisURL)
 							+ "\">sign out</a>.</p>");
 
-			String hash_uid = UserIDObscure.obsecure(user.getUserId());
+			String hash_uid = UserUtils.obsecure(user.getUserId());
 			DatastoreService datastore = DatastoreServiceFactory
 					.getDatastoreService();
 			Key key = KeyFactory.createKey("PizzaShop", hash_uid);
@@ -176,7 +176,7 @@ public class PizzaShopDatastoreServlet extends HttpServlet {
 							+ userService.createLogoutURL(thisURL)
 							+ "\">sign out</a>.</p>");
 
-			String hash_uid = UserIDObscure.obsecure(user.getUserId());
+			String hash_uid = UserUtils.obsecure(user.getUserId());
 			DatastoreService datastore = DatastoreServiceFactory
 					.getDatastoreService();
 			Key key = KeyFactory.createKey("PizzaShop", hash_uid);

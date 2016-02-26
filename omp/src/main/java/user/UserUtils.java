@@ -1,24 +1,28 @@
 /**
  * 
  */
-package ordermypizza;
+package user;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserServiceFactory;
+
 /**
  * Obscure User ID using hash function with salt
+ * 
  * @author Geurney
  *
  */
-public class UserIDObscure {
+public class UserUtils {
 
 	/**
 	 * Salt String
 	 */
 	private static final String SECRET_STRING = "order my pizza";
 
-	/** 
+	/**
 	 * Hash Function
 	 */
 	private static final String HASH_FUNCTION = "SHA-256";
@@ -33,14 +37,16 @@ public class UserIDObscure {
 	 *             Hash function not available.
 	 */
 	public static String obsecure(String uid) {
-		MessageDigest digest;
-		try {
-			digest = MessageDigest.getInstance(HASH_FUNCTION);
-			String message = SECRET_STRING + uid;
-			byte[] result = digest.digest(message.getBytes());
-			return toHex(result);
-		} catch (NoSuchAlgorithmException e) {
-			System.out.println("UID Obscure: No such hash algorithm!");
+		if (uid != null) {
+			MessageDigest digest;
+			try {
+				digest = MessageDigest.getInstance(HASH_FUNCTION);
+				String message = SECRET_STRING + uid;
+				byte[] result = digest.digest(message.getBytes());
+				return toHex(result);
+			} catch (NoSuchAlgorithmException e) {
+				System.out.println("UID Obscure: No such hash algorithm!");
+			}
 		}
 		return null;
 	}
@@ -59,5 +65,19 @@ public class UserIDObscure {
 					.substring(1));
 		}
 		return sb.toString();
+	}
+	
+	/**
+	 * Return current user obscure id
+	 * 
+	 * @return Obscured user ID
+	 */
+	public static String getCurrentUserObscureID() {
+		User user = UserServiceFactory.getUserService()
+				.getCurrentUser();
+		if (user == null) {
+			return null;
+		}
+		return UserUtils.obsecure(user.getUserId());
 	}
 }

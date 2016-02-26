@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ordermypizza.UserIDObscure;
+import user.UserUtils;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -60,7 +60,7 @@ public class CustomerDatastoreServlet extends HttpServlet {
 			User user = userService.getCurrentUser();
 			System.out.println("Get Post Request to CustomerProfile: "
 					+ req.getParameter("name"));
-			String hash_uid = UserIDObscure.obsecure(user.getUserId());
+			String hash_uid = UserUtils.obsecure(user.getUserId());
 			DatastoreService datastore = DatastoreServiceFactory
 					.getDatastoreService();
 			Key key = KeyFactory.createKey("Customer", hash_uid);
@@ -117,7 +117,7 @@ public class CustomerDatastoreServlet extends HttpServlet {
 		UserService userService = UserServiceFactory.getUserService();
 		if (req.getUserPrincipal() != null) {
 			User user = userService.getCurrentUser();
-			String hash_uid = UserIDObscure.obsecure(user.getUserId());
+			String hash_uid = UserUtils.obsecure(user.getUserId());
 			DatastoreService datastore = DatastoreServiceFactory
 					.getDatastoreService();
 			Key key = KeyFactory.createKey("Customer", hash_uid);
