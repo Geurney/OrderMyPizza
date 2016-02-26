@@ -49,12 +49,13 @@ public class CustomerResource {
 	 * @return Customer profile
 	 */
 	@GET
-	@Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+	@Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_XML,
+			MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response getCustomer() {
 		String hash_uid = UserUtils.getCurrentUserObscureID();
 		if (hash_uid == null) {
 			response = Response.status(Response.Status.FORBIDDEN)
-					.type(MediaType.TEXT_HTML).entity("You must log in!")
+					.type(MediaType.TEXT_PLAIN).entity("You must log in!")
 					.build();
 			return response;
 		}
@@ -71,7 +72,7 @@ public class CustomerResource {
 					.type(MediaType.TEXT_XML).entity(customer).build();
 		} catch (EntityNotFoundException e) {
 			response = Response.status(Response.Status.NOT_FOUND)
-					.type(MediaType.TEXT_HTML)
+					.type(MediaType.TEXT_PLAIN)
 					.entity("Please complete your profile!").build();
 		}
 		return response;
@@ -81,7 +82,7 @@ public class CustomerResource {
 	 * Add the customer into datastore
 	 */
 	@POST
-	@Produces(MediaType.TEXT_HTML)
+	@Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_XML, MediaType.TEXT_HTML })
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response newCustomer(@FormParam("name") String name,
 			@FormParam("address") String address,
@@ -89,7 +90,7 @@ public class CustomerResource {
 		String hash_uid = UserUtils.getCurrentUserObscureID();
 		if (hash_uid == null) {
 			response = Response.status(Response.Status.FORBIDDEN)
-					.type(MediaType.TEXT_HTML).entity("You must log in!")
+					.type(MediaType.TEXT_PLAIN).entity("You must log in!")
 					.build();
 			return response;
 		}
@@ -113,7 +114,8 @@ public class CustomerResource {
 			}
 			datastore.put(customer);
 		}
-		response = Response.status(Response.Status.OK).type(MediaType.TEXT_XML)
+		response = Response.status(Response.Status.OK)
+				.type(MediaType.TEXT_PLAIN)
 				.entity("Customer profile updated successfully!").build();
 		return response;
 	}
@@ -124,11 +126,12 @@ public class CustomerResource {
 	 * @throws IOException
 	 */
 	@DELETE
+	@Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_XML, MediaType.TEXT_HTML })
 	public Response deleteCustomer() {
 		String hash_uid = UserUtils.getCurrentUserObscureID();
 		if (hash_uid == null) {
 			response = Response.status(Response.Status.FORBIDDEN)
-					.type(MediaType.TEXT_HTML).entity("You must log in!")
+					.type(MediaType.TEXT_PLAIN).entity("You must log in!")
 					.build();
 			return response;
 		}
@@ -140,7 +143,7 @@ public class CustomerResource {
 			response = Response.status(Response.Status.OK).build();
 		} catch (Exception e) {
 			response = Response.status(Response.Status.NOT_FOUND)
-					.type(MediaType.TEXT_HTML).entity("Customer not found!")
+					.type(MediaType.TEXT_PLAIN).entity("Customer not found!")
 					.build();
 		}
 		return response;
