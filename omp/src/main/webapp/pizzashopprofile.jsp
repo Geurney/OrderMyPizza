@@ -19,8 +19,8 @@
 	<link rel="shortcut icon" href="./stylesheets/favicon.ico"/>
 	<link type="text/css" rel="stylesheet" href="./stylesheets/main.css"/>
 	<link href='https://fonts.googleapis.com/css?family=Raleway|Roboto+Slab|Indie+Flower|Poiret+One|Josefin+Sans|Varela+Round|Maven+Pro|Quicksand|Dancing+Script|Architects+Daughter|News+Cycle|Satisfy|Handlee' rel='stylesheet' type='text/css'/>
-	<script type="text/javascript" src="./stylesheets/omp.js"></script>
-	<script type="text/javascript" src="./stylesheets/jquery-1.12.0.min.js"></script>
+	<script type="text/javascript" src="./js/omp.js"></script>
+	<script type="text/javascript" src="./js/jquery-1.12.0.min.js"></script>
 	<title>Order My Pizza!</title>
 </head>
 <body id="body">

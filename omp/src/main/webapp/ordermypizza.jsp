@@ -12,8 +12,11 @@
 	<link rel="shortcut icon" href="./stylesheets/favicon.ico"/>
 	<link type="text/css" rel="stylesheet" href="./stylesheets/main.css"/>
 	<link href='https://fonts.googleapis.com/css?family=Raleway|Roboto+Slab|Indie+Flower|Poiret+One|Josefin+Sans|Varela+Round|Maven+Pro|Quicksand|Dancing+Script|Architects+Daughter|News+Cycle|Satisfy|Handlee' rel='stylesheet' type='text/css'/>
-	<script type="text/javascript" src="./stylesheets/omp.js"></script>
-	<script type="text/javascript" src="./stylesheets/jquery-1.12.0.min.js"></script>
+	<script type="text/javascript" src="./js/omp.js"></script>
+	<script type="text/javascript" src="./js/jquery-1.12.0.min.js"></script>
+	<script type="text/javascript" src="./js/pizzashopmap.js"></script>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBB9p91mM16Xr-mvMQSwNBfkDZDD6SuJws&signed_in=true&libraries=places&callback=initMap"
+		async defer></script>
 	<title>Order My Pizza!</title>
 </head>
 <body id="body">
@@ -50,32 +53,42 @@
 	<div id="store-locator">
 		<h1>Find A Pizza Shop</h1>
 		<div id="store-locator-body">
-			<form autocomplete="off">
-				<div>
-					<div class="data" style="float: left; margin: 10px 0 10px 0;">
-						<input type="city" autocomplete="off" placeholder="City" style="width: 215px;">
-					</div>
-
-					<div class="data" style="float: left; margin: 10px 0 10px 10px;">
-						<input id="statenames" placeholder="State" style="width: 54px;" autocomplete="off">
-					</div>
-
-					<div style="font-size: 16px; display: inline; float: left; margin-left: 10px; margin-top: 20px;">or</div>
-
-					<div class="data" style="float: left; margin: 10px 0 10px 10px;">
-						<input type="zip" autocomplete="off" style="width: 120px; margin-right: 0px;" placeholder="Zip" maxlength="5" data-placeholder="Zip">
-					</div>
-					<input type="submit" id="submit" value="Search">
-				</div>
-			</form>
-
+			<input id="citylocation" placeholder="Enter a city" type="text" />
+			<input type="submit" id="submit" value="Search">
 			<hr>
-			<div id="store-result"  style="float: left; width: 469px; margin-top: 92px">
-				<p>
-					<span>Find a Pizza Shop near you!</span><br> Enter your address above to find your local store!
-				</p>
+			<div id="resultlist">
+				<div id="noresult">
+					Find a Pizza Shop near you!<br> Enter your address above to find your local store!
+				</div>
+				<div id="resultsTableWrapper">
+	  			<table>
+	    			<tbody id="results"></tbody>
+	  			</table>
+	  			</div>
 			</div>
 			<div id="map"></div>
+			<div style="display: none">
+		  	<div id="info-content">
+				<table>
+			    	<tr id="iw-url-row" class="iw_table_row">
+			        	<td id="iw-icon" class="iw_table_icon"></td>
+		    	    	<td id="iw-url"></td>
+		    		</tr>
+		      		<tr id="iw-address-row" class="iw_table_row">
+				        <td class="iw_attribute_name">Address:</td>
+				        <td id="iw-address"></td>
+				    </tr>
+		    		<tr id="iw-phone-row" class="iw_table_row">
+		        		<td class="iw_attribute_name">Telephone:</td>
+		        		<td id="iw-phone"></td>
+		      		</tr>
+		      		<tr id="iw-rating-row" class="iw_table_row">
+			        	<td class="iw_attribute_name">Rating:</td>
+			        	<td id="iw-rating"></td>
+			      	</tr>
+		  	 	</table>
+		  	</div>
+			</div>
 		</div>
 	</div>
 
