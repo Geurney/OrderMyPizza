@@ -35,15 +35,6 @@
 	</servlet-mapping>
 
 	<servlet>
-		<servlet-name>customersignin</servlet-name>
-		<servlet-class>servlets.CustomerSignIn</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>customersignin</servlet-name>
-		<url-pattern>/customersignin</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
 		<servlet-name>customerprofile</servlet-name>
 		<servlet-class>servlets.CustomerDatastoreServlet</servlet-class>
 	</servlet>

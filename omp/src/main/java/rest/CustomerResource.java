@@ -3,8 +3,6 @@
  */
 package rest;
 
-import java.io.IOException;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -68,8 +66,7 @@ public class CustomerResource {
 			customer.setName((String) entity.getProperty("name"));
 			customer.setAddress((String) entity.getProperty("address"));
 			customer.setPhone((String) entity.getProperty("phone"));
-			response = Response.status(Response.Status.OK)
-					.type(MediaType.TEXT_XML).entity(customer).build();
+			response = Response.ok(customer).build();
 		} catch (EntityNotFoundException e) {
 			response = Response.status(Response.Status.NOT_FOUND)
 					.type(MediaType.TEXT_PLAIN)
@@ -114,16 +111,13 @@ public class CustomerResource {
 			}
 			datastore.put(customer);
 		}
-		response = Response.status(Response.Status.OK)
-				.type(MediaType.TEXT_PLAIN)
-				.entity("Customer profile updated successfully!").build();
+		response = Response.ok("Customer profile updated successfully!").build();
 		return response;
 	}
 
 	/**
 	 * Delete current customer
 	 * 
-	 * @throws IOException
 	 */
 	@DELETE
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_XML, MediaType.TEXT_HTML })
@@ -140,7 +134,7 @@ public class CustomerResource {
 		try {
 			Key key = KeyFactory.createKey("Customer", hash_uid);
 			datastore.delete(key);
-			response = Response.status(Response.Status.OK).build();
+			response = Response.ok("Customer is deleted successfully!").build();
 		} catch (Exception e) {
 			response = Response.status(Response.Status.NOT_FOUND)
 					.type(MediaType.TEXT_PLAIN).entity("Customer not found!")

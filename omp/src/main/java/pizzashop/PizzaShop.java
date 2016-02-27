@@ -28,6 +28,13 @@ public class PizzaShop extends User {
 	}
 
 	/**
+	 * Default constructor
+	 */
+	public PizzaShop() {
+		super(Type.PIZZASHOP);
+	}
+
+	/**
 	 * Get Pizza Factory
 	 * 
 	 * @return the pizzaFactory
