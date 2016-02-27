@@ -43,7 +43,7 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
  *
  */
 @Path("/pizzashop")
-public class PizzashopResources {
+public class PizzaShopResource {
 	@Context
 	UriInfo uriInfo;
 	@Context
@@ -61,6 +61,7 @@ public class PizzashopResources {
 			MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response getCurrentPizashop() {
 		String hash_uid = UserUtils.getCurrentUserObscureID();
+		
 		if (hash_uid == null) {
 			response = Response.status(Response.Status.FORBIDDEN)
 					.type(MediaType.TEXT_PLAIN).entity("You must log in!")
