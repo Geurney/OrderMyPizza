@@ -9,7 +9,6 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -17,7 +16,7 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import pizzashop.PizzaFactory;
+import pizza.PizzaTopping;
 import user.UserUtils;
 
 import com.google.appengine.api.datastore.DatastoreService;
@@ -28,13 +27,13 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 /**
- * PizzaFactory REST service
+ * PizzaTopping REST service
  * 
  * @author Geurney
  *
  */
-@Path("/pizzafactory")
-public class PizzaFactoryResource {
+@Path("/pizzatopping")
+public class PizzaToppingResource {
 	@Context
 	UriInfo uriInfo;
 	@Context
@@ -42,15 +41,19 @@ public class PizzaFactoryResource {
 	@Context
 	Response response;
 
+	public PizzaToppingResource(String topping) {
+
+	}
+
 	/**
-	 * Get the current PizzaFactory profile
+	 * Get the current PizzaTopping profile
 	 * 
-	 * @return PizzaFactory profile
+	 * @return PizzaTopping profile
 	 */
 	@GET
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_XML,
 			MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response getPizzaFactory() {
+	public Response getPizzatopping() {
 		String hash_uid = UserUtils.getCurrentUserObscureID();
 		if (hash_uid == null) {
 			response = Response.status(Response.Status.FORBIDDEN)
@@ -60,14 +63,14 @@ public class PizzaFactoryResource {
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
-		Key key = KeyFactory.createKey("PizzaFactory", hash_uid);
+		Key key = KeyFactory.createKey("pizzatopping", hash_uid);
 		try {
 			Entity entity = datastore.get(key);
-			PizzaFactory pizzaFactory = new PizzaFactory();
-			pizzaFactory.setName((String) entity.getProperty("name"));
-			pizzaFactory.setAddress((String) entity.getProperty("address"));
-			pizzaFactory.setPhone((String) entity.getProperty("phone"));
-			response = Response.ok(pizzaFactory).build();
+			PizzaTopping pizzaTopping = new PizzaTopping();
+			pizzaTopping.setName((String) entity.getProperty("name"));
+			pizzaTopping.setAddress((String) entity.getProperty("address"));
+			pizzaTopping.setPhone((String) entity.getProperty("phone"));
+			response = Response.ok(pizzaTopping).build();
 		} catch (EntityNotFoundException e) {
 			response = Response.status(Response.Status.NOT_FOUND)
 					.type(MediaType.TEXT_PLAIN)
@@ -77,12 +80,12 @@ public class PizzaFactoryResource {
 	}
 
 	/**
-	 * Add the PizzaFactory into datastore
+	 * Add the PizzaTopping into datastore
 	 */
 	@POST
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_XML, MediaType.TEXT_HTML })
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response newPizzaFactory(@FormParam("name") String name,
+	public Response newPizzatopping(@FormParam("name") String name,
 			@FormParam("address") String address,
 			@FormParam("phone") String phone) {
 		String hash_uid = UserUtils.getCurrentUserObscureID();
@@ -94,31 +97,31 @@ public class PizzaFactoryResource {
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
-		Key key = KeyFactory.createKey("PizzaFactory", hash_uid);
-		Entity pizzaFactory = null;
+		Key key = KeyFactory.createKey("PizzaTopping", hash_uid);
+		Entity pizzaTopping = null;
 		try {
-			pizzaFactory = datastore.get(key);
+			pizzaTopping = datastore.get(key);
 		} catch (EntityNotFoundException e) {
-			pizzaFactory = new Entity("PizzaFactory", hash_uid);
+			pizzaTopping = new Entity("PizzaTopping", hash_uid);
 		} finally {
 			if (name != null) {
-				pizzaFactory.setProperty("name", name);
+				pizzaTopping.setProperty("name", name);
 			}
 			if (address != null) {
-				pizzaFactory.setProperty("address", address);
+				pizzaTopping.setProperty("address", address);
 			}
 			if (phone != null) {
-				pizzaFactory.setProperty("phone", phone);
+				pizzaTopping.setProperty("phone", phone);
 			}
-			datastore.put(pizzaFactory);
+			datastore.put(pizzaTopping);
 		}
-		response = Response.ok("PizzaFactory profile updated successfully!")
+		response = Response.ok("PizzaTopping profile updated successfully!")
 				.build();
 		return response;
 	}
 
 	/**
-	 * Delete current PizzaFactory
+	 * Delete current PizzaTopping
 	 * 
 	 */
 	@DELETE
@@ -134,37 +137,15 @@ public class PizzaFactoryResource {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		try {
-			Key key = KeyFactory.createKey("PizzaFactory", hash_uid);
+			Key key = KeyFactory.createKey("pizzatopping", hash_uid);
 			datastore.delete(key);
-			response = Response.ok("PizzaFactory is deleted successfully!")
+			response = Response.ok("PizzaTopping is deleted successfully!")
 					.build();
 		} catch (Exception e) {
 			response = Response.status(Response.Status.NOT_FOUND)
 					.type(MediaType.TEXT_PLAIN)
-					.entity("PizzaFactory not found!").build();
+					.entity("PizzaTopping not found!").build();
 		}
 		return response;
-	}
-
-	@Path("{crust}")
-	public PizzaComponentResource GetPizzaCrust(@PathParam("crust") String crust) {
-		return new PizzaComponentResource(crust);
-	}
-
-	@Path("{cheese}")
-	public PizzaComponentResource GetPizzaCheese(
-			@PathParam("cheese") String cheese) {
-		return new PizzaComponentResource(cheese);
-	}
-
-	@Path("{sauce}")
-	public PizzaComponentResource GetPizzaSauce(@PathParam("sauce") String sauce) {
-		return new PizzaComponentResource(sauce);
-	}
-
-	@Path("{topping}")
-	public PizzaToppingResource GetPizzaTopping(
-			@PathParam("topping") String topping) {
-		return new PizzaToppingResource(topping);
 	}
 }
