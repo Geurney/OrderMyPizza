@@ -26,6 +26,6 @@ public class Admin extends User {
 	 *            Admin phone
 	 */
 	public Admin(String name, String address, String phone) {
-		super(name, address, phone, Type.ADMIN);
+		super(name, address, phone);
 	}
 }

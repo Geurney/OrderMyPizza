@@ -15,22 +15,27 @@ public class Pizza {
 	/**
 	 * Pizza Crust
 	 */
-	private PizzaComponent curst;
+	private PizzaCrust curst;
 
 	/**
 	 * Pizza Cheese
 	 */
-	private PizzaComponent cheese;
+	private PizzaCheese cheese;
 
 	/**
 	 * Pizza Sauce
 	 */
-	private PizzaComponent sauce;
+	private PizzaSauce sauce;
 
 	/**
-	 * Pizza Toppings
+	 * Pizza Meat Toppings
 	 */
-	private ArrayList<PizzaTopping> toppings;
+	private ArrayList<PizzaToppingVeg> vegs;
+
+	/**
+	 * Pizza Vegetable Toppings
+	 */
+	private ArrayList<PizzaToppingMeat> meats;
 
 	/**
 	 * Pizza cost
@@ -46,13 +51,14 @@ public class Pizza {
 	 * Default Constructor
 	 */
 	public Pizza() {
-		toppings = new ArrayList<PizzaTopping>();
+		vegs = new ArrayList<PizzaToppingVeg>();
+		meats = new ArrayList<PizzaToppingMeat>();
 	}
-	
+
 	/**
 	 * @return the curst
 	 */
-	public PizzaComponent getCurst() {
+	public PizzaCrust getCurst() {
 		return curst;
 	}
 
@@ -60,14 +66,14 @@ public class Pizza {
 	 * @param curst
 	 *            the curst to set
 	 */
-	public void setCurst(PizzaComponent curst) {
+	public void setCurst(PizzaCrust curst) {
 		this.curst = curst;
 	}
 
 	/**
 	 * @return the cheese
 	 */
-	public PizzaComponent getCheese() {
+	public PizzaCheese getCheese() {
 		return cheese;
 	}
 
@@ -75,14 +81,14 @@ public class Pizza {
 	 * @param cheese
 	 *            the cheese to set
 	 */
-	public void setCheese(PizzaComponent cheese) {
+	public void setCheese(PizzaCheese cheese) {
 		this.cheese = cheese;
 	}
 
 	/**
 	 * @return the sauce
 	 */
-	public PizzaComponent getSauce() {
+	public PizzaSauce getSauce() {
 		return sauce;
 	}
 
@@ -90,33 +96,38 @@ public class Pizza {
 	 * @param sauce
 	 *            the sauce to set
 	 */
-	public void setSauce(PizzaComponent sauce) {
+	public void setSauce(PizzaSauce sauce) {
 		this.sauce = sauce;
 	}
 
 	/**
 	 * @return the toppings
 	 */
-	public ArrayList<PizzaTopping> getToppings() {
-		return toppings;
+	public ArrayList<PizzaToppingVeg> getToppingVegs() {
+		return vegs;
 	}
 
 	/**
 	 * @param toppings
 	 *            the toppings to set
 	 */
-	public void setToppings(ArrayList<PizzaTopping> toppings) {
-		this.toppings = toppings;
+	public void setToppingVegs(ArrayList<PizzaToppingVeg> toppings) {
+		this.vegs = toppings;
 	}
 
 	/**
-	 * Add topping
-	 * 
-	 * @param topping
-	 *            to add
+	 * @return the toppings
 	 */
-	public void addToppings(PizzaTopping topping) {
-		toppings.add(topping);
+	public ArrayList<PizzaToppingMeat> getToppingMeats() {
+		return meats;
+	}
+
+	/**
+	 * @param toppings
+	 *            the toppings to set
+	 */
+	public void setToppingMeats(ArrayList<PizzaToppingMeat> toppings) {
+		this.meats = toppings;
 	}
 
 	/**
@@ -147,6 +158,14 @@ public class Pizza {
 	 */
 	public void setPrice(double price) {
 		this.price = price;
+	}
+
+	public void addToppingMeat(PizzaToppingMeat topping) {
+		meats.add(topping);
+	}
+
+	public void addToppingVeg(PizzaToppingVeg topping) {
+		vegs.add(topping);
 	}
 
 }

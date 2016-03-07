@@ -9,7 +9,6 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -64,9 +63,6 @@ public class PizzaFactoryResource {
 		try {
 			Entity entity = datastore.get(key);
 			PizzaFactory pizzaFactory = new PizzaFactory();
-			pizzaFactory.setName((String) entity.getProperty("name"));
-			pizzaFactory.setAddress((String) entity.getProperty("address"));
-			pizzaFactory.setPhone((String) entity.getProperty("phone"));
 			response = Response.ok(pizzaFactory).build();
 		} catch (EntityNotFoundException e) {
 			response = Response.status(Response.Status.NOT_FOUND)
@@ -101,15 +97,6 @@ public class PizzaFactoryResource {
 		} catch (EntityNotFoundException e) {
 			pizzaFactory = new Entity("PizzaFactory", hash_uid);
 		} finally {
-			if (name != null) {
-				pizzaFactory.setProperty("name", name);
-			}
-			if (address != null) {
-				pizzaFactory.setProperty("address", address);
-			}
-			if (phone != null) {
-				pizzaFactory.setProperty("phone", phone);
-			}
 			datastore.put(pizzaFactory);
 		}
 		response = Response.ok("PizzaFactory profile updated successfully!")
@@ -146,6 +133,12 @@ public class PizzaFactoryResource {
 		return response;
 	}
 
+	@Path("/pizzacomponent")
+	public PizzaComponentResource GetPizzaCrust() {
+		return new PizzaComponentResource();
+	}
+	
+	/*
 	@Path("{crust}")
 	public PizzaComponentResource GetPizzaCrust(@PathParam("crust") String crust) {
 		return new PizzaComponentResource(crust);
@@ -167,4 +160,6 @@ public class PizzaFactoryResource {
 			@PathParam("topping") String topping) {
 		return new PizzaToppingResource(topping);
 	}
+*/	
+	
 }

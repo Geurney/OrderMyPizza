@@ -5,7 +5,6 @@ package user;
 
 import javax.xml.bind.annotation.XmlElement;
 
-
 /**
  * User abstract class
  * 
@@ -37,15 +36,9 @@ public abstract class User {
 	private String phone;
 
 	/**
-	 * User type
-	 */
-	private Type type;
-
-	/**
 	 * Default constructor
 	 */
-	public User(Type type) {
-		this.type = type;
+	public User() {
 	}
 
 	/**
@@ -60,11 +53,10 @@ public abstract class User {
 	 * @param type
 	 *            User type
 	 */
-	public User(String name, String address, String phone, Type type) {
+	public User(String name, String address, String phone) {
 		this.name = name;
 		this.address = address;
 		this.phone = phone;
-		this.type = type;
 	}
 
 	/**
@@ -126,24 +118,4 @@ public abstract class User {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-
-	/**
-	 * Get user type
-	 * 
-	 * @return the type
-	 */
-	public Type getType() {
-		return type;
-	}
-
-	/**
-	 * Set user type
-	 * 
-	 * @param type
-	 *            the type to set
-	 */
-	public void setType(Type type) {
-		this.type = type;
-	}
-
 }

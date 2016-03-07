@@ -26,13 +26,13 @@ public class Customer extends User {
 	 *            Customer phone
 	 */
 	public Customer(String name, String address, String phone) {
-		super(name, address, phone, Type.CUSTOMER);
+		super(name, address, phone);
 	}
 
 	/**
 	 * Default constructor
 	 */
 	public Customer() {
-		super(Type.CUSTOMER);
+		super();
 	}
 }

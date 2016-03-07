@@ -63,9 +63,9 @@ public class OrderResource {
 		try {
 			Entity entity = datastore.get(key);
 			Order order = new Order();
-			order.setName((String) entity.getProperty("name"));
+/*			order.setName((String) entity.getProperty("name"));
 			order.setAddress((String) entity.getProperty("address"));
-			order.setPhone((String) entity.getProperty("phone"));
+			order.setPhone((String) entity.getProperty("phone"));*/
 			response = Response.ok(order).build();
 		} catch (EntityNotFoundException e) {
 			response = Response.status(Response.Status.NOT_FOUND)

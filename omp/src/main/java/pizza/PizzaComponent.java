@@ -1,6 +1,9 @@
 package pizza;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  * PizzaCompoment is the abstraction of all pizza components.
@@ -8,15 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Geurney
  *
  */
-@XmlRootElement
-public class PizzaComponent {
-	/**
-	 * Pizza Component Types
-	 */
-	public static enum PizzaComponentType {
-		CRUST, CHEESE, SAUCE, TOPPING
-	}
-
+public abstract class PizzaComponent {
 	/**
 	 * Pizza Component Sizes
 	 */
@@ -25,9 +20,9 @@ public class PizzaComponent {
 	}
 
 	/**
-	 * Component Type
+	 * Component Identifier
 	 */
-	private PizzaComponentType type;
+	private String identifier;
 
 	/**
 	 * Component Description
@@ -48,29 +43,29 @@ public class PizzaComponent {
 	 * Component Price
 	 */
 	private double prices[];
-	
+
+	/**
+	 * Default Constructor
+	 */
 	public PizzaComponent() {
 		costs = new double[PizzaComponentSize.values().length];
 		prices = new double[PizzaComponentSize.values().length];
 	}
 
 	/**
-	 * Get component type
-	 * 
-	 * @return the type
+	 * @return the identifier
 	 */
-	public PizzaComponentType getType() {
-		return type;
+	@XmlElement
+	public String getIdentifier() {
+		return identifier;
 	}
 
 	/**
-	 * Set component type
-	 * 
-	 * @param type
-	 *            the type to set
+	 * @param identifier
+	 *            the identifier to set
 	 */
-	public void setType(PizzaComponentType type) {
-		this.type = type;
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
 	}
 
 	/**
@@ -78,6 +73,7 @@ public class PizzaComponent {
 	 * 
 	 * @return the description
 	 */
+	@XmlElement
 	public String getDescription() {
 		return description;
 	}
@@ -88,12 +84,50 @@ public class PizzaComponent {
 	 * @param descripition
 	 *            the description to set
 	 */
-	public void setDescripition(String description) {
+	public void setDescription(String description) {
 		this.description = description;
 	}
 
 	/**
-	 * Get component cost
+	 * Get component all costs
+	 * 
+	 * @return the costs
+	 */
+	@XmlElement
+	public double[] getCosts() {
+		return costs;
+	}
+
+	/**
+	 * Set component costs
+	 * 
+	 * @param small
+	 *            Small size cost
+	 * @param medium
+	 *            Medium size cost
+	 * @param large
+	 *            Large size cost
+	 */
+	public void setCosts(double small, double medium, double large) {
+		costs[0] = small;
+		costs[1] = medium;
+		costs[2] = large;
+	}
+
+	/**
+	 * Set component costs
+	 * 
+	 * @param cost
+	 *            Costs
+	 */
+	public void setCosts(List<Double> costs) {
+		this.costs[0] = costs.get(0);
+		this.costs[1] = costs.get(1);
+		this.costs[2] = costs.get(2);
+	}
+
+	/**
+	 * Get current component cost
 	 * 
 	 * @return the cost
 	 */
@@ -110,19 +144,17 @@ public class PizzaComponent {
 	}
 
 	/**
-	 * Set component cost
+	 * Get component all prices
 	 * 
-	 * @param cost
-	 *            the cost to set
+	 * @return the price
 	 */
-	public void setCost(double small, double medium, double large) {
-		costs[0] = small;
-		costs[1] = medium;
-		costs[2] = large;
+	@XmlElement
+	public double[] getPrices() {
+		return prices;
 	}
 
 	/**
-	 * Get component price
+	 * Get current component price
 	 * 
 	 * @return the price
 	 */
@@ -139,19 +171,49 @@ public class PizzaComponent {
 	}
 
 	/**
-	 * Set component price
+	 * Set component prices
 	 * 
-	 * @param price
-	 *            the price to set
+	 * @param small
+	 *            Small size price
+	 * @param medium
+	 *            Medium size price
+	 * @param large
+	 *            Large size price
 	 */
-	public void setPrice(double small, double medium, double large) {
+	public void setPrices(double small, double medium, double large) {
 		prices[0] = small;
 		prices[1] = medium;
 		prices[2] = large;
 	}
 
 	/**
-	 * Get component profit
+	 * Set component prices
+	 * 
+	 * @param prices
+	 *            Prices
+	 */
+	public void setPrices(List<Double> prices) {
+		this.prices[0] = prices.get(0);
+		this.prices[1] = prices.get(1);
+		this.prices[2] = prices.get(2);
+	}
+
+	/**
+	 * Get component profits
+	 * 
+	 * @return profits
+	 */
+	@XmlElement
+	public double[] getProfits() {
+		double[] profits = new double[3];
+		profits[0] = prices[0] - costs[0];
+		profits[1] = prices[1] - costs[1];
+		profits[2] = prices[2] - costs[2];
+		return profits;
+	}
+
+	/**
+	 * Get current component profit
 	 * 
 	 * @return price - cost
 	 */

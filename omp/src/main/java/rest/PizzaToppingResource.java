@@ -16,7 +16,7 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import pizza.PizzaTopping;
+import pizza.PizzaToppingVeg;
 import user.UserUtils;
 
 import com.google.appengine.api.datastore.DatastoreService;
@@ -41,10 +41,6 @@ public class PizzaToppingResource {
 	@Context
 	Response response;
 
-	public PizzaToppingResource(String topping) {
-
-	}
-
 	/**
 	 * Get the current PizzaTopping profile
 	 * 
@@ -66,10 +62,10 @@ public class PizzaToppingResource {
 		Key key = KeyFactory.createKey("pizzatopping", hash_uid);
 		try {
 			Entity entity = datastore.get(key);
-			PizzaTopping pizzaTopping = new PizzaTopping();
-			pizzaTopping.setName((String) entity.getProperty("name"));
+			PizzaToppingVeg pizzaTopping = new PizzaToppingVeg();
+/*			pizzaTopping.setName((String) entity.getProperty("name"));
 			pizzaTopping.setAddress((String) entity.getProperty("address"));
-			pizzaTopping.setPhone((String) entity.getProperty("phone"));
+			pizzaTopping.setPhone((String) entity.getProperty("phone"));*/
 			response = Response.ok(pizzaTopping).build();
 		} catch (EntityNotFoundException e) {
 			response = Response.status(Response.Status.NOT_FOUND)

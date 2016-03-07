@@ -1,5 +1,6 @@
 package pizzashop;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
@@ -11,7 +12,7 @@ public class PizzaShop extends User {
 	/**
 	 * Pizza Factory
 	 */
-	private PizzaFactory pizzaFactory; // May be a string to xml.
+	private PizzaFactory pizzaFactory;
 
 	/**
 	 * Pizza Shop constructor
@@ -24,14 +25,14 @@ public class PizzaShop extends User {
 	 *            Shop phone
 	 */
 	public PizzaShop(String name, String address, String phone) {
-		super(name, address, phone, Type.PIZZASHOP);
+		super(name, address, phone);
 	}
 
 	/**
 	 * Default constructor
 	 */
 	public PizzaShop() {
-		super(Type.PIZZASHOP);
+		super();
 	}
 
 	/**
@@ -39,6 +40,7 @@ public class PizzaShop extends User {
 	 * 
 	 * @return the pizzaFactory
 	 */
+	@XmlElement
 	public PizzaFactory getPizzaFactory() {
 		return pizzaFactory;
 	}

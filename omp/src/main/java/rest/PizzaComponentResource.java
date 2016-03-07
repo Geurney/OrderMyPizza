@@ -3,6 +3,9 @@
  */
 package rest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -11,16 +14,18 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import pizza.PizzaComponent;
+import pizza.PizzaCrust;
 import user.UserUtils;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.EmbeddedEntity;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
@@ -32,7 +37,6 @@ import com.google.appengine.api.datastore.KeyFactory;
  * @author Geurney
  *
  */
-@Path("/pizzacomponent")
 public class PizzaComponentResource {
 	@Context
 	UriInfo uriInfo;
@@ -41,15 +45,12 @@ public class PizzaComponentResource {
 	@Context
 	Response response;
 
-	public PizzaComponentResource(String name) {
-		
-	}
-
 	/**
 	 * Get the current PizzaComponent profile
 	 * 
 	 * @return PizzaComponent profile
 	 */
+	@Path("/crust")
 	@GET
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_XML,
 			MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -63,14 +64,29 @@ public class PizzaComponentResource {
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
-		Key key = KeyFactory.createKey("PizzaComponent", hash_uid);
+		Key key = KeyFactory.createKey("PizzaFactory", hash_uid);
 		try {
-			Entity entity = datastore.get(key);
-			PizzaComponent pizzaComponent = new PizzaComponent();
-			pizzaComponent.setName((String) entity.getProperty("name"));
-			pizzaComponent.setAddress((String) entity.getProperty("address"));
-			pizzaComponent.setPhone((String) entity.getProperty("phone"));
-			response = Response.ok(pizzaComponent).build();
+			System.out.println("HERE!--------------------------");
+			Entity pizzaFactory = datastore.get(key);
+			List<EmbeddedEntity> crusts = (List<EmbeddedEntity>) pizzaFactory
+					.getProperty("crust");
+			List<PizzaCrust> pc = new ArrayList<PizzaCrust>();
+			if (crusts != null) {
+				for (EmbeddedEntity e : crusts) {
+					PizzaCrust crust = new PizzaCrust();
+					crust.setIdentifier((String) e.getProperty("identifier"));
+					crust.setDescription((String) e.getProperty("description"));
+					List<Double> costs = (List<Double>) e.getProperty("costs");
+					List<Double> prices = (List<Double>) e.getProperty("prices");
+					crust.setCosts(costs);
+					crust.setPrices(prices);
+					pc.add(crust);
+				}
+			}
+			GenericEntity<List<PizzaCrust>> list = new GenericEntity<List<PizzaCrust>>(
+					pc) {
+			};
+			response = Response.ok(list).build();
 		} catch (EntityNotFoundException e) {
 			response = Response.status(Response.Status.NOT_FOUND)
 					.type(MediaType.TEXT_PLAIN)
@@ -80,14 +96,21 @@ public class PizzaComponentResource {
 	}
 
 	/**
-	 * Add the PizzaComponent into datastore
+	 * Add the Pizza Crust into PizzaFactory
 	 */
+	@Path("/crust")
 	@POST
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_XML, MediaType.TEXT_HTML })
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response newPizzaComponent(@FormParam("name") String name,
-			@FormParam("address") String address,
-			@FormParam("phone") String phone) {
+	public Response newPizzaComponent(
+			@FormParam("identifier") String identifier,
+			@FormParam("description") String description,
+			@FormParam("cost1") String cost1,
+			@FormParam("price1") String price1,
+			@FormParam("cost2") String cost2,
+			@FormParam("price2") String price2,
+			@FormParam("cost3") String cost3, @FormParam("price3") String price3) {
+
 		String hash_uid = UserUtils.getCurrentUserObscureID();
 		if (hash_uid == null) {
 			response = Response.status(Response.Status.FORBIDDEN)
@@ -95,27 +118,48 @@ public class PizzaComponentResource {
 					.build();
 			return response;
 		}
+		if (identifier == null || description == null || cost1 == null
+				|| cost2 == null || cost3 == null || price1 == null
+				|| price2 == null || price3 == null) {
+			response = Response.status(Response.Status.BAD_REQUEST)
+					.type(MediaType.TEXT_PLAIN)
+					.entity("You must provide all parameters!").build();
+			return response;
+		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
-		Key key = KeyFactory.createKey("PizzaComponent", hash_uid);
-		Entity pizzaComponent = null;
+		Key key = KeyFactory.createKey("PizzaFactory", hash_uid);
+		Entity pizzaFactory = null;
 		try {
-			pizzaComponent = datastore.get(key);
+			pizzaFactory = datastore.get(key);
 		} catch (EntityNotFoundException e) {
-			pizzaComponent = new Entity("PizzaComponent", hash_uid);
+			pizzaFactory = new Entity("PizzaFactory", hash_uid);
 		} finally {
-			if (name != null) {
-				pizzaComponent.setProperty("name", name);
+			List<Double> costs = new ArrayList<Double>();
+			costs.add(Double.valueOf(cost1));
+			costs.add(Double.valueOf(cost2));
+			costs.add(Double.valueOf(cost3));
+
+			List<Double> prices = new ArrayList<Double>();
+			prices.add(Double.valueOf(price1));
+			prices.add(Double.valueOf(price2));
+			prices.add(Double.valueOf(price3));
+
+			EmbeddedEntity component = new EmbeddedEntity();
+			component.setProperty("description", description);
+			component.setProperty("costs", costs);
+			component.setProperty("prices", prices);
+
+			List<EmbeddedEntity> list = (List<EmbeddedEntity>) pizzaFactory
+					.getProperty("crust");
+			if (list == null) {
+				list = new ArrayList<EmbeddedEntity>();
 			}
-			if (address != null) {
-				pizzaComponent.setProperty("address", address);
-			}
-			if (phone != null) {
-				pizzaComponent.setProperty("phone", phone);
-			}
-			datastore.put(pizzaComponent);
+			list.add(component);
+			pizzaFactory.setProperty("crust", list);
+			datastore.put(pizzaFactory);
 		}
-		response = Response.ok("PizzaComponent profile updated successfully!")
+		response = Response.ok("Pizza Component profile updated successfully!")
 				.build();
 		return response;
 	}
