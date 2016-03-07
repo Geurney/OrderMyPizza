@@ -3,11 +3,10 @@
  */
 package rest;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -27,7 +26,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 /**
- * PizzaFactory REST service
+ * Pizza Factory REST service
  * 
  * @author Geurney
  *
@@ -42,9 +41,9 @@ public class PizzaFactoryResource {
 	Response response;
 
 	/**
-	 * Get the current PizzaFactory profile
+	 * Get the current Pizza Factory profile
 	 * 
-	 * @return PizzaFactory profile
+	 * @return Pizza Factory profile
 	 */
 	@GET
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_XML,
@@ -67,20 +66,17 @@ public class PizzaFactoryResource {
 		} catch (EntityNotFoundException e) {
 			response = Response.status(Response.Status.NOT_FOUND)
 					.type(MediaType.TEXT_PLAIN)
-					.entity("Please complete your profile!").build();
+					.entity("Pizza Factory not found!").build();
 		}
 		return response;
 	}
 
 	/**
-	 * Add the PizzaFactory into datastore
+	 * Add a new Pizza Factory into datastore
 	 */
 	@POST
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_XML, MediaType.TEXT_HTML })
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response newPizzaFactory(@FormParam("name") String name,
-			@FormParam("address") String address,
-			@FormParam("phone") String phone) {
+	public Response newPostPizzaFactory() {
 		String hash_uid = UserUtils.getCurrentUserObscureID();
 		if (hash_uid == null) {
 			response = Response.status(Response.Status.FORBIDDEN)
@@ -94,13 +90,40 @@ public class PizzaFactoryResource {
 		Entity pizzaFactory = null;
 		try {
 			pizzaFactory = datastore.get(key);
+			response = Response.ok("Pizza Factory already exists!").build();
 		} catch (EntityNotFoundException e) {
 			pizzaFactory = new Entity("PizzaFactory", hash_uid);
-		} finally {
 			datastore.put(pizzaFactory);
+			response = Response.ok("Pizza Factory is created!").build();
 		}
-		response = Response.ok("PizzaFactory profile updated successfully!")
-				.build();
+		return response;
+	}
+	
+	/**
+	 * Add a new Pizza Factory into datastore
+	 */
+	@PUT
+	@Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_XML, MediaType.TEXT_HTML })
+	public Response newPutPizzaFactory() {
+		String hash_uid = UserUtils.getCurrentUserObscureID();
+		if (hash_uid == null) {
+			response = Response.status(Response.Status.FORBIDDEN)
+					.type(MediaType.TEXT_PLAIN).entity("You must log in!")
+					.build();
+			return response;
+		}
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		Key key = KeyFactory.createKey("PizzaFactory", hash_uid);
+		Entity pizzaFactory = null;
+		try {
+			pizzaFactory = datastore.get(key);
+			response = Response.ok("Pizza Factory already exists!").build();
+		} catch (EntityNotFoundException e) {
+			pizzaFactory = new Entity("PizzaFactory", hash_uid);
+			datastore.put(pizzaFactory);
+			response = Response.ok("Pizza Factory is created!").build();
+		}
 		return response;
 	}
 
@@ -123,43 +146,24 @@ public class PizzaFactoryResource {
 		try {
 			Key key = KeyFactory.createKey("PizzaFactory", hash_uid);
 			datastore.delete(key);
-			response = Response.ok("PizzaFactory is deleted successfully!")
+			response = Response.ok("Pizza Factory is deleted!")
 					.build();
 		} catch (Exception e) {
 			response = Response.status(Response.Status.NOT_FOUND)
 					.type(MediaType.TEXT_PLAIN)
-					.entity("PizzaFactory not found!").build();
+					.entity("Pizza Factory not found!").build();
 		}
 		return response;
 	}
 
-	@Path("/pizzacomponent")
-	public PizzaComponentResource GetPizzaCrust() {
-		return new PizzaComponentResource();
-	}
-	
-	/*
-	@Path("{crust}")
-	public PizzaComponentResource GetPizzaCrust(@PathParam("crust") String crust) {
-		return new PizzaComponentResource(crust);
-	}
-
-	@Path("{cheese}")
-	public PizzaComponentResource GetPizzaCheese(
-			@PathParam("cheese") String cheese) {
-		return new PizzaComponentResource(cheese);
+	/**
+	 * For Pizza Crust Resource
+	 * 
+	 * @return Crust Resource
+	 */
+	@Path("/crust")
+	public PizzaCrustsResource handlePizzaCrusts() {
+		return new PizzaCrustsResource();
 	}
 
-	@Path("{sauce}")
-	public PizzaComponentResource GetPizzaSauce(@PathParam("sauce") String sauce) {
-		return new PizzaComponentResource(sauce);
-	}
-
-	@Path("{topping}")
-	public PizzaToppingResource GetPizzaTopping(
-			@PathParam("topping") String topping) {
-		return new PizzaToppingResource(topping);
-	}
-*/	
-	
 }
