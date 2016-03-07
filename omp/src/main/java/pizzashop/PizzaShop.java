@@ -1,9 +1,9 @@
 package pizzashop;
 
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
+import pizza.Pizza;
 import user.User;
 
 @XmlRootElement
@@ -40,7 +40,6 @@ public class PizzaShop extends User {
 	 * 
 	 * @return the pizzaFactory
 	 */
-	@XmlElement
 	public PizzaFactory getPizzaFactory() {
 		return pizzaFactory;
 	}
@@ -53,6 +52,44 @@ public class PizzaShop extends User {
 	 */
 	public void setPizzaFactory(PizzaFactory pizzaFactory) {
 		this.pizzaFactory = pizzaFactory;
+	}
+
+	/**
+	 * Verify the shop's factory has all ingredients
+	 *
+	 * @param order
+	 *            Order
+	 * @return True if all ingredients are available
+	 */
+	public boolean verifyOrder(Order order) {
+		boolean isAvailable = true;
+		isAvailable &= pizzaFactory.hasCrust(order.getCrust());
+		isAvailable &= pizzaFactory.hasCheese(order.getCheese());
+		isAvailable &= pizzaFactory.hasSauce(order.getSauce());
+		for (String meat : order.getMeats()) {
+			isAvailable &= pizzaFactory.hasMeat(meat);
+		}
+		for (String veg : order.getVegs()) {
+			isAvailable &= pizzaFactory.hasVeg(veg);
+		}
+		return isAvailable;
+	}
+
+	/**
+	 * Create Pizza
+	 * 
+	 * @param order
+	 *            Order
+	 * @return Pizza
+	 */
+	public Pizza createPizza(Order order) {
+		Pizza pizza = pizzaFactory.preparePizza();
+		pizzaFactory.buildCrust(order.getCrust(), pizza);
+		pizzaFactory.buildCheese(order.getCheese(), pizza);
+		pizzaFactory.buildSauce(order.getSauce(), pizza);
+		pizzaFactory.buildToppingMeat(order.getMeats(), pizza);
+		pizzaFactory.buildToppingVeg(order.getVegs(), pizza);
+		return pizza;
 	}
 
 }

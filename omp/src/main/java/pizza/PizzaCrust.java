@@ -14,5 +14,4 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 @XmlSeeAlso(PizzaComponent.class)
 public class PizzaCrust extends PizzaComponent {
 
-
 }

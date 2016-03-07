@@ -2,7 +2,9 @@ package pizzashop;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import pizza.Pizza;
@@ -20,11 +22,6 @@ import pizza.PizzaToppingVeg;
  */
 @XmlRootElement
 public class PizzaFactory {
-
-	/**
-	 * Pizza to build
-	 */
-	private Pizza pizza;
 
 	/**
 	 * Available crusts
@@ -63,6 +60,18 @@ public class PizzaFactory {
 	}
 
 	/**
+	 * Get list of crusts
+	 * 
+	 * @return crusts
+	 */
+	@XmlElement
+	public List<PizzaCrust> getCrusts() {
+		List<PizzaCrust> list = new ArrayList<PizzaCrust>();
+		list.addAll(crusts.values());
+		return list;
+	}
+
+	/**
 	 * Add a crust if the identifier not exist in the factory.
 	 * 
 	 * @param crust
@@ -85,6 +94,30 @@ public class PizzaFactory {
 	 */
 	public void putCrust(PizzaCrust crust) {
 		crusts.put(crust.getIdentifier(), crust);
+	}
+
+	/**
+	 * Add list of crusts
+	 * 
+	 * @param crustList
+	 *            Crusts to be added
+	 */
+	public void addCrust(List<PizzaCrust> crustList) {
+		for (PizzaCrust s : crustList) {
+			addCrust(s);
+		}
+	}
+
+	/**
+	 * Get list of cheeses
+	 * 
+	 * @return cheeses
+	 */
+	@XmlElement
+	public List<PizzaCheese> getCheeses() {
+		List<PizzaCheese> list = new ArrayList<PizzaCheese>();
+		list.addAll(cheeses.values());
+		return list;
 	}
 
 	/**
@@ -113,6 +146,30 @@ public class PizzaFactory {
 	}
 
 	/**
+	 * Add list of cheeses
+	 * 
+	 * @param cheeseList
+	 *            cheeses to be added
+	 */
+	public void addCheese(List<PizzaCheese> cheeseList) {
+		for (PizzaCheese s : cheeseList) {
+			addCheese(s);
+		}
+	}
+
+	/**
+	 * Get list of sauces
+	 * 
+	 * @return sauces
+	 */
+	@XmlElement
+	public List<PizzaSauce> getSauces() {
+		List<PizzaSauce> list = new ArrayList<PizzaSauce>();
+		list.addAll(sauces.values());
+		return list;
+	}
+
+	/**
 	 * Add a sauce if the identifier not exist in the factory.
 	 * 
 	 * @param sauce
@@ -135,6 +192,42 @@ public class PizzaFactory {
 	 */
 	public void putSauce(PizzaSauce sauce) {
 		sauces.put(sauce.getIdentifier(), sauce);
+	}
+
+	/**
+	 * Add list of sauces
+	 * 
+	 * @param sauceList
+	 *            Sauces to be added
+	 */
+	public void addSauce(List<PizzaSauce> sauceList) {
+		for (PizzaSauce s : sauceList) {
+			addSauce(s);
+		}
+	}
+
+	/**
+	 * Get list of meat toppings
+	 * 
+	 * @return meat toppings
+	 */
+	@XmlElement
+	public List<PizzaToppingMeat> getMeats() {
+		List<PizzaToppingMeat> list = new ArrayList<PizzaToppingMeat>();
+		list.addAll(meats.values());
+		return list;
+	}
+
+	/**
+	 * Get list of vegetable toppings
+	 * 
+	 * @return vegetable toppings
+	 */
+	@XmlElement
+	public List<PizzaToppingVeg> getVegs() {
+		List<PizzaToppingVeg> list = new ArrayList<PizzaToppingVeg>();
+		list.addAll(vegs.values());
+		return list;
 	}
 
 	/**
@@ -163,6 +256,18 @@ public class PizzaFactory {
 	}
 
 	/**
+	 * Add list of meat toppings
+	 * 
+	 * @param meatList
+	 *            Meat Toppings to be added
+	 */
+	public void addToppingMeat(List<PizzaToppingMeat> meatList) {
+		for (PizzaToppingMeat s : meatList) {
+			addToppingMeat(s);
+		}
+	}
+
+	/**
 	 * Add a vegetable topping if the identifier not exist in the factory.
 	 * 
 	 * @param topping
@@ -188,13 +293,24 @@ public class PizzaFactory {
 	}
 
 	/**
+	 * Add list of vegetable toppings
+	 * 
+	 * @param vegList
+	 *            Vetegable toppings to be added
+	 */
+	public void addToppingVeg(List<PizzaToppingVeg> vegList) {
+		for (PizzaToppingVeg s : vegList) {
+			addToppingVeg(s);
+		}
+	}
+
+	/**
 	 * Prepare a raw pizza
 	 * 
 	 * @return pizza
 	 */
 	public Pizza preparePizza() {
-		pizza = new Pizza();
-		return pizza;
+		return new Pizza();
 	}
 
 	/**
@@ -204,9 +320,9 @@ public class PizzaFactory {
 	 *            Crust identifier
 	 * @return True if crust exists in the factory.
 	 */
-	public boolean buildCrust(String id) {
+	public boolean buildCrust(String id, Pizza pizza) {
 		if (pizza == null) {
-			pizza = new Pizza();
+			return false;
 		}
 		PizzaCrust crust = crusts.get(id);
 		if (crust == null) {
@@ -223,9 +339,9 @@ public class PizzaFactory {
 	 *            Cheese identifier
 	 * @return True if cheese exists in the factory
 	 */
-	public boolean buildCheese(String id) {
+	public boolean buildCheese(String id, Pizza pizza) {
 		if (pizza == null) {
-			pizza = new Pizza();
+			return false;
 		}
 		PizzaCheese cheese = cheeses.get(id);
 		if (cheese == null) {
@@ -242,9 +358,9 @@ public class PizzaFactory {
 	 *            Sauce identifier
 	 * @return True if sauce exists in the factory
 	 */
-	public boolean buildSauce(String id) {
+	public boolean buildSauce(String id, Pizza pizza) {
 		if (pizza == null) {
-			pizza = new Pizza();
+			return false;
 		}
 		PizzaSauce sauce = sauces.get(id);
 		if (sauce == null) {
@@ -261,9 +377,9 @@ public class PizzaFactory {
 	 *            Meat topping identifier
 	 * @return True if topping exists in the factory
 	 */
-	public boolean buildToppingMeat(String id) {
+	public boolean buildToppingMeat(String id, Pizza pizza) {
 		if (pizza == null) {
-			pizza = new Pizza();
+			return false;
 		}
 		PizzaToppingMeat topping = meats.get(id);
 		if (topping == null) {
@@ -280,9 +396,9 @@ public class PizzaFactory {
 	 *            Vegetable topping identifier
 	 * @return True if topping exists in the factory
 	 */
-	public boolean buildToppingVeg(String id) {
+	public boolean buildToppingVeg(String id, Pizza pizza) {
 		if (pizza == null) {
-			pizza = new Pizza();
+			return false;
 		}
 		PizzaToppingVeg topping = vegs.get(id);
 		if (topping == null) {
@@ -293,40 +409,82 @@ public class PizzaFactory {
 	}
 
 	/**
-	 * Create Pizza
+	 * Build meat toppings
+	 * 
+	 * @param meats
+	 *            meat toppings
+	 */
+	public void buildToppingMeat(List<String> meats, Pizza pizza) {
+		for (String meat : meats) {
+			buildToppingMeat(meat, pizza);
+		}
+	}
+
+	/**
+	 * Build vegetable toppings
+	 * 
+	 * @param vegs
+	 *            vegetable toppings
+	 */
+	public void buildToppingVeg(List<String> vegs, Pizza pizza) {
+		for (String veg : vegs) {
+			buildToppingMeat(veg, pizza);
+		}
+	}
+
+	/**
+	 * Check if contains this crust
 	 * 
 	 * @param crust
-	 *            Pizza Crust
-	 * @param cheese
-	 *            Pizza Cheese
-	 * @param sauce
-	 *            Pizza Sauce
-	 * @param toppings
-	 *            Pizza toppings
-	 * @return Pizza
+	 *            crust identifier
+	 * @return True if contains
 	 */
-	public Pizza createPizza(String crust, String cheese, String sauce,
-			ArrayList<String> toppingmeats, ArrayList<String> toppingvegs) {
-		Pizza pizza = new Pizza();
-
-		PizzaCrust pizzaCrust = new PizzaCrust();
-		pizza.setCurst(pizzaCrust);
-
-		PizzaCheese pizzaCheese = new PizzaCheese();
-		pizza.setCheese(pizzaCheese);
-
-		PizzaSauce pizzaSauce = new PizzaSauce();
-		pizza.setSauce(pizzaSauce);
-
-		for (String topping : toppingmeats) {
-			PizzaToppingMeat meat = new PizzaToppingMeat();
-			pizza.addToppingMeat(meat);
-		}
-		for (String topping : toppingvegs) {
-			PizzaToppingVeg veg = new PizzaToppingVeg();
-			pizza.addToppingVeg(veg);
-		}
-
-		return pizza;
+	public boolean hasCrust(String crust) {
+		return crusts.containsKey(crust);
 	}
+
+	/**
+	 * Check if contains this cheese
+	 * 
+	 * @param cheese
+	 *            cheese identifier
+	 * @return True if contains
+	 */
+	public boolean hasCheese(String cheese) {
+		return cheeses.containsKey(cheese);
+	}
+
+	/**
+	 * Check if contains this sauce
+	 * 
+	 * @param sauce
+	 *            sauce identifier
+	 * @return True if contains
+	 */
+	public boolean hasSauce(String sauce) {
+		return sauces.containsKey(sauce);
+	}
+
+	/**
+	 * Check if contains this meat topping
+	 * 
+	 * @param meat
+	 *            meat topping identifier
+	 * @return True if contains
+	 */
+	public boolean hasMeat(String meat) {
+		return meats.containsKey(meat);
+	}
+
+	/**
+	 * Check if contains this vegetable topping
+	 * 
+	 * @param veg
+	 *            vegetable topping identifier
+	 * @return True if contains
+	 */
+	public boolean hasVeg(String veg) {
+		return vegs.containsKey(veg);
+	}
+
 }

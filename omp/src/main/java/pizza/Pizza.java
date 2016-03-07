@@ -1,8 +1,12 @@
 package pizza;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import pizza.PizzaComponent.PizzaComponentSize;
 
 /**
  * Pizza Definition
@@ -15,7 +19,7 @@ public class Pizza {
 	/**
 	 * Pizza Crust
 	 */
-	private PizzaCrust curst;
+	private PizzaCrust crust;
 
 	/**
 	 * Pizza Cheese
@@ -38,6 +42,11 @@ public class Pizza {
 	private ArrayList<PizzaToppingMeat> meats;
 
 	/**
+	 * Pizza Size
+	 */
+	private PizzaComponentSize size;
+
+	/**
 	 * Pizza cost
 	 */
 	private double cost;
@@ -56,28 +65,38 @@ public class Pizza {
 	}
 
 	/**
-	 * @return the curst
+	 * Get crust
+	 * 
+	 * @return the crust
 	 */
+	@XmlElement
 	public PizzaCrust getCurst() {
-		return curst;
+		return crust;
 	}
 
 	/**
-	 * @param curst
-	 *            the curst to set
+	 * Set Crust
+	 * 
+	 * @param crust
+	 *            the crust to set
 	 */
-	public void setCurst(PizzaCrust curst) {
-		this.curst = curst;
+	public void setCurst(PizzaCrust crust) {
+		this.crust = crust;
 	}
 
 	/**
+	 * Get cheese
+	 * 
 	 * @return the cheese
 	 */
+	@XmlElement
 	public PizzaCheese getCheese() {
 		return cheese;
 	}
 
 	/**
+	 * Set cheese
+	 * 
 	 * @param cheese
 	 *            the cheese to set
 	 */
@@ -86,13 +105,18 @@ public class Pizza {
 	}
 
 	/**
+	 * Get sauce
+	 * 
 	 * @return the sauce
 	 */
+	@XmlElement
 	public PizzaSauce getSauce() {
 		return sauce;
 	}
 
 	/**
+	 * Set sauce
+	 * 
 	 * @param sauce
 	 *            the sauce to set
 	 */
@@ -101,43 +125,95 @@ public class Pizza {
 	}
 
 	/**
+	 * Get vegetable toppings
+	 * 
 	 * @return the toppings
 	 */
-	public ArrayList<PizzaToppingVeg> getToppingVegs() {
+	@XmlElement
+	public List<PizzaToppingVeg> getToppingVegs() {
 		return vegs;
 	}
 
 	/**
-	 * @param toppings
-	 *            the toppings to set
-	 */
-	public void setToppingVegs(ArrayList<PizzaToppingVeg> toppings) {
-		this.vegs = toppings;
-	}
-
-	/**
+	 * Get meat toppings
+	 * 
 	 * @return the toppings
 	 */
+	@XmlElement
 	public ArrayList<PizzaToppingMeat> getToppingMeats() {
 		return meats;
 	}
 
 	/**
-	 * @param toppings
-	 *            the toppings to set
+	 * Get ingredient cost
+	 * 
+	 * @return ingredient cost
 	 */
-	public void setToppingMeats(ArrayList<PizzaToppingMeat> toppings) {
-		this.meats = toppings;
+	public double getIngredientsCost() {
+		double ingredCost = 0;
+		if (crust != null) {
+			ingredCost += crust.getCost();
+		}
+		if (cheese != null) {
+			ingredCost += sauce.getCost();
+		}
+		if (sauce != null) {
+			ingredCost += cheese.getCost();
+		}
+		if (meats != null) {
+			for (PizzaToppingMeat meat : meats) {
+				ingredCost += meat.getCost();
+			}
+		}
+		if (vegs != null) {
+			for (PizzaToppingVeg veg : vegs) {
+				ingredCost += veg.getCost();
+			}
+		}
+		return ingredCost;
 	}
 
 	/**
-	 * @return the cost
+	 * Get ingredient price
+	 * 
+	 * @return ingredient price
 	 */
-	public double getCost() {
-		return cost;
+	public double getIngredientsPrice() {
+		double ingredPrice = 0;
+		if (crust != null) {
+			ingredPrice += crust.getPrice();
+		}
+		if (cheese != null) {
+			ingredPrice += sauce.getPrice();
+		}
+		if (sauce != null) {
+			ingredPrice += cheese.getPrice();
+		}
+		if (meats != null) {
+			for (PizzaToppingMeat meat : meats) {
+				ingredPrice += meat.getPrice();
+			}
+		}
+		if (vegs != null) {
+			for (PizzaToppingVeg veg : vegs) {
+				ingredPrice += veg.getPrice();
+			}
+		}
+		return ingredPrice;
 	}
 
 	/**
+	 * Get ingredient profits
+	 * 
+	 * @return ingredient profits
+	 */
+	public double getIngredientProfit() {
+		return getIngredientsPrice() - getIngredientsCost();
+	}
+
+	/**
+	 * Set cost
+	 * 
 	 * @param cost
 	 *            the cost to set
 	 */
@@ -146,13 +222,27 @@ public class Pizza {
 	}
 
 	/**
+	 * Get cost
+	 * 
+	 * @return cost
+	 */
+	public double getCost() {
+		return cost;
+	}
+
+	/**
+	 * Get price
+	 * 
 	 * @return the price
 	 */
+	@XmlElement
 	public double getPrice() {
 		return price;
 	}
 
 	/**
+	 * Set price
+	 * 
 	 * @param price
 	 *            the price to set
 	 */
@@ -160,12 +250,43 @@ public class Pizza {
 		this.price = price;
 	}
 
+	/**
+	 * Add meat topping
+	 * 
+	 * @param topping
+	 *            Topping to add
+	 */
 	public void addToppingMeat(PizzaToppingMeat topping) {
 		meats.add(topping);
 	}
 
+	/**
+	 * Add vegetable topping
+	 * 
+	 * @param topping
+	 *            Topping to add
+	 */
 	public void addToppingVeg(PizzaToppingVeg topping) {
 		vegs.add(topping);
+	}
+
+	/**
+	 * Get pizza size
+	 * 
+	 * @return the size
+	 */
+	public PizzaComponentSize getSize() {
+		return size;
+	}
+
+	/**
+	 * Set pizza size
+	 * 
+	 * @param size
+	 *            the size to set
+	 */
+	public void setSize(PizzaComponentSize size) {
+		this.size = size;
 	}
 
 }
