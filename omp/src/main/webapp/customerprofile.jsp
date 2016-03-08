@@ -79,7 +79,7 @@
 	<%
 			} finally {
 	%>
-	<form action="/customerprofile" method="post">
+	<form action="/rest/customer" method="post">
 		<fieldset id="profile_fieldset" <%if (!(name == null || phone == null || address == null)) {%> disabled <%}%>>
 			Name: <input type="text" name="name" <%if (name != null) {%> value="<%=name%>" <%}%>><br>
 			Address: <input type="text" name="address" <%if (address != null) {%> value="<%=address%>" <%}%>><br>
@@ -90,7 +90,7 @@
 		</fieldset>
 	</form>
 	<button onclick="fieldset_enable()">Edit</button>
-	<button onclick="delete_req('/customerprofile', '/ordermypizza.jsp')">Delete</button>
+	<button onclick="delete_req('/rest/customer', '/ordermypizza.jsp')">Delete</button>
 	<%
 			}
 		}

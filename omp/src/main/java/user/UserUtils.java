@@ -66,18 +66,30 @@ public class UserUtils {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Return current user obscure id
 	 * 
 	 * @return Obscured user ID
 	 */
 	public static String getCurrentUserObscureID() {
-		User user = UserServiceFactory.getUserService()
-				.getCurrentUser();
+		User user = UserServiceFactory.getUserService().getCurrentUser();
 		if (user == null) {
 			return null;
 		}
 		return UserUtils.obsecure(user.getUserId());
+	}
+
+	/**
+	 * Return current user email
+	 * 
+	 * @return User email
+	 */
+	public static String getCurrentUserEmail() {
+		User user = UserServiceFactory.getUserService().getCurrentUser();
+		if (user == null) {
+			return null;
+		}
+		return user.getEmail();
 	}
 }

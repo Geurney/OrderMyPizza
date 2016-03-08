@@ -21,6 +21,16 @@ public abstract class User {
 	}
 
 	/**
+	 * User token
+	 */
+	private String token;
+
+	/**
+	 * User email
+	 */
+	private String email;
+
+	/**
 	 * User name
 	 */
 	private String name;
@@ -39,24 +49,49 @@ public abstract class User {
 	 * Default constructor
 	 */
 	public User() {
+
 	}
 
 	/**
-	 * User constructor
+	 * Get token
 	 * 
-	 * @param name
-	 *            User name
-	 * @param address
-	 *            User address
-	 * @param phone
-	 *            User phone
-	 * @param type
-	 *            User type
+	 * @return User hash id
 	 */
-	public User(String name, String address, String phone) {
-		this.name = name;
-		this.address = address;
-		this.phone = phone;
+	@XmlElement
+	public String getToken() {
+		return token;
+	}
+
+	/**
+	 * Set token only if current token is null
+	 * 
+	 * @param token
+	 *            Token to set
+	 */
+	public void setToken(String token) {
+		if (this.token == null) {
+			this.token = token;
+		}
+	}
+
+	/**
+	 * Get user email
+	 * 
+	 * @return the email
+	 */
+	@XmlElement
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * Set user email
+	 * 
+	 * @param email
+	 *            the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	/**
@@ -118,4 +153,5 @@ public abstract class User {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+
 }

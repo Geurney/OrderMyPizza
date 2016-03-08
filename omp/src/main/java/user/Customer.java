@@ -6,6 +6,7 @@ package user;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
@@ -26,25 +27,14 @@ public class Customer extends User {
 	private List<Order> orders;
 
 	/**
-	 * Customer constructor
-	 * 
-	 * @param name
-	 *            Customer name
-	 * @param address
-	 *            Customer address
-	 * @param phone
-	 *            Customer phone
-	 */
-	public Customer(String name, String address, String phone) {
-		super(name, address, phone);
-		orders = new ArrayList<Order>();
-	}
-
-	/**
 	 * Default constructor
+	 * 
+	 * @param token
+	 *            Token
 	 */
 	public Customer() {
 		super();
+		orders = new ArrayList<Order>();
 	}
 
 	/**
@@ -52,6 +42,7 @@ public class Customer extends User {
 	 * 
 	 * @return the orders
 	 */
+	@XmlElement
 	public List<Order> getOrders() {
 		return orders;
 	}

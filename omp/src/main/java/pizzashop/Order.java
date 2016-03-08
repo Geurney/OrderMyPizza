@@ -88,6 +88,11 @@ public class Order {
 	private String status;
 
 	/**
+	 * Order number
+	 */
+	private String number;
+
+	/**
 	 * Get PizzaShop
 	 * 
 	 * @return the pizzaShop
@@ -374,6 +379,26 @@ public class Order {
 	 */
 	public void setSize(String size) {
 		this.size = size;
+	}
+
+	/**
+	 * Get order number
+	 * 
+	 * @return the number
+	 */
+	@XmlElement
+	public String getNumber() {
+		return number;
+	}
+
+	/**
+	 * Set order number
+	 * 
+	 * @param number
+	 *            the number to set
+	 */
+	public void setNumber(String number) {
+		this.number = number;
 	}
 
 }

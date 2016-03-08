@@ -1,0 +1,71 @@
+text/xml application/xml
+application/json
+
+Customer:
+Login in 
+GET Accept: text/xml http://localhost:8080/rest/customer 
+GET Accept: application/xml http://localhost:8080/rest/customer
+GET Accept: application/json http://localhost:8080/rest/customer
+curl -H "Accept: text/xml" -X GET http://localhost:8080/rest/customer/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
+curl -H "Accept: application/xml" -X GET http://localhost:8080/rest/customer/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
+curl -H "Accept: application/json" -X GET http://localhost:8080/rest/customer/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
+
+_ah admin untest
+
+POST http://localhost:8080/rest/customer 
+Content-Type: application/x-www-form-urlencoded 
+name=Geurney&address=Unviersity+Of+California%2C+Santa+Barbara&phone=123456789
+
+POST http://localhost:8080/rest/customer 
+Content-Type: application/json 
+{"name":"Geurney", "address":"UCSB","phone":"876543255"}
+
+PUT http://localhost:8080/rest/customer/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
+Content-Type: application/x-www-form-urlencoded 
+name=Geurney&address=Unviersity+Of+California%2C+Santa+Barbara&phone=123456789
+
+PUT http://localhost:8080/rest/customer/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
+Content-Type: application/json 
+{"name":"Geurney", "address":"UCSB","phone":"876543255"}
+
+curl -H "Content-type: application/json" -X PUT -d '{"name":"Geurney", "address":"UCSB","phone":"876543255"}' http://localhost:8080/rest/customer/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
+
+DELETE http://localhost:8080/rest/customer
+
+PizzaShop
+Login in as PizzaShop
+GET Accept: text/xml http://localhost:8080/rest/pizzashop
+GET Accept: application/xml http://localhost:8080/rest/pizzashop
+GET Accept: application/json http://localhost:8080/rest/pizzashop
+
+GET Accept: text/xml http://localhost:8080/rest/pizzashop/all
+GET Accept: application/xml http://localhost:8080/rest/pizzashop/all
+GET Accept: application/json http://localhost:8080/rest/pizzashop/all
+
+curl -H "Accept: text/xml" -X GET http://localhost:8080/rest/pizzashop/findbyname?name=he
+curl -H "Accept: text/xml" -X GET http://localhost:8080/rest/pizzashop/findbytoken?token=he
+curl -H "Accept: text/xml" -X GET http://localhost:8080/rest/pizzashop/all
+curl -H "Accept: text/xml" -X GET http://localhost:8080/rest/pizzashop/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
+curl -H "Accept: application/xml" -X GET http://localhost:8080/rest/pizzashop/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
+curl -H "Accept: application/json" -X GET http://localhost:8080/rest/pizzashop/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
+
+POST http://localhost:8080/rest/pizzashop
+Content-Type: application/x-www-form-urlencoded 
+name=Geurney&address=Unviersity+Of+California%2C+Santa+Barbara&phone=123456789
+
+POST http://localhost:8080/rest/pizzashop 
+Content-Type: application/json 
+{"name":"Geurney", "address":"UCSB","phone":"876543255"}
+
+PUT http://localhost:8080/rest/pizzashop/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
+Content-Type: application/x-www-form-urlencoded 
+name=Geurney&address=Unviersity+Of+California%2C+Santa+Barbara&phone=123456789
+
+PUT http://localhost:8080/rest/pizzashop/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
+Content-Type: application/json 
+{"name":"Geurney", "address":"UCSB","phone":"876543255"}
+
+curl -H "Content-type: application/json" -X PUT -d '{"name":"Geurney", "address":"UCSB","phone":"876543255"}' http://localhost:8080/rest/pizzashop/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
+
+DELETE http://localhost:8080/rest/pizzashop
+

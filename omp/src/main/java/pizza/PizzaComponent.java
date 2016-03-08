@@ -98,6 +98,34 @@ public abstract class PizzaComponent {
 	}
 
 	/**
+	 * Get specific cost
+	 * 
+	 * @param size
+	 *            Size
+	 * @return cost
+	 */
+	public double getCost(int size) {
+		if (size >= 3) {
+			return -1;
+		}
+		return costs[size];
+	}
+
+	/**
+	 * Get specific price
+	 * 
+	 * @param size
+	 *            Size
+	 * @return price
+	 */
+	public double getPrice(int size) {
+		if (size >= 3) {
+			return -1;
+		}
+		return prices[size];
+	}
+
+	/**
 	 * Set component costs
 	 * 
 	 * @param small

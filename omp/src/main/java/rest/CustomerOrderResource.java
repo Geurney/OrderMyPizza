@@ -12,7 +12,6 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -86,26 +85,13 @@ public class CustomerOrderResource {
 				order.setSize((String) entity.getProperty("size"));
 				order.setStatus((String) entity.getProperty("status"));
 				order.setPrice((double) entity.getProperty("price"));
-				response = Response.ok(order)
-						.build();
+				response = Response.ok(order).build();
 			}
 		} catch (Exception e) {
 			response = Response.status(Response.Status.NOT_FOUND)
 					.type(MediaType.TEXT_PLAIN).entity("Order not found!")
 					.build();
 		}
-
-			/*
-			 * order.setCustomer((String) result.getProperty("customer"));
-			 * order.setCrust((String) result.getProperty("crust"));
-			 * order.setCheese((String) result.getProperty("cheese"));
-			 * order.setSauce((String) result.getProperty("sauce"));
-			 * List<String> meats = (List<String>) result.getProperty("meat");
-			 * if (meats != null) { for (String meat : meats) {
-			 * order.addMeat(meat); } } List<String> vegs = (List<String>)
-			 * result.getProperty("veg"); if (vegs != null) { for (String veg :
-			 * vegs) { order.addVeg(veg); } }
-			 */
 		return response;
 	}
 
@@ -142,8 +128,9 @@ public class CustomerOrderResource {
 			return response;
 		}
 		Date date = new Date();
-		Entity order = new Entity("Order", UserUtils.obsecure(pizzashop
-				+ customer + date));
+		String number = UserUtils.obsecure(pizzashop + customer + date);
+		Entity order = new Entity("Order", number);
+		order.setProperty("number", number);
 		order.setProperty("pizzashop", pizzashop);
 		order.setProperty("customer", customer);
 		order.setProperty("crust", crust);

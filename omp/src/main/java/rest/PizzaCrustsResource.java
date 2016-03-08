@@ -15,7 +15,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
@@ -53,15 +52,13 @@ public class PizzaCrustsResource {
 	 */
 	@SuppressWarnings("unchecked")
 	@GET
-	@Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_XML,
-			MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response getPizzaCrusts() {
+	@Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML,
+			MediaType.APPLICATION_JSON })
+	public List<PizzaCrust> getPizzaCrusts() {
+		List<PizzaCrust> pizzaCrusts = new ArrayList<PizzaCrust>();
 		String hash_uid = UserUtils.getCurrentUserObscureID();
 		if (hash_uid == null) {
-			response = Response.status(Response.Status.FORBIDDEN)
-					.type(MediaType.TEXT_PLAIN).entity("You must log in!")
-					.build();
-			return response;
+			return null;
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -70,7 +67,6 @@ public class PizzaCrustsResource {
 			Entity pizzaFactory = datastore.get(key);
 			List<EmbeddedEntity> crusts = (List<EmbeddedEntity>) pizzaFactory
 					.getProperty("crust");
-			List<PizzaCrust> pc = new ArrayList<PizzaCrust>();
 			if (crusts != null) {
 				for (EmbeddedEntity e : crusts) {
 					PizzaCrust crust = new PizzaCrust();
@@ -81,29 +77,38 @@ public class PizzaCrustsResource {
 							.getProperty("prices");
 					crust.setCosts(costs);
 					crust.setPrices(prices);
-					pc.add(crust);
+					pizzaCrusts.add(crust);
 				}
 			}
-			GenericEntity<List<PizzaCrust>> list = new GenericEntity<List<PizzaCrust>>(
-					pc) {
-			};
-			response = Response.ok(list).build();
 		} catch (EntityNotFoundException e) {
-			response = Response.status(Response.Status.NOT_FOUND)
-					.type(MediaType.TEXT_PLAIN)
-					.entity("Your pizza factory is not built yet!").build();
 		}
-		return response;
+		return pizzaCrusts;
 	}
 
 	/**
-	 * Add/Update the Pizza Crust into PizzaFactory
+	 * Add/Update the Pizza Crust into PizzaFactory with form
+	 * 
+	 * @param identifier
+	 *            PizzaCrust identifier
+	 * @param description
+	 *            PizzaCrust
+	 * @param cost1
+	 *            PizzaCrust cost1
+	 * @param price1
+	 *            PizzaCrust price1
+	 * @param cost2
+	 *            PizzaCrust cost2
+	 * @param price2
+	 *            PizzaCrust price2
+	 * @param cost3
+	 *            PizzaCrust cost3
+	 * @param price3
+	 *            PizzaCrust price3
 	 */
 	@SuppressWarnings("unchecked")
 	@POST
-	@Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_XML, MediaType.TEXT_HTML })
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response newPostPizzaCrust(
+	public void newPostPizzaCrustXML(
 			@FormParam("identifier") String identifier,
 			@FormParam("description") String description,
 			@FormParam("cost1") String cost1,
@@ -111,23 +116,23 @@ public class PizzaCrustsResource {
 			@FormParam("cost2") String cost2,
 			@FormParam("price2") String price2,
 			@FormParam("cost3") String cost3, @FormParam("price3") String price3) {
-
 		String hash_uid = UserUtils.getCurrentUserObscureID();
 		if (hash_uid == null) {
-			response = Response.status(Response.Status.FORBIDDEN)
-					.type(MediaType.TEXT_PLAIN).entity("You must log in!")
-					.build();
-			return response;
+			return;
 		}
 		if (identifier == null || description == null || cost1 == null
 				|| cost2 == null || cost3 == null || price1 == null
 				|| price2 == null || price3 == null) {
-			response = Response
-					.status(Response.Status.BAD_REQUEST)
-					.type(MediaType.TEXT_PLAIN)
-					.entity("You must provide all parameters! Identifier, Description, Cost1~3, Price1~3")
-					.build();
-			return response;
+			return;
+		}
+		double ct1 = Double.valueOf(cost1);
+		double ct2 = Double.valueOf(cost2);
+		double ct3 = Double.valueOf(cost3);
+		double pc1 = Double.valueOf(price1);
+		double pc2 = Double.valueOf(price2);
+		double pc3 = Double.valueOf(price3);
+		if (ct1 < 0 || ct2 < 0 || ct3 < 0 || pc1 < 0 || pc2 < 0 || pc3 < 0) {
+			return;
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -144,24 +149,22 @@ public class PizzaCrustsResource {
 			if (crusts != null) {
 				for (EmbeddedEntity e : crusts) {
 					if (e.getProperty("identifier").equals(identifier)) {
-						response = Response.status(Response.Status.CONFLICT)
-								.type(MediaType.TEXT_PLAIN)
-								.entity("Identifier alread exists!").build();
-						return response;
+						return;
 					}
 				}
 			} else {
 				crusts = new ArrayList<EmbeddedEntity>();
 			}
 			List<Double> costs = new ArrayList<Double>();
-			costs.add(Double.valueOf(cost1));
-			costs.add(Double.valueOf(cost2));
-			costs.add(Double.valueOf(cost3));
+
+			costs.add(ct1);
+			costs.add(ct2);
+			costs.add(ct3);
 
 			List<Double> prices = new ArrayList<Double>();
-			prices.add(Double.valueOf(price1));
-			prices.add(Double.valueOf(price2));
-			prices.add(Double.valueOf(price3));
+			prices.add(pc1);
+			prices.add(pc2);
+			prices.add(pc3);
 
 			EmbeddedEntity component = new EmbeddedEntity();
 			component.setProperty("identifier", identifier);
@@ -173,8 +176,73 @@ public class PizzaCrustsResource {
 			pizzaFactory.setProperty("crust", crusts);
 			datastore.put(pizzaFactory);
 		}
-		response = Response.ok("Pizza Crusts updated successfully!").build();
-		return response;
+	}
+
+	/**
+	 * Add/Update the Pizza Crust into PizzaFactory with JSON
+	 * 
+	 * @param pizzaCrust
+	 *            PizzaCrust
+	 */
+	@SuppressWarnings("unchecked")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void newPostPizzaCrustJSON(PizzaCrust pizzaCrust) {
+		String hash_uid = UserUtils.getCurrentUserObscureID();
+		if (hash_uid == null) {
+			return;
+		}
+		String identifier = pizzaCrust.getIdentifier();
+		String description = pizzaCrust.getDescription();
+		double[] costs = pizzaCrust.getCosts();
+		double[] prices = pizzaCrust.getPrices();
+
+		if (identifier == null || description == null || costs[0] < 0
+				|| costs[1] < 0 || costs[2] < 0 || prices[0] < 0
+				|| prices[1] < 0 || prices[2] < 0) {
+			return;
+		}
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		Key key = KeyFactory.createKey("PizzaFactory", hash_uid);
+		Entity pizzaFactory = null;
+
+		try {
+			pizzaFactory = datastore.get(key);
+		} catch (EntityNotFoundException e) {
+			pizzaFactory = new Entity("PizzaFactory", hash_uid);
+		} finally {
+			List<EmbeddedEntity> crusts = (List<EmbeddedEntity>) pizzaFactory
+					.getProperty("crust");
+			if (crusts != null) {
+				for (EmbeddedEntity e : crusts) {
+					if (e.getProperty("identifier").equals(identifier)) {
+						return;
+					}
+				}
+			} else {
+				crusts = new ArrayList<EmbeddedEntity>();
+			}
+			List<Double> costs_list = new ArrayList<Double>();
+			costs_list.add(costs[0]);
+			costs_list.add(costs[1]);
+			costs_list.add(costs[2]);
+
+			List<Double> prices_list = new ArrayList<Double>();
+			prices_list.add(prices[0]);
+			prices_list.add(prices[1]);
+			prices_list.add(prices[2]);
+
+			EmbeddedEntity component = new EmbeddedEntity();
+			component.setProperty("identifier", identifier);
+			component.setProperty("description", description);
+			component.setProperty("costs", costs_list);
+			component.setProperty("prices", prices_list);
+
+			crusts.add(component);
+			pizzaFactory.setProperty("crust", crusts);
+			datastore.put(pizzaFactory);
+		}
 	}
 
 	/**
@@ -182,14 +250,10 @@ public class PizzaCrustsResource {
 	 * 
 	 */
 	@DELETE
-	@Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_XML, MediaType.TEXT_HTML })
-	public Response deletePizzaCrusts() {
+	public void deletePizzaCrusts() {
 		String hash_uid = UserUtils.getCurrentUserObscureID();
 		if (hash_uid == null) {
-			response = Response.status(Response.Status.FORBIDDEN)
-					.type(MediaType.TEXT_PLAIN).entity("You must log in!")
-					.build();
-			return response;
+			return;
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -197,13 +261,8 @@ public class PizzaCrustsResource {
 			Key key = KeyFactory.createKey("PizzaFactory", hash_uid);
 			Entity pizzaFactory = datastore.get(key);
 			pizzaFactory.removeProperty("crust");
-			response = Response.ok("Pizza Crusts are deleted!").build();
 		} catch (Exception e) {
-			response = Response.status(Response.Status.NOT_FOUND)
-					.type(MediaType.TEXT_PLAIN)
-					.entity("Pizza Factory not found!").build();
 		}
-		return response;
 	}
 
 	/**

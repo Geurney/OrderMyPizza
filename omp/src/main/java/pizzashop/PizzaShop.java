@@ -15,21 +15,8 @@ public class PizzaShop extends User {
 	private PizzaFactory pizzaFactory;
 
 	/**
-	 * Pizza Shop constructor
-	 * 
-	 * @param name
-	 *            Shop name
-	 * @param address
-	 *            Shop address
-	 * @param phone
-	 *            Shop phone
-	 */
-	public PizzaShop(String name, String address, String phone) {
-		super(name, address, phone);
-	}
-
-	/**
 	 * Default constructor
+	 * 
 	 */
 	public PizzaShop() {
 		super();
