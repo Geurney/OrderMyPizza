@@ -7,15 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
@@ -38,7 +34,8 @@ import com.google.appengine.api.datastore.KeyFactory;
  * @author Geurney
  *
  */
-public class PizzaCheesesResource {
+public class PizzaCheesesResource implements
+		PizzaComponentsResourceInterface<PizzaCheese> {
 	@Context
 	UriInfo uriInfo;
 	@Context
@@ -51,159 +48,165 @@ public class PizzaCheesesResource {
 	 * 
 	 * @return Pizza Cheeses
 	 */
-	@SuppressWarnings("unchecked")
-	@GET
-	@Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_XML,
-			MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response getPizzaCheeses() {
+	@Override
+	public List<PizzaCheese> getComponents() {
 		String hash_uid = UserUtils.getCurrentUserObscureID();
-		if (hash_uid == null) {
-			response = Response.status(Response.Status.FORBIDDEN)
-					.type(MediaType.TEXT_PLAIN).entity("You must log in!")
-					.build();
-			return response;
-		}
-		DatastoreService datastore = DatastoreServiceFactory
-				.getDatastoreService();
-		Key key = KeyFactory.createKey("PizzaFactory", hash_uid);
-		try {
-			Entity pizzaFactory = datastore.get(key);
-			List<EmbeddedEntity> cheeses = (List<EmbeddedEntity>) pizzaFactory
-					.getProperty("cheese");
-			List<PizzaCheese> pc = new ArrayList<PizzaCheese>();
-			if (cheeses != null) {
-				for (EmbeddedEntity e : cheeses) {
-					PizzaCheese cheese = new PizzaCheese();
-					cheese.setIdentifier((String) e.getProperty("identifier"));
-					cheese.setDescription((String) e.getProperty("description"));
-					List<Double> costs = (List<Double>) e.getProperty("costs");
-					List<Double> prices = (List<Double>) e
-							.getProperty("prices");
-					cheese.setCosts(costs);
-					cheese.setPrices(prices);
-					pc.add(cheese);
-				}
-			}
-			GenericEntity<List<PizzaCheese>> list = new GenericEntity<List<PizzaCheese>>(
-					pc) {
-			};
-			response = Response.ok(list).build();
-		} catch (EntityNotFoundException e) {
-			response = Response.status(Response.Status.NOT_FOUND)
-					.type(MediaType.TEXT_PLAIN)
-					.entity("Your pizza factory is not built yet!").build();
-		}
-		return response;
+		return findPizzaComponents(hash_uid);
 	}
 
 	/**
-	 * Add/Update the Pizza Cheese into PizzaFactory
+	 * Get the Pizza Cheeses with token
+	 * 
+	 * @param token
+	 *            Pizza Factory token
+	 * @return Pizza Cheeses
 	 */
-	@SuppressWarnings("unchecked")
+	@Override
+	public List<PizzaCheese> getComponents(@PathParam("token") String token) {
+		return findPizzaComponents(token);
+	}
+
+	/**
+	 * Add the Pizza Cheese into PizzaFactory. This operation fails on following
+	 * conditions:1.Token is null 2.Parameters are missing 3.costs/prices are
+	 * negative 4.Identifier already exists
+	 * 
+	 * @param token
+	 *            Pizza Factory token. Should not be null
+	 * @param newIdentifier
+	 *            PizzaComponent identifier. Should be unique.
+	 * @param description
+	 *            PizzaComponent description. Should not be null
+	 * @param cost1
+	 *            PizzaComponent small size cost. Should not be negative
+	 * @param price1
+	 *            PizzaComponent small size price. Should not be negative
+	 * @param cost2
+	 *            PizzaComponent medium size cost. Should not be negative
+	 * @param price2
+	 *            PizzaComponent medium size price. Should not be negative
+	 * @param cost3
+	 *            PizzaComponent large size cost. Should not be negative
+	 * @param price3
+	 *            PizzaComponent large size price. Should not be negative
+	 * 
+	 */
 	@POST
-	@Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_XML, MediaType.TEXT_HTML })
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response newPostPizzaCheese(
-			@FormParam("identifier") String identifier,
+	public void postPizzaComponent(
+			@FormParam("identifier") String newIdentifier,
 			@FormParam("description") String description,
 			@FormParam("cost1") String cost1,
 			@FormParam("price1") String price1,
 			@FormParam("cost2") String cost2,
 			@FormParam("price2") String price2,
 			@FormParam("cost3") String cost3, @FormParam("price3") String price3) {
-
 		String hash_uid = UserUtils.getCurrentUserObscureID();
-		if (hash_uid == null) {
-			response = Response.status(Response.Status.FORBIDDEN)
-					.type(MediaType.TEXT_PLAIN).entity("You must log in!")
-					.build();
-			return response;
-		}
-		if (identifier == null || description == null || cost1 == null
-				|| cost2 == null || cost3 == null || price1 == null
-				|| price2 == null || price3 == null) {
-			response = Response
-					.status(Response.Status.BAD_REQUEST)
-					.type(MediaType.TEXT_PLAIN)
-					.entity("You must provide all parameters! Identifier, Description, Cost1~3, Price1~3")
-					.build();
-			return response;
-		}
-		DatastoreService datastore = DatastoreServiceFactory
-				.getDatastoreService();
-		Key key = KeyFactory.createKey("PizzaFactory", hash_uid);
-		Entity pizzaFactory = null;
+		newPizzaComponent(hash_uid, newIdentifier, description, cost1, price1,
+				cost2, price2, cost3, price3);
+	}
 
-		try {
-			pizzaFactory = datastore.get(key);
-		} catch (EntityNotFoundException e) {
-			pizzaFactory = new Entity("PizzaFactory", hash_uid);
-		} finally {
-			List<EmbeddedEntity> cheeses = (List<EmbeddedEntity>) pizzaFactory
-					.getProperty("cheese");
-			if (cheeses != null) {
-				for (EmbeddedEntity e : cheeses) {
-					if (e.getProperty("identifier").equals(identifier)) {
-						response = Response.status(Response.Status.CONFLICT)
-								.type(MediaType.TEXT_PLAIN)
-								.entity("Identifier alread exists!").build();
-						return response;
-					}
-				}
-			} else {
-				cheeses = new ArrayList<EmbeddedEntity>();
-			}
-			List<Double> costs = new ArrayList<Double>();
-			costs.add(Double.valueOf(cost1));
-			costs.add(Double.valueOf(cost2));
-			costs.add(Double.valueOf(cost3));
+	/**
+	 * Add the Pizza Cheese into PizzaFactory. This operation fails on following
+	 * conditions:1.Token is null 2.Parameters are missing 3.costs/prices are
+	 * negative 4.Identifier already exists
+	 * 
+	 * @param token
+	 *            Pizza Factory token. Should not be null
+	 * @param newIdentifier
+	 *            PizzaComponent identifier. Should be unique.
+	 * @param description
+	 *            PizzaComponent description. Should not be null
+	 * @param cost1
+	 *            PizzaComponent small size cost. Should not be negative
+	 * @param price1
+	 *            PizzaComponent small size price. Should not be negative
+	 * @param cost2
+	 *            PizzaComponent medium size cost. Should not be negative
+	 * @param price2
+	 *            PizzaComponent medium size price. Should not be negative
+	 * @param cost3
+	 *            PizzaComponent large size cost. Should not be negative
+	 * @param price3
+	 *            PizzaComponent large size price. Should not be negative
+	 * 
+	 */
+	@Path("/authorize/{token}")
+	@POST
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public void postPizzaComponent(@PathParam("token") String token,
+			@FormParam("identifier") String newIdentifier,
+			@FormParam("description") String description,
+			@FormParam("cost1") String cost1,
+			@FormParam("price1") String price1,
+			@FormParam("cost2") String cost2,
+			@FormParam("price2") String price2,
+			@FormParam("cost3") String cost3, @FormParam("price3") String price3) {
+		newPizzaComponent(token, newIdentifier, description, cost1, price1,
+				cost2, price2, cost3, price3);
+	}
 
-			List<Double> prices = new ArrayList<Double>();
-			prices.add(Double.valueOf(price1));
-			prices.add(Double.valueOf(price2));
-			prices.add(Double.valueOf(price3));
+	/**
+	 * Add the Pizza Cheese into PizzaFactory with JSON. This operation fails on
+	 * following conditions:1.Token is null 2.Parameters are missing
+	 * 3.costs/prices are negative 4.Identifier already exists
+	 * 
+	 * @param component
+	 *            PizzaCheese
+	 */
+	@Override
+	public void postPizzaComponent(PizzaCheese component) {
+		String hash_uid = UserUtils.getCurrentUserObscureID();
+		double[] costs = component.getCosts();
+		double[] prices = component.getPrices();
+		newPizzaComponent(hash_uid, component.getIdentifier(),
+				component.getDescription(), String.valueOf(costs[0]),
+				String.valueOf(prices[0]), String.valueOf(costs[1]),
+				String.valueOf(prices[1]), String.valueOf(costs[2]),
+				String.valueOf(prices[2]));
+	}
 
-			EmbeddedEntity component = new EmbeddedEntity();
-			component.setProperty("identifier", identifier);
-			component.setProperty("description", description);
-			component.setProperty("costs", costs);
-			component.setProperty("prices", prices);
-
-			cheeses.add(component);
-			pizzaFactory.setProperty("cheese", cheeses);
-			datastore.put(pizzaFactory);
-		}
-		response = Response.ok("Pizza Cheeses updated successfully!").build();
-		return response;
+	/**
+	 * Add the Pizza Cheese into PizzaFactory with JSON with token for curl.
+	 * This operation fails on following conditions:1.Token is null 2.Parameters
+	 * are missing 3.costs/prices are negative 4.Identifier already exists
+	 * 
+	 * @param token
+	 *            Pizza Factory token
+	 * @param component
+	 *            PizzaCheese
+	 */
+	@Override
+	public void postPizzaComponent(@PathParam("token") String token,
+			PizzaCheese component) {
+		double[] costs = component.getCosts();
+		double[] prices = component.getPrices();
+		newPizzaComponent(token, component.getIdentifier(),
+				component.getDescription(), String.valueOf(costs[0]),
+				String.valueOf(prices[0]), String.valueOf(costs[1]),
+				String.valueOf(prices[1]), String.valueOf(costs[2]),
+				String.valueOf(prices[2]));
 	}
 
 	/**
 	 * Delete All Pizza Cheeses
 	 * 
 	 */
-	@DELETE
-	@Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_XML, MediaType.TEXT_HTML })
-	public Response deletePizzaCheeses() {
+	@Override
+	public void deletePizzaComponents() {
 		String hash_uid = UserUtils.getCurrentUserObscureID();
-		if (hash_uid == null) {
-			response = Response.status(Response.Status.FORBIDDEN)
-					.type(MediaType.TEXT_PLAIN).entity("You must log in!")
-					.build();
-			return response;
-		}
-		DatastoreService datastore = DatastoreServiceFactory
-				.getDatastoreService();
-		try {
-			Key key = KeyFactory.createKey("PizzaFactory", hash_uid);
-			Entity pizzaFactory = datastore.get(key);
-			pizzaFactory.removeProperty("cheese");
-			response = Response.ok("Pizza Cheeses are deleted!").build();
-		} catch (Exception e) {
-			response = Response.status(Response.Status.NOT_FOUND)
-					.type(MediaType.TEXT_PLAIN)
-					.entity("Pizza Factory not found!").build();
-		}
-		return response;
+		removePizzaComponents(hash_uid);
+	}
+
+	/**
+	 * Delete All Pizza Cheeses with token
+	 * 
+	 * @param token
+	 *            Pizza Factory token
+	 */
+	@Override
+	public void deletePizzaComponents(@PathParam("token") String token) {
+		removePizzaComponents(token);
 	}
 
 	/**
@@ -214,6 +217,146 @@ public class PizzaCheesesResource {
 	public PizzaCheeseResource handlePizzaCheese(
 			@PathParam("identifier") String identifier) {
 		return new PizzaCheeseResource(uriInfo, request, identifier);
+	}
+
+	/**
+	 * Get the Pizza Cheeses
+	 * 
+	 * @param token
+	 *            Pizza Factory token
+	 * @return Pizza Cheeses
+	 */
+	@SuppressWarnings("unchecked")
+	private List<PizzaCheese> findPizzaComponents(String token) {
+		if (token == null) {
+			return null;
+		}
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		Key key = KeyFactory.createKey("PizzaFactory", token);
+		List<PizzaCheese> components = null;
+		try {
+			Entity pizzaFactory = datastore.get(key);
+			List<EmbeddedEntity> list = (List<EmbeddedEntity>) pizzaFactory
+					.getProperty("cheese");
+			components = new ArrayList<PizzaCheese>();
+			if (list != null) {
+				for (EmbeddedEntity e : list) {
+					PizzaCheese component = PizzaCheeseResource
+							.entityToObject(e);
+					components.add(component);
+				}
+			}
+		} catch (EntityNotFoundException e) {
+		}
+		return components;
+	}
+
+	/**
+	 * Add the Pizza Cheese into PizzaFactory. This operation fails on following
+	 * conditions:1.Token is null 2.Parameters are missing 3.costs/prices are
+	 * negative 4.Identifier already exists
+	 * 
+	 * @param token
+	 *            Pizza Factory token. Should not be null
+	 * @param newIdentifier
+	 *            PizzaComponent identifier. Should be unique.
+	 * @param description
+	 *            PizzaComponent description. Should not be null
+	 * @param cost1
+	 *            PizzaComponent small size cost. Should not be negative
+	 * @param price1
+	 *            PizzaComponent small size price. Should not be negative
+	 * @param cost2
+	 *            PizzaComponent medium size cost. Should not be negative
+	 * @param price2
+	 *            PizzaComponent medium size price. Should not be negative
+	 * @param cost3
+	 *            PizzaComponent large size cost. Should not be negative
+	 * @param price3
+	 *            PizzaComponent large size price. Should not be negative
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	private void newPizzaComponent(String token, String identifier,
+			String description, String cost1, String price1, String cost2,
+			String price2, String cost3, String price3) {
+		if (token == null) {
+			return;
+		}
+		if (identifier == null || description == null || cost1 == null
+				|| cost2 == null || cost3 == null || price1 == null
+				|| price2 == null || price3 == null) {
+			return;
+		}
+		double ct1 = Double.valueOf(cost1);
+		double ct2 = Double.valueOf(cost2);
+		double ct3 = Double.valueOf(cost3);
+		double pc1 = Double.valueOf(price1);
+		double pc2 = Double.valueOf(price2);
+		double pc3 = Double.valueOf(price3);
+		if (ct1 < 0 || ct2 < 0 || ct3 < 0 || pc1 < 0 || pc2 < 0 || pc3 < 0) {
+			return;
+		}
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		Key key = KeyFactory.createKey("PizzaFactory", token);
+		Entity pizzaFactory = null;
+		try {
+			pizzaFactory = datastore.get(key);
+			List<EmbeddedEntity> list = (List<EmbeddedEntity>) pizzaFactory
+					.getProperty("cheese");
+			if (list == null) {
+				list = new ArrayList<EmbeddedEntity>();
+			} else {
+				for (EmbeddedEntity e : list) {
+					String id = (String) e.getProperty("identifier");
+					if (id != null && id.equals(identifier)) {
+						return;
+					}
+				}
+			}
+			List<Double> costs = new ArrayList<Double>();
+			costs.add(ct1);
+			costs.add(ct2);
+			costs.add(ct3);
+
+			List<Double> prices = new ArrayList<Double>();
+			prices.add(pc1);
+			prices.add(pc2);
+			prices.add(pc3);
+
+			EmbeddedEntity component = new EmbeddedEntity();
+			component.setProperty("identifier", identifier);
+			component.setProperty("description", description);
+			component.setProperty("costs", costs);
+			component.setProperty("prices", prices);
+
+			list.add(component);
+			pizzaFactory.setProperty("cheese", list);
+			datastore.put(pizzaFactory);
+		} catch (EntityNotFoundException e) {
+		}
+	}
+
+	/**
+	 * Delete Pizza Component
+	 * 
+	 * @param token
+	 *            Pizza Factory token
+	 */
+	private void removePizzaComponents(String token) {
+		if (token == null) {
+			return;
+		}
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		Key key = KeyFactory.createKey("PizzaFactory", token);
+		try {
+			Entity pizzaFactory = datastore.get(key);
+			pizzaFactory.removeProperty("cheese");
+		} catch (Exception e) {
+		}
 	}
 
 }

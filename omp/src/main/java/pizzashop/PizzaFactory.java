@@ -22,6 +22,10 @@ import pizza.PizzaToppingVeg;
  */
 @XmlRootElement
 public class PizzaFactory {
+	/**
+	 * Pizza Factory identifier, same as its Pizza Shop
+	 */
+	private String identifier;
 
 	/**
 	 * Available crusts
@@ -57,6 +61,26 @@ public class PizzaFactory {
 		sauces = new HashMap<String, PizzaSauce>();
 		meats = new HashMap<String, PizzaToppingMeat>();
 		vegs = new HashMap<String, PizzaToppingVeg>();
+	}
+
+	/**
+	 * Get identifier
+	 * 
+	 * @return the identifier
+	 */
+	@XmlElement
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	/**
+	 * Set identifier
+	 * 
+	 * @param identifier
+	 *            the identifier to set
+	 */
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
 	}
 
 	/**

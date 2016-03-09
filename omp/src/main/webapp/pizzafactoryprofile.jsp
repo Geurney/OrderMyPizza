@@ -36,7 +36,7 @@
 					pageContext.setAttribute("user_type", "pizzashop", PageContext.APPLICATION_SCOPE);
 			%>
 			<ul>
-				<li>${fn:escapeXml(user.nickname)}</li>
+				<li><a href="/pizzashopprofile">${fn:escapeXml(user.nickname)}</a></li>
 				<li><a href="<%=userService.createLogoutURL(request.getRequestURI())%>">Sign out</a></li>
 				<%
 					} else {
@@ -78,21 +78,10 @@
 					List<EmbeddedEntity> topping_veg = (List<EmbeddedEntity>) pizzaFactory
 							.getProperty("topping_veg");
 				} catch (EntityNotFoundException e) {
-					
 				}
 		}
     %>
       		
-    <form action="/pizzafactoryprofile" method="post">
-      <input type="text" name="type">
-      <input type="text" name="description">
-      <input type="text" name="cost1">
-      <input type="text" name="cost2">
-      <input type="text" name="cost3">
-      <input type="text" name="price1">
-      <input type="text" name="price2">
-      <input type="text" name="price3">
-      <input type="submit">
-    </form>
+    <a href="/factory.html">Add a component</a>	
   </body>
 </html>

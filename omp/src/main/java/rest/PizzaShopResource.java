@@ -54,60 +54,30 @@ public class PizzaShopResource {
 	/**
 	 * Get the current pizzashop's profile
 	 * 
-	 * @return Pizzashop profile
+	 * @return PizzaShop profile
 	 */
 	@GET
 	@Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML,
 			MediaType.APPLICATION_JSON })
 	public PizzaShop getCurrentPizashop() {
-		PizzaShop pizzaShop = null;
 		String hash_uid = UserUtils.getCurrentUserObscureID();
-		if (hash_uid == null) {
-			return null;
-		}
-		DatastoreService datastore = DatastoreServiceFactory
-				.getDatastoreService();
-		Key key = KeyFactory.createKey("PizzaShop", hash_uid);
-		try {
-			Entity entity = datastore.get(key);
-			pizzaShop = new PizzaShop();
-			pizzaShop.setToken(hash_uid);
-			pizzaShop.setEmail((String) entity.getProperty("email"));
-			pizzaShop.setName((String) entity.getProperty("name"));
-			pizzaShop.setAddress((String) entity.getProperty("address"));
-			pizzaShop.setPhone((String) entity.getProperty("phone"));
-		} catch (EntityNotFoundException e) {
-		}
-		return pizzaShop;
+		return findPizzaShop(hash_uid);
 	}
-	
+
 	/**
 	 * Get the pizzashop's profile with token
 	 * 
+	 * @param token
+	 *            Pizza Shop token
 	 * @return Pizzashop profile
 	 */
-	@Path("{token}")
+	@Path("/authorize/{token}")
 	@GET
 	@Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML,
 			MediaType.APPLICATION_JSON })
 	public PizzaShop getPizashop(@PathParam("token") String token) {
-		PizzaShop pizzaShop = null;
-		DatastoreService datastore = DatastoreServiceFactory
-				.getDatastoreService();
-		Key key = KeyFactory.createKey("PizzaShop", token);
-		try {
-			Entity entity = datastore.get(key);
-			pizzaShop = new PizzaShop();
-			pizzaShop.setToken(token);
-			pizzaShop.setEmail((String) entity.getProperty("email"));
-			pizzaShop.setName((String) entity.getProperty("name"));
-			pizzaShop.setAddress((String) entity.getProperty("address"));
-			pizzaShop.setPhone((String) entity.getProperty("phone"));
-		} catch (EntityNotFoundException e) {
-		}
-		return pizzaShop;
+		return findPizzaShop(token);
 	}
-
 
 	/**
 	 * Get all pizzashops
@@ -116,8 +86,8 @@ public class PizzaShopResource {
 	 */
 	@Path("/all")
 	@GET
-	@Produces({MediaType.TEXT_XML,
-			MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML,
+			MediaType.APPLICATION_JSON })
 	public List<PizzaShop> getAllPizashops() {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -125,11 +95,7 @@ public class PizzaShopResource {
 		PreparedQuery pq = datastore.prepare(q);
 		List<PizzaShop> pizzashops = new ArrayList<PizzaShop>();
 		for (Entity result : pq.asIterable()) {
-			PizzaShop pizzaShop = new PizzaShop();
-			pizzaShop.setToken(result.getKey().getName());
-			pizzaShop.setName((String) result.getProperty("name"));
-			pizzaShop.setAddress((String) result.getProperty("address"));
-			pizzaShop.setPhone((String) result.getProperty("phone"));
+			PizzaShop pizzaShop = entityToPizzaShop(result);
 			pizzashops.add(pizzaShop);
 		}
 		return pizzashops;
@@ -158,44 +124,38 @@ public class PizzaShopResource {
 		PreparedQuery pq = datastore.prepare(q);
 		List<PizzaShop> pizzashops = new ArrayList<PizzaShop>();
 		for (Entity result : pq.asIterable()) {
-			PizzaShop pizzaShop = new PizzaShop();
-			pizzaShop.setToken(result.getKey().getName());
-			pizzaShop.setName((String) result.getProperty("name"));
-			pizzaShop.setAddress((String) result.getProperty("address"));
-			pizzaShop.setPhone((String) result.getProperty("phone"));
+			PizzaShop pizzaShop = entityToPizzaShop(result);
 			pizzashops.add(pizzaShop);
 		}
 		return pizzashops;
 	}
 
 	/**
-	 * Get PizzaShop by token
+	 * Get PizzaShop by identifier
 	 * 
-	 * @param token
-	 *            PizzaShop Hash ID
+	 * @param identifier
+	 *            PizzaShop identifier
 	 * @return PizzaShop
 	 */
-	@Path("/findbytoken/{token}")
+	@Path("/findbyidentifier/{identifier}")
 	@GET
 	@Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML,
 			MediaType.APPLICATION_JSON })
-	public PizzaShop getPizzaShopByToken(@PathParam("token") String token) {
-		if(token == null) {
+	public PizzaShop getPizzaShopByToken(
+			@PathParam("identifier") String identifier) {
+		if (identifier == null) {
 			return null;
 		}
-		PizzaShop pizzaShop = null;
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
-		Key key = KeyFactory.createKey("PizzaShop", token);
-		try {
-			Entity entity = datastore.get(key);
-			pizzaShop = new PizzaShop();
-			pizzaShop.setToken(token);
-			pizzaShop.setEmail((String) entity.getProperty("email"));
-			pizzaShop.setName((String) entity.getProperty("name"));
-			pizzaShop.setAddress((String) entity.getProperty("address"));
-			pizzaShop.setPhone((String) entity.getProperty("phone"));
-		} catch (EntityNotFoundException e) {
+		Filter identifierFilter = new FilterPredicate("identifier",
+				FilterOperator.EQUAL, identifier);
+		Query q = new Query("PizzaShop").setFilter(identifierFilter);
+		PreparedQuery pq = datastore.prepare(q);
+		Entity entity = pq.asSingleEntity();
+		PizzaShop pizzaShop = null;
+		if (entity != null) {
+			pizzaShop = entityToPizzaShop(entity);
 		}
 		return pizzaShop;
 	}
@@ -203,6 +163,8 @@ public class PizzaShopResource {
 	/**
 	 * Add a PizzaShop into datastore with form
 	 * 
+	 * @param identifier
+	 *            PizzaShop identifier
 	 * @param name
 	 *            PizzaShop name
 	 * @param address
@@ -212,10 +174,11 @@ public class PizzaShopResource {
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public void newPizzaShopXML(@FormParam("name") String name,
+	public void postPizzaShop(@FormParam("identifier") String identifier,
+			@FormParam("name") String name,
 			@FormParam("address") String address,
 			@FormParam("phone") String phone) {
-		newPizzaShop(name, address, phone);
+		newPizzaShop(identifier, name, address, phone);
 	}
 
 	/**
@@ -226,16 +189,20 @@ public class PizzaShopResource {
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void newPizzaShopJSON(PizzaShop pizzaShop) {
+	public void postPizzaShop(PizzaShop pizzaShop) {
 		if (pizzaShop != null) {
-			newPizzaShop(pizzaShop.getName(), pizzaShop.getAddress(),
-					pizzaShop.getPhone());
+			newPizzaShop(pizzaShop.getIdentifier(), pizzaShop.getName(),
+					pizzaShop.getAddress(), pizzaShop.getPhone());
 		}
 	}
 
 	/**
 	 * Update a PizzaShop with form using token
 	 * 
+	 * @param token
+	 *            PizzaShop token
+	 * @param identifier
+	 *            PizzaShop identifier
 	 * @param name
 	 *            PizzaShop name
 	 * @param address
@@ -243,29 +210,33 @@ public class PizzaShopResource {
 	 * @param phone
 	 *            PizzaShop phone
 	 */
-	@Path("{token}")
+	@Path("/authorize/{token}")
 	@PUT
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public void updatePizzaShopXML(@PathParam("token") String token,
+			@FormParam("identifier") String identifier,
 			@FormParam("name") String name,
 			@FormParam("address") String address,
 			@FormParam("phone") String phone) {
-		updatePizzaShop(token, name, address, phone);
+		updatePizzaShop(token, identifier, name, address, phone);
 	}
 
 	/**
 	 * Update PizzaShop into datastore with JSON using token
 	 * 
+	 * @param token
+	 *            PizzaShop token
 	 * @param pizzaShop
 	 *            PizzaShop
 	 */
-	@Path("{token}")
+	@Path("/authorize/{token}")
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void updatePizzaShopJSON(@PathParam("token") String token,
 			PizzaShop pizzaShop) {
 		if (pizzaShop != null) {
-			updatePizzaShop(token, pizzaShop.getName(), pizzaShop.getAddress(),
+			updatePizzaShop(token, pizzaShop.getIdentifier(),
+					pizzaShop.getName(), pizzaShop.getAddress(),
 					pizzaShop.getPhone());
 		}
 	}
@@ -276,35 +247,45 @@ public class PizzaShopResource {
 	 */
 	@DELETE
 	public void deletePizzaShop() {
-		String hash_uid = UserUtils.getCurrentUserObscureID();
-		if (hash_uid == null) {
-			return;
-		}
-		DatastoreService datastore = DatastoreServiceFactory
-				.getDatastoreService();
-		try {
-			Key key = KeyFactory.createKey("PizzaShop", hash_uid);
-			datastore.delete(key);
-		} catch (Exception e) {
-		}
+		String token = UserUtils.getCurrentUserObscureID();
+		removePizzaShop(token);
 	}
 
 	/**
-	 * Delete current PizzaShop with token
+	 * Delete PizzaShop with token for curl
 	 * 
+	 * @param token
+	 *            PizzaShop token
 	 */
-	@Path("/findbytoken/{token}")
+	@Path("/authorize/{token}")
 	@DELETE
 	public void deletePizzaShop(@PathParam("token") String token) {
+		removePizzaShop(token);
+	}
+
+	/**
+	 * Get the pizzashop's profile with token
+	 * 
+	 * @param token
+	 *            Pizza Shop token
+	 * @return Pizzashop profile
+	 */
+	private PizzaShop findPizzaShop(String token) {
+		if (token == null) {
+			return null;
+		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
+		Key key = KeyFactory.createKey("PizzaShop", token);
+		PizzaShop pizzaShop = null;
 		try {
-			Key key = KeyFactory.createKey("PizzaShop", token);
-			datastore.delete(key);
-		} catch (Exception e) {
+			Entity entity = datastore.get(key);
+			pizzaShop = entityToPizzaShop(entity);
+		} catch (EntityNotFoundException e) {
 		}
+		return pizzaShop;
 	}
-	
+
 	/**
 	 * Create/Update new PizzaShop
 	 * 
@@ -315,7 +296,8 @@ public class PizzaShopResource {
 	 * @param phone
 	 *            PizzaShop phone
 	 */
-	private void newPizzaShop(String name, String address, String phone) {
+	private void newPizzaShop(String identifier, String name, String address,
+			String phone) {
 		String hash_uid = UserUtils.getCurrentUserObscureID();
 		if (hash_uid == null) {
 			return;
@@ -330,6 +312,9 @@ public class PizzaShopResource {
 			entity = new Entity("PizzaShop", hash_uid);
 			entity.setProperty("email", UserUtils.getCurrentUserEmail());
 		} finally {
+			if (identifier != null) {
+				entity.setProperty("identifier", identifier);
+			}
 			if (name != null) {
 				entity.setProperty("name", name);
 			}
@@ -348,6 +333,8 @@ public class PizzaShopResource {
 	 * 
 	 * @param token
 	 *            PizzaShop Hash ID
+	 * @param identifier
+	 *            PizzaShop identifier
 	 * @param name
 	 *            PizzaShop name
 	 * @param address
@@ -355,13 +342,16 @@ public class PizzaShopResource {
 	 * @param phone
 	 *            PizzaShop phone
 	 */
-	private void updatePizzaShop(String token, String name, String address,
-			String phone) {
+	private void updatePizzaShop(String token, String identifier, String name,
+			String address, String phone) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Key key = KeyFactory.createKey("PizzaShop", token);
 		try {
 			Entity entity = datastore.get(key);
+			if (identifier != null) {
+				entity.setProperty("identifier", identifier);
+			}
 			if (name != null) {
 				entity.setProperty("name", name);
 			}
@@ -376,4 +366,43 @@ public class PizzaShopResource {
 		}
 	}
 
+	/**
+	 * Delete PizzaShop
+	 * 
+	 * @param token
+	 *            PizzaShop token
+	 */
+	private void removePizzaShop(String token) {
+		if (token == null) {
+			return;
+		}
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		try {
+			Key key = KeyFactory.createKey("PizzaShop", token);
+			datastore.delete(key);
+		} catch (Exception e) {
+		}
+	}
+
+	/**
+	 * Convert entity to PizzaShop
+	 * 
+	 * @param entity
+	 *            Entity
+	 * @return PizzaShop
+	 */
+	public static PizzaShop entityToPizzaShop(Entity entity) {
+		if (entity == null || !entity.getKind().equals("PizzaShop")) {
+			return null;
+		}
+		PizzaShop pizzaShop = new PizzaShop();
+		pizzaShop.setIdentifier((String) entity.getProperty("identifier"));
+		pizzaShop.setToken((String) entity.getKey().getName());
+		pizzaShop.setEmail((String) entity.getProperty("email"));
+		pizzaShop.setName((String) entity.getProperty("name"));
+		pizzaShop.setAddress((String) entity.getProperty("address"));
+		pizzaShop.setPhone((String) entity.getProperty("phone"));
+		return pizzaShop;
+	}
 }

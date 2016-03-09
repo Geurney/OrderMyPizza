@@ -1,55 +1,125 @@
-	<html>
-	
-	<body>
-		<p>Place Order</p>
-		<form action="/OrderDatastoreServlet" method="post">
-			<input type="radio" name="size" value="small" checked> Small<br>
-			<input type="radio" name="size" value="medium"> Medium<br>
-			<input type="radio" name="size" value="large"> Large<br>
-			<select name="crust">
-				<option value="crust1">Crust1</option>
-				<option value="crust2">Crust2</option>
-				<option value="crust3">Crust3</option>
-			</select> <br>
-			<input type="text" name="cheese"><br>
-			<input type="text" name="sauce"><br>
-			<div id="topping_meat">
-			<input type="text" name="topping_meat">
+
+<html>
+<body>
+	<p>Place Order</p>
+	<form action="/OrderDatastoreServlet" method="post">
+		<input type="radio" name="size" value="small" checked> Small<br />
+		<input type="radio" name="size" value="medium"> Medium<br />
+		<input type="radio" name="size" value="large"> Large<br />
+		Select your crust: <select name="crust">
+			<option value="crust1">Crust1</option>
+			<option value="crust2">Crust2</option>
+			<option value="crust3">Crust3</option>
+		</select> <br /> <br /> Select your cheese: <select name="cheese">
+			<option value="cheese1">Cheese1</option>
+			<option value="cheese2">Cheese2</option>
+			<option value="cheese3">Cheese3</option>
+		</select> <br /> <br /> Select your sauce: <select name="sauce">
+			<option value="sauce1">Sauce1</option>
+			<option value="sauce2">Sauce2</option>
+			<option value="sauce3">Sauce3</option>
+		</select> <br /> <br />
+		<div id="topping_meat">
+			<div id="topping_meat1">
+				Select your meat topping: <select name="meat1">
+					<option value="no_meat">None</option>
+					<option value="meat_topping1">Meat1</option>
+					<option value="meat_topping2">Meat2</option>
+					<option value="meat_topping3">Meat3</option>
+				</select> <br />
 			</div>
-			<button value="Add another text input" onclick="addInput('topping_meat');">Add</button><br> 
-			<div id="topping_veg">
-			<input type="text" name="topping_veg">
+		</div>
+		<br />
+		<div id="topping_veg">
+			<div id="topping_veg1">
+				Select your vegetable topping: <select name="veg1">
+					<option value="no_veg">None</option>
+					<option value="veg_topping1">Veg1</option>
+					<option value="veg_topping2">Veg2</option>
+					<option value="veg_topping3">Veg3</option>
+				</select> <br />
 			</div>
-			<button value="Add another text input" onclick="addInput('topping_veg');">Add</button><br>
-			<input type="text" name="name"><br>
-			<input type="text" name="address"><br>
-			<input type="text" name="phone"><br>
-			<input type="submit">
-		</form>
-		
-	
-		<script>
-		var counter = 1;
-		var limit = 5;
-		function addInput(divName){
-		     if (counter == limit)  {
-		          alert("You have reached the limit of adding " + counter + " inputs");
-		     }
-		     else {
-		 		/* var newp = document.createElement('P');
-		       	var t = document.createTextNode("Delete successfully!");
-		       	newp.appendChild(t);
-		       	document.body.appendChild(t); */
-		          var newdiv = document.createElement('div');
-		          newdiv.innerHTML = divName + (counter + 1) + " <br><input type='text' name='topping_meat'>";
-		          document.getElementById(divName).appendChild(newdiv);
-		          counter++;
-		     }
+		</div>
+		<input type="submit">
+	</form>
+	<button value="Add another meat topping"
+		onclick="addTopping('topping_meat');">Add another meat
+		topping</button>
+	<button value="Remove last meat topping"
+		onclick="removeTopping('topping_meat');">Remove last meat
+		topping</button>
+	<br />
+	<button value="Add another veg topping"
+		onclick="addTopping('topping_veg');">Add another vegetable
+		topping</button>
+	<button value="Remove last veg topping"
+		onclick="removeTopping('topping_veg');">Remove last vegetable
+		topping</button>
+	<br />
+
+	<script>
+		var counter_meat = 1;
+		var counter_veg = 1;
+		var limit = 3;
+		function addTopping(divName) {
+			if (divName == 'topping_meat') {
+				if (counter_meat >= limit) {
+					alert("You have reached the limit of adding "
+							+ counter_meat + " meat toppings!");
+				} else {
+					counter_meat++;
+					var newDiv = document.createElement('div');
+					newDiv.setAttribute("id", divName + counter_meat);
+					var num = 'second';
+					if (counter_meat == 3) {
+						num = 'third';
+					}
+					newDiv.innerHTML = "Select your "
+							+ num
+							+ " meat topping:<select name='meat" + counter_meat + "'><option value='no_meat'>None</option><option value='meat_topping1'>Meat1</option><option value='meat_topping2'>Meat2</option><option value='meat_topping3'>Meat3</option></select><br />";
+					document.getElementById(divName).appendChild(newDiv);
+				}
+			} else if (divName == 'topping_veg') {
+				if (counter_veg >= limit) {
+					alert("You have reached the limit of adding " + counter_veg
+							+ " vegetable toppings!");
+				} else {
+					counter_veg++;
+					var newDiv = document.createElement('div');
+					newDiv.setAttribute("id", divName + counter_veg);
+					var num = 'second';
+					if (counter_veg == 3) {
+						num = 'third';
+					}
+					newDiv.innerHTML = "Select your "
+							+ num
+							+ " vegetable topping:<select name='veg" + counter_veg + "'><option value='no_veg'>None</option><option value='veg_topping1'>Veg1</option><option value='veg_topping2'>Veg2</option><option value='veg_topping3'>Veg3</option></select><br />";
+					document.getElementById(divName).appendChild(newDiv);
+				}
+			}
+		}
+		function removeTopping(divName) {
+			if (divName == 'topping_meat') {
+				if (counter_meat == 1) {
+					alert("You can select None for meat toppings!");
+				} else {
+					var newDiv = document
+							.getElementById(divName + counter_meat);
+					newDiv.parentNode.removeChild(newDiv);
+					counter_meat--;
+				}
+			} else if (divName == 'topping_veg') {
+				if (counter_veg == 1) {
+					alert("You can select None for vegetable toppings!");
+				} else {
+					var newDiv = document.getElementById(divName + counter_veg);
+					newDiv.parentNode.removeChild(newDiv);
+					counter_veg--;
+				}
+			}
 		}
 	</script>
-	
-	
-	
-	</body>
-	
-	</html>
+
+</body>
+
+</html>

@@ -35,6 +35,7 @@
 			%>
 			<ul>
 				<li>${fn:escapeXml(user.nickname)}</li>
+				<li><a href="/pizzafactoryprofile.jsp">My PizzaFactory</a></li>
 				<li><a href="<%=userService.createLogoutURL(request.getRequestURI())%>">Sign out</a></li>
 				<%
 					} else {
@@ -65,8 +66,10 @@
 			String name = null;
 			String address = null;
 			String phone = null;
+			String identifier = null;
 			try {
 				pizzaShop = datastore.get(key);
+				identifier = (String) pizzaShop.getProperty("identifier");
 				name = (String) pizzaShop.getProperty("name");
 				address = (String) pizzaShop.getProperty("address");
 				phone = (String) pizzaShop.getProperty("phone");
@@ -79,8 +82,9 @@
 	<%
 			} finally {
 	%>
-	<form action="/pizzashopprofile" method="post">
+	<form action="/rest/pizzashop" method="post">
 		<fieldset id="profile_fieldset" <%if (!(name == null || phone == null || address == null)) {%> disabled <%}%>>
+		    Identifier: <input type="text" name="identifier" <%if (identifier != null) {%> value="<%=identifier%>" <%}%>><br>
 			Name: <input type="text" name="name" <%if (name != null) {%> value="<%=name%>" <%}%>><br>
 			Address: <input type="text" name="address" <%if (address != null) {%> value="<%=address%>" <%}%>><br>
 			Phone: <input type="text" name="phone" <%if (phone != null) {%> value="<%=phone%>" <%}%>><br>

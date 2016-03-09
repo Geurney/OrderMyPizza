@@ -1,5 +1,6 @@
 package pizzashop;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
@@ -9,6 +10,11 @@ import user.User;
 @XmlRootElement
 @XmlSeeAlso(User.class)
 public class PizzaShop extends User {
+	/**
+	 * Pizza Shop identifier
+	 */
+	private String identifier;
+
 	/**
 	 * Pizza Factory
 	 */
@@ -20,6 +26,26 @@ public class PizzaShop extends User {
 	 */
 	public PizzaShop() {
 		super();
+	}
+
+	/**
+	 * Get pizza shop identifier
+	 * 
+	 * @return the identifier
+	 */
+	@XmlElement
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	/**
+	 * Set pizza shop identifier
+	 * 
+	 * @param identifier
+	 *            the identifier to set
+	 */
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
 	}
 
 	/**

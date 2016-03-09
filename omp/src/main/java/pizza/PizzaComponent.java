@@ -47,8 +47,12 @@ public abstract class PizzaComponent {
 	 * Default Constructor
 	 */
 	public PizzaComponent() {
-		costs = new double[PizzaComponentSize.values().length];
-		prices = new double[PizzaComponentSize.values().length];
+		costs = new double[3];
+		prices = new double[3];
+		for (int i = 0; i < 3; i++) {
+			costs[i] = -1;
+			prices[i] = -1;
+		}
 	}
 
 	/**
@@ -105,7 +109,7 @@ public abstract class PizzaComponent {
 	 * @return cost
 	 */
 	public double getCost(int size) {
-		if (size >= 3) {
+		if (size >= 3 || size < 0) {
 			return -1;
 		}
 		return costs[size];
@@ -119,7 +123,7 @@ public abstract class PizzaComponent {
 	 * @return price
 	 */
 	public double getPrice(int size) {
-		if (size >= 3) {
+		if (size >= 3 || size < 0) {
 			return -1;
 		}
 		return prices[size];
@@ -148,6 +152,9 @@ public abstract class PizzaComponent {
 	 *            Costs
 	 */
 	public void setCosts(List<Double> costs) {
+		if (costs == null || costs.size() != 3) {
+			return;
+		}
 		this.costs[0] = costs.get(0);
 		this.costs[1] = costs.get(1);
 		this.costs[2] = costs.get(2);
@@ -220,6 +227,9 @@ public abstract class PizzaComponent {
 	 *            Prices
 	 */
 	public void setPrices(List<Double> prices) {
+		if (prices == null || prices.size() != 3) {
+			return;
+		}
 		this.prices[0] = prices.get(0);
 		this.prices[1] = prices.get(1);
 		this.prices[2] = prices.get(2);
