@@ -28,6 +28,7 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.GeoPt;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
@@ -35,6 +36,8 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.datastore.Query.GeoRegion.Circle;
+import com.google.appengine.api.datastore.Query.StContainsFilter;
 
 /**
  * Pizzashop REST service
@@ -50,6 +53,49 @@ public class PizzaShopResource {
 	Request request;
 	@Context
 	Response response;
+
+	@POST
+	@Path("/map/init")
+	public void newTestPizzaShop() {
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		
+		// Center : 34.419012,-119.8566853 Stroker Field
+		String[] identifiers = {"Tower", "AppFoilo", "AppFoile"};
+		String[] names = {"Stroke Tower", "Harder Stadium", "COmpany"};
+		String[] phones = {"1111","2222","3333"};
+		String[] locations = {"34.4125511,-119.8486431","34.4201257,-119.8547056","34.4340806,-119.8640424"};
+		for (int i = 0; i < 3; i++) {
+			Entity entity = new Entity("PizzaShopTest");
+			entity.setProperty("identifier", identifiers[i]);
+			entity.setProperty("name", names[i]);
+			entity.setProperty("phone", phones[i]);
+			entity.setProperty("location", locations[i]);
+			datastore.put(entity);
+		}
+	}
+	
+	@Path("/map/{latlnt}")
+	@GET
+	@Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML,
+		MediaType.APPLICATION_JSON })
+	public List<PizzaShop> getShops(@PathParam("latlnt") String latlnt) {
+		String[] latlnt_split = latlnt.split(",");
+		GeoPt center = new GeoPt(Float.valueOf(latlnt_split[0]),
+				Float.valueOf(latlnt_split[1]));
+		double radius = 1000;
+		Filter f = new StContainsFilter("location", new Circle(center, radius));
+		Query q = new Query("PizzaShopTest").setFilter(f);
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		PreparedQuery pq = datastore.prepare(q);
+		List<PizzaShop> pizzashops = new ArrayList<PizzaShop>();
+		for (Entity result : pq.asIterable()) {
+			PizzaShop pizzaShop = entityToPizzaShop(result);
+			pizzashops.add(pizzaShop);
+		}
+		return pizzashops;
+	}
 
 	/**
 	 * Get the current pizzashop's profile

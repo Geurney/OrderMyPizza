@@ -5,6 +5,8 @@ package user;
 
 import javax.xml.bind.annotation.XmlElement;
 
+import com.google.appengine.api.datastore.GeoPt;
+
 /**
  * User abstract class
  * 
@@ -39,6 +41,16 @@ public abstract class User {
 	 * User Address
 	 */
 	private String address;
+
+	/**
+	 * Latitude
+	 */
+	private float latitude;
+
+	/**
+	 * longtitude
+	 */
+	private float longtitude;
 
 	/**
 	 * User phone
@@ -152,6 +164,44 @@ public abstract class User {
 	 */
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	/**
+	 * Get latitude
+	 * 
+	 * @return the latitude
+	 */
+	public float getLatitude() {
+		return latitude;
+	}
+
+	/**
+	 * Set latitude
+	 * 
+	 * @param latitude
+	 *            the latitude to set
+	 */
+	public void setLatitude(float latitude) {
+		this.latitude = latitude;
+	}
+
+	/**
+	 * Get longtitude
+	 * 
+	 * @return the longtitude
+	 */
+	public float getLongtitude() {
+		return longtitude;
+	}
+
+	/**
+	 * Set longtitude
+	 * 
+	 * @param longtitude
+	 *            the longtitude to set
+	 */
+	public void setLongtitude(float longtitude) {
+		this.longtitude = longtitude;
 	}
 
 }

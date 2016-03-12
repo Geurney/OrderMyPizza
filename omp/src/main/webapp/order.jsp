@@ -88,7 +88,7 @@
 			if (entity == null) {
 				response.sendRedirect("/ordermypizza.jsp");
 			}
-			PizzaFactory pizzaFactory = PizzaFactoryResource.entityToPizzaFactory(entity);
+			PizzaFactory pizzaFactory = PizzaFactoryResource.entityToObject(entity);
 			List<PizzaCrust> crusts = pizzaFactory.getCrusts();
 			List<PizzaCheese> cheeses = pizzaFactory.getCheeses();
 			List<PizzaSauce> sauces = pizzaFactory.getSauces();
