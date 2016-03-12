@@ -70,7 +70,9 @@ public class PizzaShopResource {
 			entity.setProperty("identifier", identifiers[i]);
 			entity.setProperty("name", names[i]);
 			entity.setProperty("phone", phones[i]);
-			entity.setProperty("location", locations[i]);
+			String[] location_split = locations[i].split(",");
+			entity.setProperty("location", new GeoPt(Float.valueOf(location_split[0]),
+					Float.valueOf(location_split[1])));
 			datastore.put(entity);
 		}
 	}
@@ -81,6 +83,7 @@ public class PizzaShopResource {
 		MediaType.APPLICATION_JSON })
 	public List<PizzaShop> getShops(@PathParam("latlnt") String latlnt) {
 		String[] latlnt_split = latlnt.split(",");
+		System.out.println("HEre!! " + latlnt_split[0] + "    "+latlnt_split[1]);
 		GeoPt center = new GeoPt(Float.valueOf(latlnt_split[0]),
 				Float.valueOf(latlnt_split[1]));
 		double radius = 1000;
@@ -91,8 +94,9 @@ public class PizzaShopResource {
 		PreparedQuery pq = datastore.prepare(q);
 		List<PizzaShop> pizzashops = new ArrayList<PizzaShop>();
 		for (Entity result : pq.asIterable()) {
-			PizzaShop pizzaShop = entityToPizzaShop(result);
-			pizzashops.add(pizzaShop);
+			System.out.println(result.getProperty("name"));
+			//PizzaShop pizzaShop = entityToPizzaShop(result);
+			//pizzashops.add(pizzaShop);
 		}
 		return pizzashops;
 	}
