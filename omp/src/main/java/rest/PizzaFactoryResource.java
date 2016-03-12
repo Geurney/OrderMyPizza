@@ -208,7 +208,7 @@ public class PizzaFactoryResource {
 		PizzaFactory pizzaFactory = null;
 		try {
 			Entity entity = datastore.get(key);
-			pizzaFactory = entityToPizzaFactory(entity);
+			pizzaFactory = entityToObject(entity);
 		} catch (EntityNotFoundException e) {
 		}
 		return pizzaFactory;
@@ -274,7 +274,7 @@ public class PizzaFactoryResource {
 	 * @return PizzaShop
 	 */
 	@SuppressWarnings("unchecked")
-	public static PizzaFactory entityToPizzaFactory(Entity entity) {
+	public static PizzaFactory entityToObject(Entity entity) {
 		if (entity == null || !entity.getKind().equals("PizzaFactory")) {
 			return null;
 		}

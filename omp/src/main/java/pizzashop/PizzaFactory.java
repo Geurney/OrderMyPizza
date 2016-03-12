@@ -51,7 +51,7 @@ public class PizzaFactory {
 	 * Available vegetable toppings
 	 */
 	private HashMap<String, PizzaToppingVeg> vegs;
-
+	
 	/**
 	 * Default Constructor
 	 */
@@ -79,7 +79,8 @@ public class PizzaFactory {
 	 * @param identifier
 	 *            the identifier to set
 	 */
-	public void setIdentifier(String identifier) {
+	
+	synchronized public void setIdentifier(String identifier) {
 		this.identifier = identifier;
 	}
 
@@ -102,7 +103,7 @@ public class PizzaFactory {
 	 *            Crust to be added
 	 * @return True if crust does not exist. False if the crust exists.
 	 */
-	public boolean addCrust(PizzaCrust crust) {
+	synchronized public boolean addCrust(PizzaCrust crust) {
 		if (crusts.containsKey(crust.getIdentifier())) {
 			return false;
 		}
@@ -116,7 +117,7 @@ public class PizzaFactory {
 	 * @param crust
 	 *            Crust to be added
 	 */
-	public void putCrust(PizzaCrust crust) {
+	synchronized public void putCrust(PizzaCrust crust) {
 		crusts.put(crust.getIdentifier(), crust);
 	}
 
@@ -126,7 +127,7 @@ public class PizzaFactory {
 	 * @param crustList
 	 *            Crusts to be added
 	 */
-	public void addCrust(List<PizzaCrust> crustList) {
+	synchronized public void addCrust(List<PizzaCrust> crustList) {
 		for (PizzaCrust s : crustList) {
 			addCrust(s);
 		}
@@ -151,7 +152,7 @@ public class PizzaFactory {
 	 *            Cheese to be added
 	 * @return True if cheese does not exist. False if the cheese exists.
 	 */
-	public boolean addCheese(PizzaCheese cheese) {
+	synchronized public boolean addCheese(PizzaCheese cheese) {
 		if (cheeses.containsKey(cheese.getIdentifier())) {
 			return false;
 		}
@@ -165,7 +166,7 @@ public class PizzaFactory {
 	 * @param cheese
 	 *            Cheese to be added
 	 */
-	public void putCheese(PizzaCheese cheese) {
+	synchronized public void putCheese(PizzaCheese cheese) {
 		cheeses.put(cheese.getIdentifier(), cheese);
 	}
 
@@ -175,7 +176,7 @@ public class PizzaFactory {
 	 * @param cheeseList
 	 *            cheeses to be added
 	 */
-	public void addCheese(List<PizzaCheese> cheeseList) {
+	synchronized public void addCheese(List<PizzaCheese> cheeseList) {
 		for (PizzaCheese s : cheeseList) {
 			addCheese(s);
 		}
@@ -200,7 +201,7 @@ public class PizzaFactory {
 	 *            sauce to be added
 	 * @return True if sauce does not exist. False if the sauce exists.
 	 */
-	public boolean addSauce(PizzaSauce sauce) {
+	synchronized public boolean addSauce(PizzaSauce sauce) {
 		if (sauces.containsKey(sauce.getIdentifier())) {
 			return false;
 		}
@@ -214,7 +215,7 @@ public class PizzaFactory {
 	 * @param sauce
 	 *            Sauce to be added
 	 */
-	public void putSauce(PizzaSauce sauce) {
+	synchronized public void putSauce(PizzaSauce sauce) {
 		sauces.put(sauce.getIdentifier(), sauce);
 	}
 
@@ -224,7 +225,7 @@ public class PizzaFactory {
 	 * @param sauceList
 	 *            Sauces to be added
 	 */
-	public void addSauce(List<PizzaSauce> sauceList) {
+	synchronized public void addSauce(List<PizzaSauce> sauceList) {
 		for (PizzaSauce s : sauceList) {
 			addSauce(s);
 		}
@@ -261,7 +262,7 @@ public class PizzaFactory {
 	 *            topping to be added
 	 * @return True if topping does not exist. False if the topping exists.
 	 */
-	public boolean addToppingMeat(PizzaToppingMeat topping) {
+	synchronized public boolean addToppingMeat(PizzaToppingMeat topping) {
 		if (meats.containsKey(topping.getIdentifier())) {
 			return false;
 		}
@@ -275,7 +276,7 @@ public class PizzaFactory {
 	 * @param topping
 	 *            topping to be added
 	 */
-	public void putToppingMeat(PizzaToppingMeat topping) {
+	synchronized public void putToppingMeat(PizzaToppingMeat topping) {
 		meats.put(topping.getIdentifier(), topping);
 	}
 
@@ -285,7 +286,7 @@ public class PizzaFactory {
 	 * @param meatList
 	 *            Meat Toppings to be added
 	 */
-	public void addToppingMeat(List<PizzaToppingMeat> meatList) {
+	synchronized public void addToppingMeat(List<PizzaToppingMeat> meatList) {
 		for (PizzaToppingMeat s : meatList) {
 			addToppingMeat(s);
 		}
@@ -298,7 +299,7 @@ public class PizzaFactory {
 	 *            topping to be added
 	 * @return True if topping does not exist. False if the topping exists.
 	 */
-	public boolean addToppingVeg(PizzaToppingVeg topping) {
+	synchronized public boolean addToppingVeg(PizzaToppingVeg topping) {
 		if (vegs.containsKey(topping.getIdentifier())) {
 			return false;
 		}
@@ -312,7 +313,7 @@ public class PizzaFactory {
 	 * @param topping
 	 *            topping to be added
 	 */
-	public void putToppingVeg(PizzaToppingVeg topping) {
+	synchronized public void putToppingVeg(PizzaToppingVeg topping) {
 		vegs.put(topping.getIdentifier(), topping);
 	}
 
@@ -322,7 +323,7 @@ public class PizzaFactory {
 	 * @param vegList
 	 *            Vetegable toppings to be added
 	 */
-	public void addToppingVeg(List<PizzaToppingVeg> vegList) {
+	synchronized public void addToppingVeg(List<PizzaToppingVeg> vegList) {
 		for (PizzaToppingVeg s : vegList) {
 			addToppingVeg(s);
 		}

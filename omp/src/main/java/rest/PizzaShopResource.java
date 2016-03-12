@@ -264,6 +264,16 @@ public class PizzaShopResource {
 	}
 
 	/**
+	 * Handle order request
+	 * 
+	 * @return Pizza Shop Order Resource
+	 */
+	@Path("/order")
+	public PizzaShopOrderResource handleOrder() {
+		return new PizzaShopOrderResource(uriInfo, request);
+	}
+
+	/**
 	 * Get the pizzashop's profile with token
 	 * 
 	 * @param token

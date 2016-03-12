@@ -214,6 +214,16 @@ public class CustomerResource {
 	}
 
 	/**
+	 * Handle customer order requests
+	 * 
+	 * @return Customer Order Resource
+	 */
+	@Path("/order")
+	public CustomerOrderResource handleOrders() {
+		return new CustomerOrderResource(uriInfo, request);
+	}
+
+	/**
 	 * Get the customer's profile
 	 * 
 	 * @param token
@@ -230,12 +240,7 @@ public class CustomerResource {
 		Customer customer = null;
 		try {
 			Entity entity = datastore.get(key);
-			customer = new Customer();
-			customer.setToken(token);
-			customer.setEmail((String) entity.getProperty("email"));
-			customer.setName((String) entity.getProperty("name"));
-			customer.setAddress((String) entity.getProperty("address"));
-			customer.setPhone((String) entity.getProperty("phone"));
+			customer = entityToObject(entity);
 		} catch (EntityNotFoundException e) {
 		}
 		return customer;
@@ -329,6 +334,26 @@ public class CustomerResource {
 			datastore.delete(key);
 		} catch (Exception e) {
 		}
+	}
+
+	/**
+	 * Convert an entity to object.
+	 * 
+	 * @param entity
+	 *            Entity
+	 * @return Customer
+	 */
+	public static Customer entityToObject(Entity entity) {
+		if (entity == null || !entity.getKind().equals("Customer")) {
+			return null;
+		}
+		Customer customer = new Customer();
+		customer.setToken((String) entity.getProperty("token"));
+		customer.setEmail((String) entity.getProperty("email"));
+		customer.setName((String) entity.getProperty("name"));
+		customer.setAddress((String) entity.getProperty("address"));
+		customer.setPhone((String) entity.getProperty("phone"));
+		return customer;
 	}
 
 }

@@ -6,8 +6,6 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import pizza.Pizza;
-
 /**
  * Order (viewed as tasks for task queues)
  * 
@@ -18,19 +16,14 @@ import pizza.Pizza;
 public class Order {
 
 	/**
-	 * Pizza Shop
+	 * Pizza Shop identifier
 	 */
 	private String pizzaShop;
 
 	/**
-	 * Customer
+	 * Customer email
 	 */
 	private String customer;
-
-	/**
-	 * Pizza
-	 */
-	private Pizza pizza;
 
 	/**
 	 * Crust identifier
@@ -58,11 +51,6 @@ public class Order {
 	private List<String> vegs;
 
 	/**
-	 * Description
-	 */
-	private String description;
-
-	/**
 	 * Date
 	 */
 	private Date date;
@@ -83,7 +71,7 @@ public class Order {
 	private String size;
 
 	/**
-	 * Order status new,verified,ready,done,scancel
+	 * Order status new,verified,ready,done, cancel
 	 */
 	private String status;
 
@@ -106,7 +94,7 @@ public class Order {
 	 * Set PizzaShop
 	 * 
 	 * @param pizzaShop
-	 *            the pizzaShop to set
+	 *            the pizzaShop identifier to set
 	 */
 	public void setPizzaShop(String pizzaShop) {
 		this.pizzaShop = pizzaShop;
@@ -130,26 +118,6 @@ public class Order {
 	 */
 	public void setCustomer(String customer) {
 		this.customer = customer;
-	}
-
-	/**
-	 * Get Pizza
-	 * 
-	 * @return the pizza
-	 */
-	@XmlElement
-	public Pizza getPizza() {
-		return pizza;
-	}
-
-	/**
-	 * Set Pizza
-	 * 
-	 * @param pizza
-	 *            the pizza to set
-	 */
-	public void setPizza(Pizza pizza) {
-		this.pizza = pizza;
 	}
 
 	/**
@@ -253,21 +221,35 @@ public class Order {
 	}
 
 	/**
-	 * Set description
-	 * 
-	 * @param description
-	 *            description
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	/**
 	 * Get description
+	 * 
+	 * @return Description
 	 */
 	@XmlElement
 	public String getDescription() {
-		return description;
+		StringBuilder sb = new StringBuilder();
+		sb.append(size + " size, " + crust + " crust, " + cheese
+				+ "cheese, with " + sauce + " sauce.");
+		if (meats.size() == 0) {
+			sb.append(" No meat toppings.");
+		}
+		{
+			sb.append(" Include meat topping: ");
+			for (String s : meats) {
+				sb.append(s + ",");
+			}
+			sb.deleteCharAt(sb.length() - 1);
+		}
+		if (vegs.size() == 0) {
+			sb.append(" No vegetable toppings.");
+		} else {
+			sb.append(" Include vegetable topping: ");
+			for (String s : vegs) {
+				sb.append(s + ",");
+			}
+			sb.deleteCharAt(sb.length() - 1);
+		}
+		return sb.toString();
 	}
 
 	/**
