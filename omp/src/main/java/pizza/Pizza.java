@@ -3,10 +3,17 @@ package pizza;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import pizza.PizzaComponent.PizzaComponentSize;
+import pizza.cheese.PizzaCheese;
+import pizza.crust.PizzaCrust;
+import pizza.meat.PizzaToppingMeat;
+import pizza.sauce.PizzaSauce;
+import pizza.veg.PizzaToppingVeg;
 
 /**
  * Pizza Definition
@@ -15,6 +22,7 @@ import pizza.PizzaComponent.PizzaComponentSize;
  *
  */
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class Pizza {
 	/**
 	 * Pizza Crust

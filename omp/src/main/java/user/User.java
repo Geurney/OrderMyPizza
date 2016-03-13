@@ -3,9 +3,9 @@
  */
 package user;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-
-import com.google.appengine.api.datastore.GeoPt;
 
 /**
  * User abstract class
@@ -13,14 +13,8 @@ import com.google.appengine.api.datastore.GeoPt;
  * @author Geurney
  *
  */
+@XmlAccessorType(XmlAccessType.NONE)
 public abstract class User {
-	/**
-	 * User Types
-	 *
-	 */
-	public static enum Type {
-		CUSTOMER, PIZZASHOP, ADMIN
-	}
 
 	/**
 	 * User token
@@ -38,24 +32,19 @@ public abstract class User {
 	private String name;
 
 	/**
-	 * User Address
-	 */
-	private String address;
-
-	/**
-	 * Latitude
-	 */
-	private float latitude;
-
-	/**
-	 * longtitude
-	 */
-	private float longtitude;
-
-	/**
 	 * User phone
 	 */
 	private String phone;
+
+	/**
+	 * User City Name
+	 */
+	private String City;
+
+	/**
+	 * Latitude and longitude
+	 */
+	private double[] location = new double[2];
 
 	/**
 	 * Default constructor
@@ -127,26 +116,6 @@ public abstract class User {
 	}
 
 	/**
-	 * Get user address
-	 * 
-	 * @return the address
-	 */
-	@XmlElement
-	public String getAddress() {
-		return address;
-	}
-
-	/**
-	 * Set user address
-	 * 
-	 * @param address
-	 *            the address to set
-	 */
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	/**
 	 * Get user phone
 	 * 
 	 * @return the phone
@@ -167,12 +136,33 @@ public abstract class User {
 	}
 
 	/**
+	 * Get City Name
+	 * 
+	 * @return the city
+	 */
+	@XmlElement
+	public String getCity() {
+		return City;
+	}
+
+	/**
+	 * Set City
+	 * 
+	 * @param city
+	 *            the City to set
+	 */
+	public void setCity(String city) {
+		City = city;
+	}
+
+	/**
 	 * Get latitude
 	 * 
 	 * @return the latitude
 	 */
-	public float getLatitude() {
-		return latitude;
+	@XmlElement
+	public double getLatitude() {
+		return location[0];
 	}
 
 	/**
@@ -181,27 +171,28 @@ public abstract class User {
 	 * @param latitude
 	 *            the latitude to set
 	 */
-	public void setLatitude(float latitude) {
-		this.latitude = latitude;
+	public void setLatitude(double latitude) {
+		location[0] = latitude;
 	}
 
 	/**
-	 * Get longtitude
+	 * Get longitude
 	 * 
-	 * @return the longtitude
+	 * @return the longitude
 	 */
-	public float getLongtitude() {
-		return longtitude;
+	@XmlElement
+	public double getLongitude() {
+		return location[1];
 	}
 
 	/**
-	 * Set longtitude
+	 * Set longitude
 	 * 
-	 * @param longtitude
-	 *            the longtitude to set
+	 * @param longitude
+	 *            the longitude to set
 	 */
-	public void setLongtitude(float longtitude) {
-		this.longtitude = longtitude;
+	public void setLongitude(double longitude) {
+		location[1] = longitude;
 	}
 
 }

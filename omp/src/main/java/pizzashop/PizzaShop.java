@@ -2,15 +2,20 @@ package pizzashop;
 
 import java.util.UUID;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
+import order.Order;
 import pizza.Pizza;
+import pizzafactory.PizzaFactory;
 import user.User;
 
-@XmlRootElement
+@XmlRootElement(name = "PizzaShop")
 @XmlSeeAlso(User.class)
+@XmlAccessorType(XmlAccessType.NONE)
 public class PizzaShop extends User {
 	/**
 	 * Pizza Shop identifier
@@ -78,15 +83,7 @@ public class PizzaShop extends User {
 	 */
 	public boolean verifyOrder(Order order) {
 		boolean isAvailable = true;
-		isAvailable &= pizzaFactory.hasCrust(order.getCrust());
 		isAvailable &= pizzaFactory.hasCheese(order.getCheese());
-		isAvailable &= pizzaFactory.hasSauce(order.getSauce());
-		for (String meat : order.getMeats()) {
-			isAvailable &= pizzaFactory.hasMeat(meat);
-		}
-		for (String veg : order.getVegs()) {
-			isAvailable &= pizzaFactory.hasVeg(veg);
-		}
 		return isAvailable;
 	}
 
@@ -99,11 +96,7 @@ public class PizzaShop extends User {
 	 */
 	public Pizza createPizza(Order order) {
 		Pizza pizza = pizzaFactory.preparePizza();
-		pizzaFactory.buildCrust(order.getCrust(), pizza);
 		pizzaFactory.buildCheese(order.getCheese(), pizza);
-		pizzaFactory.buildSauce(order.getSauce(), pizza);
-		pizzaFactory.buildToppingMeat(order.getMeats(), pizza);
-		pizzaFactory.buildToppingVeg(order.getVegs(), pizza);
 		return pizza;
 	}
 

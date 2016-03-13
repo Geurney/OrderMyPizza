@@ -24,6 +24,7 @@
 			<%
 				UserService userService = UserServiceFactory.getUserService();
 				User user = userService.getCurrentUser();
+                String type = request.getParameter("type");
 				if (user != null) {
 					pageContext.setAttribute("user", user);
 					pageContext.setAttribute("user_type", "pizzashop", PageContext.APPLICATION_SCOPE);
@@ -53,64 +54,36 @@
 	</p>
 	<%
 		} else {
+
+    %>
+   <br>
+ <form action="<%="/pizzafactory/rest/pizzafactory/" + type%>" method="post">
+	  Type: <%=type%> <br >
+	  Identifier:
+      <input type="text" name="identifier" required="required" minlength ="1" size = "40"><br/>
+      Description:
+      <input type="text" name="description" required="required" minlength ="5" size = "40"><br/>
+	  Small Size Cost:
+      <input type="number" step="0.01" min="0.00" required="required" name="cost1">
+	  Medium Size Cost:
+      <input type="number" step="0.01" min="0.00" required="required" name="cost2">
+	  Large Size Cost:
+      <input type="number" step="0.01" min="0.00" required="required" name="cost3"><br/>
+	  Small Size Price:
+      <input type="number" step="0.01" min="0.00" required="required" name="price1">
+	  Medium Size Price:
+      <input type="number" step="0.01" min="0.00" required="required" name="price2">
+	  Large Size Price:
+      <input type="number" step="0.01" min="0.00" required="required" name="price3"><br/>
+      <input type="submit">
+    </form>
+    
+    <%
 		}
     %>
-	<br>
-    <div id="factoryList"></div>
-    <br>
-    <a href="/factory.jsp?type=crust">Add a Pizza Crust</a><br>
-    <a href="/factory.jsp?type=cheese">Add a Pizza Cheese</a><br>
-    <a href="/factory.jsp?type=sauce">Add a Pizza Sauce</a><br>
-    <a href="/factory.jsp?type=meat">Add a Pizza Meat Topping</a><br>
-    <a href="/factory.jsp?type=veg">Add a Pizza Vegetable Topping</a>	<br>
   </body>
-  <script>
-   var user = '<%=user%>';
-	if (user != "null") {
-	  $(document).ready(loadFactory);
-	}
-  function loadFactory() {
-	  $.ajax({
-          dataType: "json",
-          url: "/pizzafactory/rest/pizzafactory/",
-		  method : 'GET',
-          success: function(data) {
-			 var div = document.getElementById('factoryList');
-		      function makeUL(array) {
-			  var list = document.createElement('ul');
-			  for(var i = 0; i < array.length; i++) {
-				var item = document.createElement('li');
-				var s = array[i].identifier +": " +array[i].description + " " + array[i].costs + " " + array[i].prices;
-				item.appendChild(document.createTextNode(s));
-				list.appendChild(item);
-			}
-			return list;
-		}
-		document.getElementById('factoryList').appendChild(document.createTextNode("Pizza Crusts:"));
-	    document.getElementById('factoryList').appendChild(makeUL(data['crusts']));
-		
-		document.getElementById('factoryList').appendChild(document.createTextNode("Pizza Cheeses: "));
-	    document.getElementById('factoryList').appendChild(makeUL(data['cheeses']));
-		
-		document.getElementById('factoryList').appendChild(document.createTextNode("Pizza Sauces: "));
-	    document.getElementById('factoryList').appendChild(makeUL(data['sauces']));
-		
-		document.getElementById('factoryList').appendChild(document.createTextNode("Pizza Topping Meats: "));
-	    document.getElementById('factoryList').appendChild(makeUL(data['meats']));
-		
-		document.getElementById('factoryList').appendChild(document.createTextNode("Pizza Topping Vegetables: "));
-	    document.getElementById('factoryList').appendChild(makeUL(data['vegs']));
-			 
-          },
-          error: function(jqXHR, textStatus, errorThrown) {
-			   	if (jqXHR.status == "404") {
-					alert("Please complete your profile");
-					fieldset_enable();
-				} else {
-					 alert(" " + jqXHR.status + " " + textStatus + " " +errorThrown);
-				}
-          }
-      });
-  }
-  </script>
 </html>
+
+
+   
+	

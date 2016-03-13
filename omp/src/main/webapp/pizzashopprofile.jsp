@@ -21,6 +21,9 @@
 	<link href='https://fonts.googleapis.com/css?family=Raleway|Roboto+Slab|Indie+Flower|Poiret+One|Josefin+Sans|Varela+Round|Maven+Pro|Quicksand|Dancing+Script|Architects+Daughter|News+Cycle|Satisfy|Handlee' rel='stylesheet' type='text/css'/>
 	<script type="text/javascript" src="./js/omp.js"></script>
 	<script type="text/javascript" src="./js/jquery-1.12.0.min.js"></script>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBB9p91mM16Xr-mvMQSwNBfkDZDD6SuJws"
+		async defer></script>
+	<script src="http://www.google.com/jsapi"></script>
 	<title>Order My Pizza!</title>
 </head>
 <body id="body">
@@ -35,8 +38,8 @@
 			%>
 			<ul>
 				<li>${fn:escapeXml(user.nickname)}</li>
-				<li><a href="/pizzafactoryprofile.jsp">My PizzaFactory</a></li>
 				<li><a href="<%=userService.createLogoutURL(request.getRequestURI())%>">Sign out</a></li>
+				<li><a href="/pizzafactoryprofile.jsp">My PizzaFactory</a></li>
 				<%
 					} else {
 				%>
@@ -54,49 +57,31 @@
 		if (user == null) {
 	%>
 	<p>
-		You must sign in before proceeding
+		You must sign in before proceeding 
 		<a href="<%=userService.createLoginURL(request.getRequestURI())%>">Sign in</a>
 	</p>
 	<%
 		} else {
-			String hash_uid = UserUtils.obsecure(user.getUserId());
-			DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-			Key key = KeyFactory.createKey("PizzaShop", hash_uid);
-			Entity pizzaShop = null;
-			String name = null;
-			String address = null;
-			String phone = null;
-			String identifier = null;
-			try {
-				pizzaShop = datastore.get(key);
-				identifier = (String) pizzaShop.getProperty("identifier");
-				name = (String) pizzaShop.getProperty("name");
-				address = (String) pizzaShop.getProperty("address");
-				phone = (String) pizzaShop.getProperty("phone");
 	%>
 	<p>My Profile</p>
-	<%
-			} catch (EntityNotFoundException e) {
-	%>
-	<p>Please complete your information below</p>
-	<%
-			} finally {
-	%>
-	<form action="/rest/pizzashop" method="post">
-		<fieldset id="profile_fieldset" <%if (!(name == null || phone == null || address == null)) {%> disabled <%}%>>
-		    Identifier: <input type="text" name="identifier" <%if (identifier != null) {%> value="<%=identifier%>" <%}%>><br>
-			Name: <input type="text" name="name" <%if (name != null) {%> value="<%=name%>" <%}%>><br>
-			Address: <input type="text" name="address" <%if (address != null) {%> value="<%=address%>" <%}%>><br>
-			Phone: <input type="text" name="phone" <%if (phone != null) {%> value="<%=phone%>" <%}%>><br>
-			<div id="submit_form" <%if (!(name == null || phone == null || address == null)) {%> style="display: none" <%}%>>
-				<input type="submit" name="submit">
+	<form id="form">
+		<fieldset id="profile_fieldset" disabled>
+		    Identifier: <input type="text" id="identifier" name="identifier" required><br>
+			Name: <input type="text" id="name" name="name" required><br>
+			Phone: <input type="text" id="phone" name="phone" required><br>
+			City: <input type="text" id="city" name="city" required><br>
+			Latitude: <input type="number" id="latitude" name="latitude" step="any" min="-180" max="180" required><br>
+		    Longitude: <input type="number" id="longitude" name="longitude" step="any" min="-180" max="180" required><br>
+			<div id="submit_form" style="display: none">
+				<button type="button" onclick="findmylocation()">Locate</button>
+				<button type="submit" name="submit" onclick="mysubmit();return false;">Submit</button>
 			</div>
 		</fieldset>
 	</form>
 	<button onclick="fieldset_enable()">Edit</button>
-	<button onclick="delete_req('/customerprofile', '/ordermypizza.jsp')">Delete</button>
+	<button onclick="delete_req('/rest/pizzashop', '/ordermypizza.jsp')">Delete</button>
+
 	<%
-			}
 		}
 	%>
 
@@ -105,7 +90,57 @@
 			Order My Pizza!<br>Geurney 2016
 		</p>
 	</div>
-
-
+	<script>
+	var user = '<%=user%>';
+	if (user != "null") {
+	  $(document).ready(loadUser);
+	}
+	function loadUser() {
+		$.ajax({
+            dataType: "json",
+            url: "pizzashop/rest/pizzashop",
+			method : 'GET',
+            success: function(data) {
+            	document.getElementById('identifier').value = data.identifier;
+				document.getElementById('name').value = data.name;
+				document.getElementById('phone').value = data.phone;
+				document.getElementById('city').value = data.city;
+				document.getElementById('latitude').value = data.latitude;
+				document.getElementById('longitude').value = data.longitude;
+			 },
+            error: function(jqXHR, textStatus, errorThrown) {
+			   	if (jqXHR.status == "404") {
+					alert("Please complete your profile");
+					fieldset_enable();
+				} else {
+					 alert(" " + jqXHR.status + " " + textStatus + " " +errorThrown);
+				}
+            }
+        });
+	}
+	function findmylocation() {
+		if(google.loader.ClientLocation) {
+			document.getElementById('city').value = google.loader.ClientLocation.address.city;
+			document.getElementById('latitude').value = google.loader.ClientLocation.latitude;
+			document.getElementById('longitude').value = google.loader.ClientLocation.longitude;
+	    } else {
+			alert('Location not available');
+		}
+	}
+	function mysubmit(form) {
+		$.ajax({
+			data: $('form').serializeArray(),
+			url: "pizzashop/rest/pizzashop",
+			method : 'POST',
+			success: function(data) {
+				  alert("Successful!");
+				  window.location.href = "/pizzashopprofile.jsp";
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert(" " + jqXHR.status + " " + textStatus + " " +errorThrown);
+			}
+		});
+	}
+	</script>
 </body>
 </html>

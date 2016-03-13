@@ -7,60 +7,6 @@
 		<welcome-file>ordermypizza.jsp</welcome-file>
 	</welcome-file-list>
 
-	<servlet>
-		<servlet-name>datastore</servlet-name>
-		<servlet-class>servlets.DatastoreServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>datastore</servlet-name>
-		<url-pattern>/datastore</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>enqueue</servlet-name>
-		<servlet-class>servlets.Enqueue</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>enqueue</servlet-name>
-		<url-pattern>/task</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>worker</servlet-name>
-		<servlet-class>servlets.Worker</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>worker</servlet-name>
-		<url-pattern>/worker</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>customerprofile</servlet-name>
-		<servlet-class>servlets.CustomerDatastoreServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>customerprofile</servlet-name>
-		<url-pattern>/customerprofile</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>pizzashopprofile</servlet-name>
-		<servlet-class>servlets.PizzaShopDatastoreServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>pizzashopprofile</servlet-name>
-		<url-pattern>/pizzashopprofile</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>pizzafactoryprofile</servlet-name>
-		<servlet-class>servlets.PizzaFactoryDatastoreServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>pizzafactoryprofile</servlet-name>
-		<url-pattern>/pizzafactoryprofile</url-pattern>
-	</servlet-mapping>
-
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>datastore</web-resource-name>
@@ -82,16 +28,60 @@
 	</security-constraint>
 
 	<servlet>
-		<servlet-name>Jersey REST Service</servlet-name>
+		<servlet-name>CustomerResource</servlet-name>
 		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
 		<init-param>
 			<param-name>jersey.config.server.provider.packages</param-name>
-			<param-value>rest</param-value>
+			<param-value>customer</param-value>
 		</init-param>
+		<init-param>
+        <!-- speed up initial Jersey loading by deactivating WADL -->
+        <param-name>jersey.config.server.wadl.disableWadl</param-name>
+        <param-value>true</param-value>
+        </init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>Jersey REST Service</servlet-name>
-		<url-pattern>/rest/*</url-pattern>
+		<servlet-name>CustomerResource</servlet-name>
+		<url-pattern>/customer/rest/*</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>PizzaShopResource</servlet-name>
+		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>jersey.config.server.provider.packages</param-name>
+			<param-value>pizzashop</param-value>
+		</init-param>
+		<init-param>
+        <!-- speed up initial Jersey loading by deactivating WADL -->
+        <param-name>jersey.config.server.wadl.disableWadl</param-name>
+        <param-value>true</param-value>
+        </init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PizzaShopResource</servlet-name>
+		<url-pattern>/pizzashop/rest/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>PizzaFactoryResource</servlet-name>
+		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>jersey.config.server.provider.packages</param-name>
+			<param-value>pizzafactory</param-value>
+		</init-param>
+		<init-param>
+        <!-- speed up initial Jersey loading by deactivating WADL -->
+        <param-name>jersey.config.server.wadl.disableWadl</param-name>
+        <param-value>true</param-value>
+        </init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PizzaFactoryResource</servlet-name>
+		<url-pattern>/pizzafactory/rest/*</url-pattern>
+	</servlet-mapping>
+	
 </web-app>

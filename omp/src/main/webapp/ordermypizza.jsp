@@ -15,9 +15,9 @@
 	<link href='https://fonts.googleapis.com/css?family=Raleway|Roboto+Slab|Indie+Flower|Poiret+One|Josefin+Sans|Varela+Round|Maven+Pro|Quicksand|Dancing+Script|Architects+Daughter|News+Cycle|Satisfy|Handlee' rel='stylesheet' type='text/css'/>
 	<script type="text/javascript" src="./js/omp.js"></script>
 	<script type="text/javascript" src="./js/jquery-1.12.0.min.js"></script>
-	<script type="text/javascript" src="./js/pizzashopmap.js"></script>
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBB9p91mM16Xr-mvMQSwNBfkDZDD6SuJws&signed_in=true&libraries=places&callback=initMap"
-		async defer></script>
+	<!--script type="text/javascript" src="./js/pizzashopmap.js"></script -->
+
+	<script src="http://www.google.com/jsapi"></script>
 	<title>Order My Pizza!</title>
 </head>
 <body id="body">
@@ -72,20 +72,16 @@
 		  	<div id="info-content">
 				<table>
 			    	<tr id="iw-url-row" class="iw_table_row">
-			        	<td id="iw-icon" class="iw_table_icon"></td>
+			        	<td class="iw_attribute_name">Name:</td>
 		    	    	<td id="iw-url"></td>
 		    		</tr>
-		      		<tr id="iw-address-row" class="iw_table_row">
-				        <td class="iw_attribute_name">Address:</td>
-				        <td id="iw-address"></td>
-				    </tr>
 		    		<tr id="iw-phone-row" class="iw_table_row">
 		        		<td class="iw_attribute_name">Telephone:</td>
 		        		<td id="iw-phone"></td>
 		      		</tr>
-		      		<tr id="iw-rating-row" class="iw_table_row">
-			        	<td class="iw_attribute_name">Rating:</td>
-			        	<td id="iw-rating"></td>
+		      		<tr id="iw-email-row" class="iw_table_row">
+			        	<td class="iw_attribute_name">Email:</td>
+			        	<td id="iw-email"></td>
 			      	</tr>
 		  	 	</table>
 		  	</div>
@@ -98,6 +94,187 @@
 			Order My Pizza!<br>Geurney 2016
 		</p>
 	</div>
+<script>
+var map, infoWindow;
+var markers = [];
+var autocomplete;
+var countryRestrict = {
+  'country': 'us'
+};
+var MARKER_PATH = 'https://maps.gstatic.com/intl/en_us/mapfiles/marker_green';
 
+var countries = {
+  'us': {
+    center: {
+      lat: 37.1,
+      lng: -95.7
+    },
+    zoom: 3
+  }
+};
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: countries['us'].zoom,
+    center: countries['us'].center,
+    mapTypeControl: false,
+    panControl: false,
+    zoomControl: false,
+    streetViewControl: false
+  });
+
+  infoWindow = new google.maps.InfoWindow({
+    content: document.getElementById('info-content')
+  });
+
+  autocomplete = new google.maps.places.Autocomplete(
+    (
+      document.getElementById('citylocation')), {
+      types: ['(cities)'],
+      componentRestrictions: countryRestrict
+    });
+  
+  autocomplete.addListener('place_changed', onPlaceChanged);
+  getLocation();
+}
+
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else {
+    alert("Geolocation is not supported by this browser.");
+  }
+}
+function showPosition(position) {
+  var lat = position.coords.latitude;
+  var lng = position.coords.longitude;
+  map.setCenter(new google.maps.LatLng(lat, lng));
+  map.setZoom(11);
+  search_center(lat, lng);
+}
+
+function onPlaceChanged() {
+  var place = autocomplete.getPlace();
+  if (place.geometry) {
+    map.panTo(place.geometry.location);
+    map.setZoom(15);
+    search_center(place.geometry.location.lat(),place.geometry.location.lng());
+  } else {
+    document.getElementById('citylocation').placeholder = 'Enter a city';
+  }
+}
+
+function search_center(latitude, longitude){
+	$.ajax({
+        dataType: "json",
+		url: "pizzashop/rest/pizzashop/center/" + latitude+","+longitude,
+		method : 'GET',
+		success: function(data) {
+			clearResults();
+            clearMarkers();
+			document.getElementById('noresult').style.display = 'none';
+            document.getElementById('resultsTableWrapper').style.display = 'block';
+			for (var i = 0; i < data.length; i ++ ){
+				var markerLetter = String.fromCharCode('A'.charCodeAt(0) + i);
+				var markerIcon = MARKER_PATH + markerLetter + '.png';
+                var latlng = {lat: parseFloat(data[i].latitude), lng: parseFloat(data[i].longitude)};
+				markers[i] = new google.maps.Marker({
+				  position: latlng,
+				  animation: google.maps.Animation.DROP,
+				  icon: markerIcon
+				});
+				attachWindow(markers[i], data[i]);
+				setTimeout(dropMarker(i), i * 100);
+				addResult(data[i], i);
+            }
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+			alert(" " + jqXHR.status + " " + textStatus + " " +errorThrown);
+		}
+    });
+}
+
+function attachWindow(marker, place) {
+  marker.addListener('click', function() {
+    infoWindow.open(map, marker);
+	buildIWContent(place);
+  });
+}
+
+function clearMarkers() {
+  for (var i = 0; i < markers.length; i++) {
+    if (markers[i]) {
+      markers[i].setMap(null);
+    }
+  }
+  markers = [];
+}
+
+function dropMarker(i) {
+  return function() {
+    markers[i].setMap(map);
+  };
+}
+
+function addResult(result, i) {
+  var results = document.getElementById('results');
+  var markerLetter = String.fromCharCode('A'.charCodeAt(0) + i);
+  var markerIcon = MARKER_PATH + markerLetter + '.png';
+
+  var tr = document.createElement('tr');
+  tr.style.backgroundColor = (i % 2 === 0 ? '#F0F0F0' : '#FFFFFF');
+  tr.onclick = function() {
+    window.location.href = "/pizzashop.jsp?identifier=" + result.identifier;
+  };
+
+  var iconTd = document.createElement('td');
+  var nameTd = document.createElement('td');
+  var icon = document.createElement('img');
+  icon.src = markerIcon;
+  icon.setAttribute('class', 'placeIcon');
+  icon.setAttribute('className', 'placeIcon');
+  var name = document.createTextNode(result.name);
+  iconTd.appendChild(icon);
+  nameTd.appendChild(name);
+  tr.appendChild(iconTd);
+  tr.appendChild(nameTd);
+  results.appendChild(tr);
+}
+
+function clearResults() {
+  var results = document.getElementById('results');
+  while (results.childNodes[0]) {
+    results.removeChild(results.childNodes[0]);
+  }
+}
+
+
+function buildIWContent(place) {
+  document.getElementById('iw-url').innerHTML = '<b><a href="/pizzashop.jsp?identifier=' + place.identifier +
+    '">' + place.name + '</a></b>';
+  document.getElementById('iw-email').textContent = place.email;
+  document.getElementById('iw-phone').textContent = place.phone;
+
+  /*
+  if (place.rating) {
+    var ratingHtml = '';
+    for (var i = 0; i < 5; i++) {
+      if (place.rating < (i + 0.5)) {
+        ratingHtml += '&#10025;';
+      } else {
+        ratingHtml += '&#10029;';
+      }
+      document.getElementById('iw-rating-row').style.display = '';
+      document.getElementById('iw-rating').innerHTML = ratingHtml;
+    }
+  } else {
+    document.getElementById('iw-rating-row').style.display = 'none';
+  }
+*/
+}
+
+</script>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBB9p91mM16Xr-mvMQSwNBfkDZDD6SuJws&signed_in=true&libraries=geometry,places&callback=initMap"
+		async defer></script>
 </body>
 </html>
