@@ -105,7 +105,6 @@
           error: function(jqXHR, textStatus, errorThrown) {
 			   	if (jqXHR.status == "404") {
 					alert("Please complete your profile");
-					fieldset_enable();
 				} else {
 					 alert(" " + jqXHR.status + " " + textStatus + " " +errorThrown);
 				}

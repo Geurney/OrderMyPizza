@@ -21,7 +21,7 @@
 	<link href='https://fonts.googleapis.com/css?family=Raleway|Roboto+Slab|Indie+Flower|Poiret+One|Josefin+Sans|Varela+Round|Maven+Pro|Quicksand|Dancing+Script|Architects+Daughter|News+Cycle|Satisfy|Handlee' rel='stylesheet' type='text/css'/>
 	<script type="text/javascript" src="./js/omp.js"></script>
 	<script type="text/javascript" src="./js/jquery-1.12.0.min.js"></script>
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBB9p91mM16Xr-mvMQSwNBfkDZDD6SuJws"
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCajB_AS8cdfBcCDP2qIhpKHP8FZiiq1e0"
 		async defer></script>
 	<script src="http://www.google.com/jsapi"></script>
 	<title>Order My Pizza!</title>
@@ -98,7 +98,7 @@
 	function loadUser() {
 		$.ajax({
             dataType: "json",
-            url: "customer/rest/customer",
+            url: "/customer/rest/customer",
 			method : 'GET',
             success: function(data) {
 				document.getElementById('name').value = data.name;
@@ -111,8 +111,6 @@
 				if (jqXHR.status == "404") {
 					alert("Please complete your profile");
 					fieldset_enable();
-				} else {
-					alert(" " + jqXHR.status + " " + textStatus + " " +errorThrown);
 				}
 			}
           });
@@ -136,11 +134,6 @@
 		        document.getElementById('orderList').appendChild(makeUL(data));
 				},
             error: function(jqXHR, textStatus, errorThrown) {
-			   	if (jqXHR.status == "404") {
-					fieldset_enable();
-				} else {
-					 alert(" " + jqXHR.status + " " + textStatus + " " +errorThrown);
-				}
             }
         });
 	}
@@ -153,10 +146,10 @@
 			alert('Location not available');
 		}
 	}
-	function mysubmit(form) {
+	function mysubmit() {
 		$.ajax({
             data: $('form').serializeArray(),
-            url: "customer/rest/customer",
+            url: "/customer/rest/customer",
 			method : 'POST',
             success: function(data) {
 		          alert("Successful!");

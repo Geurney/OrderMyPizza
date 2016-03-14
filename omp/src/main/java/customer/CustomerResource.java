@@ -5,6 +5,7 @@ package customer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -35,6 +36,9 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.memcache.ErrorHandlers;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
 /**
  * Customer REST service
@@ -259,13 +263,20 @@ public class CustomerResource {
 		if (token == null) {
 			return RestResponse.FORBIDDEN;
 		}
+		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+		syncCache.setErrorHandler(ErrorHandlers
+				.getConsistentLogAndContinue(Level.INFO));
+		Customer customer = cacheToObject(syncCache, token);
+		if (customer != null) {
+			return RestResponse.OK(customer);
+		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Key key = KeyFactory.createKey("Customer", token);
-		Customer customer = null;
 		try {
 			Entity entity = datastore.get(key);
 			customer = entityToObject(entity);
+			entityToCache(syncCache, entity);
 			response = RestResponse.OK(customer);
 		} catch (EntityNotFoundException e) {
 			response = RestResponse.NOT_FOUND;
@@ -295,6 +306,9 @@ public class CustomerResource {
 		if (hash_uid == null) {
 			return RestResponse.FORBIDDEN;
 		}
+		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+		syncCache.setErrorHandler(ErrorHandlers
+				.getConsistentLogAndContinue(Level.INFO));
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Key key = KeyFactory.createKey("Customer", hash_uid);
@@ -319,6 +333,7 @@ public class CustomerResource {
 						Float.valueOf(longitude));
 				entity.setProperty("location", location);
 			}
+			entityToCache(syncCache, entity);
 			datastore.put(entity);
 		}
 		return RestResponse.OK;
@@ -346,6 +361,9 @@ public class CustomerResource {
 		if (token == null) {
 			return RestResponse.FORBIDDEN;
 		}
+		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+		syncCache.setErrorHandler(ErrorHandlers
+				.getConsistentLogAndContinue(Level.INFO));
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Key key = KeyFactory.createKey("Customer", token);
@@ -366,6 +384,7 @@ public class CustomerResource {
 				entity.setProperty("location", location);
 			}
 			datastore.put(entity);
+			entityToCache(syncCache, entity);
 			response = RestResponse.OK;
 		} catch (EntityNotFoundException e) {
 			response = RestResponse.NOT_FOUND;
@@ -384,11 +403,15 @@ public class CustomerResource {
 		if (token == null) {
 			return RestResponse.FORBIDDEN;
 		}
+		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+		syncCache.setErrorHandler(ErrorHandlers
+				.getConsistentLogAndContinue(Level.INFO));
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		try {
 			Key key = KeyFactory.createKey("Customer", token);
 			datastore.delete(key);
+			syncCache.delete(token + "customer");
 			response = RestResponse.OK;
 		} catch (Exception e) {
 			response = RestResponse.NOT_FOUND;
@@ -419,6 +442,57 @@ public class CustomerResource {
 			customer.setLongitude((double) location.getLongitude());
 		}
 		return customer;
+	}
+
+	/**
+	 * Convert cache to object
+	 * 
+	 * @param syncCache
+	 *            MemCache
+	 * @param token
+	 *            Token
+	 * @return Object
+	 */
+	public static Customer cacheToObject(MemcacheService syncCache, String token) {
+		Object[] values = (Object[]) syncCache.get(token + "customer");
+		if (values == null || values.length != 7) {
+			return null;
+		}
+		Customer customer = new Customer();
+		customer.setToken((String) values[0]);
+		customer.setEmail((String) values[1]);
+		customer.setName((String) values[2]);
+		customer.setPhone((String) values[3]);
+		customer.setCity((String) values[4]);
+		GeoPt location = new GeoPt((float) values[5], (float) values[6]);
+		if (location != null) {
+			customer.setLatitude((double) location.getLatitude());
+			customer.setLongitude((double) location.getLongitude());
+		}
+		return customer;
+	}
+
+	/**
+	 * Put entity into cache
+	 * 
+	 * @param syncCache
+	 *            MemCache
+	 * @param entity
+	 *            Entity
+	 */
+	public static void entityToCache(MemcacheService syncCache, Entity entity) {
+		syncCache.put(
+				(String) entity.getProperty("token") + "customer",
+				new Object[] {
+						entity.getProperty("token"),
+						entity.getProperty("email"),
+						entity.getProperty("name"),
+						entity.getProperty("phone"),
+						entity.getProperty("city"),
+						(Object) ((GeoPt) entity.getProperty("location"))
+								.getLatitude(),
+						(Object) ((GeoPt) entity.getProperty("location"))
+								.getLongitude() });
 	}
 
 }

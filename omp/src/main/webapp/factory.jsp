@@ -57,7 +57,7 @@
 
     %>
    <br>
- <form action="<%="/pizzafactory/rest/pizzafactory/" + type%>" method="post">
+ <form id="form">
 	  Type: <%=type%> <br >
 	  Identifier:
       <input type="text" name="identifier" required="required" minlength ="1" size = "40"><br/>
@@ -75,12 +75,31 @@
       <input type="number" step="0.01" min="0.00" required="required" name="price2">
 	  Large Size Price:
       <input type="number" step="0.01" min="0.00" required="required" name="price3"><br/>
-      <input type="submit">
+      <input type="submit" onclick="mysubmit(); return false;">
     </form>
     
     <%
 		}
     %>
+    <script>
+	function mysubmit() {
+		var type = "<%=type%>";
+		$.ajax({
+            data: $('form').serializeArray(),
+            url: "/pizzafactory/rest/pizzafactory/" + type,
+			method : 'POST',
+            success: function(data) {
+		          alert("Successful!");
+				  window.location.href = "/pizzafactoryprofile.jsp";
+			},
+            error: function(jqXHR, textStatus, errorThrown) {
+            	if(jqXHR.status == "400") {
+            		alert("Please provide valid input! Identifier must be unique!");
+            	} 
+            }
+          });
+	}
+    </script>
   </body>
 </html>
 

@@ -163,11 +163,12 @@ function onPlaceChanged() {
     document.getElementById('citylocation').placeholder = 'Enter a city';
   }
 }
-
+var loc={};
 function search_center(latitude, longitude){
+	findmylocation();
 	$.ajax({
         dataType: "json",
-		url: "pizzashop/rest/pizzashop/center/" + latitude+","+longitude,
+		url: "/pizzashop/rest/pizzashop/city/" + loc.city,
 		method : 'GET',
 		success: function(data) {
 			clearResults();
@@ -189,11 +190,21 @@ function search_center(latitude, longitude){
             }
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
-			alert(" " + jqXHR.status + " " + textStatus + " " +errorThrown);
+			if (jqXHR.status == "404") {
+					alert("No shop found!");
+			}
 		}
     });
 }
-
+function findmylocation() {
+	if(google.loader.ClientLocation) {
+		loc.city = google.loader.ClientLocation.address.city;
+		loc.latitude = google.loader.ClientLocation.latitude;
+		loc.longitude = google.loader.ClientLocation.longitude;
+    } else {
+			alert('Location not available');
+	}
+}
 function attachWindow(marker, place) {
   marker.addListener('click', function() {
     infoWindow.open(map, marker);
@@ -274,7 +285,7 @@ function buildIWContent(place) {
 }
 
 </script>
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBB9p91mM16Xr-mvMQSwNBfkDZDD6SuJws&signed_in=true&libraries=geometry,places&callback=initMap"
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCajB_AS8cdfBcCDP2qIhpKHP8FZiiq1e0&signed_in=true&libraries=geometry,places&callback=initMap"
 		async defer></script>
 </body>
 </html>

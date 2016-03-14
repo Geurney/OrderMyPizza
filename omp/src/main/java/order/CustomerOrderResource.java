@@ -279,4 +279,5 @@ public class CustomerOrderResource {
 		order.setPrice((double) entity.getProperty("price"));
 		return order;
 	}
+
 }

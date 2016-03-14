@@ -21,7 +21,7 @@
 	<link href='https://fonts.googleapis.com/css?family=Raleway|Roboto+Slab|Indie+Flower|Poiret+One|Josefin+Sans|Varela+Round|Maven+Pro|Quicksand|Dancing+Script|Architects+Daughter|News+Cycle|Satisfy|Handlee' rel='stylesheet' type='text/css'/>
 	<script type="text/javascript" src="./js/omp.js"></script>
 	<script type="text/javascript" src="./js/jquery-1.12.0.min.js"></script>
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBB9p91mM16Xr-mvMQSwNBfkDZDD6SuJws"
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCajB_AS8cdfBcCDP2qIhpKHP8FZiiq1e0"
 		async defer></script>
 	<script src="http://www.google.com/jsapi"></script>
 	<title>Order My Pizza!</title>
@@ -115,8 +115,6 @@
 			   	if (jqXHR.status == "404") {
 					alert("Please complete your profile");
 					fieldset_enable();
-				} else {
-					 alert(" " + jqXHR.status + " " + textStatus + " " +errorThrown);
 				}
             }
         });
@@ -142,8 +140,6 @@
             error: function(jqXHR, textStatus, errorThrown) {
 			   	if (jqXHR.status == "404") {
 					fieldset_enable();
-				} else {
-					 alert(" " + jqXHR.status + " " + textStatus + " " +errorThrown);
 				}
             }
         });
@@ -167,7 +163,6 @@
 				  window.location.href = "/pizzashopprofile.jsp";
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
-				alert(" " + jqXHR.status + " " + textStatus + " " +errorThrown);
 			}
 		});
 	}
