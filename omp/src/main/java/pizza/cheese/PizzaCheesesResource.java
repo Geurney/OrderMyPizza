@@ -29,7 +29,6 @@ public class PizzaCheesesResource extends
 	public PizzaCheesesResource() {
 		super();
 		type = "cheese";
-		System.out.println("HERE==Constructor");
 	}
 
 	@Override
@@ -49,12 +48,10 @@ public class PizzaCheesesResource extends
 		List<PizzaCheese> components = null;
 		try {
 			Entity pizzaFactory = datastore.get(key);
-			System.out.println("HERE--Got Factory");
 			List<EmbeddedEntity> list = (List<EmbeddedEntity>) pizzaFactory
 					.getProperty(type);
 			components = new ArrayList<PizzaCheese>();
 			if (list != null) {
-				System.out.println("HERE--list is not null");
 				for (EmbeddedEntity e : list) {
 					PizzaCheese component = PizzaCheeseResource
 							.entityToObject(e);
@@ -65,7 +62,6 @@ public class PizzaCheesesResource extends
 					components) {
 			};
 			response = RestResponse.OK(lists);
-			System.out.println("HERE--list is ok");
 		} catch (EntityNotFoundException e) {
 			response = RestResponse.NOT_FOUND;
 		}

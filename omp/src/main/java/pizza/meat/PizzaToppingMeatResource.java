@@ -70,7 +70,6 @@ public class PizzaToppingMeatResource extends
 		if (entity == null) {
 			return null;
 		}
-		System.out.println("HERE--entity to object");
 		PizzaToppingMeat component = new PizzaToppingMeat();
 		component.setIdentifier((String) entity.getProperty("identifier"));
 		component.setDescription((String) entity.getProperty("description"));

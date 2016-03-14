@@ -69,7 +69,6 @@ public class PizzaSauceResource extends PizzaComponentResource<PizzaSauce> {
 		if (entity == null) {
 			return null;
 		}
-		System.out.println("HERE--entity to object");
 		PizzaSauce component = new PizzaSauce();
 		component.setIdentifier((String) entity.getProperty("identifier"));
 		component.setDescription((String) entity.getProperty("description"));

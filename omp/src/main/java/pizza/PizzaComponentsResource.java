@@ -271,22 +271,11 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 			String description, String cost1, String price1, String cost2,
 			String price2, String cost3, String price3) {
 		if (token == null) {
-			System.out.println("HERE--NUll TOKEN");
 			return RestResponse.FORBIDDEN;
 		}
 		if (identifier == null || description == null || cost1 == null
 				|| cost2 == null || cost3 == null || price1 == null
 				|| price2 == null || price3 == null) {
-			if (identifier == null) {
-				System.out.println("HERE--identifier is null");
-			}
-			if (description == null) {
-				System.out.println("HERE--description is null");
-			}
-			if (cost1 == null) {
-				System.out.println("HERE--cost1 is null");
-			}
-			System.out.println("HERE--Null Parameter");
 			return RestResponse.BAD;
 		}
 		double ct1 = Double.valueOf(cost1);
@@ -296,7 +285,6 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 		double pc2 = Double.valueOf(price2);
 		double pc3 = Double.valueOf(price3);
 		if (ct1 < 0 || ct2 < 0 || ct3 < 0 || pc1 < 0 || pc2 < 0 || pc3 < 0) {
-			System.out.println("HERE-Negatives");
 			return RestResponse.BAD;
 		}
 		DatastoreService datastore = DatastoreServiceFactory
@@ -313,7 +301,6 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 				for (EmbeddedEntity e : list) {
 					String id = (String) e.getProperty("identifier");
 					if (id != null && id.equals(identifier)) {
-						System.out.println("HERE-same id");
 						return RestResponse.BAD;
 					}
 				}

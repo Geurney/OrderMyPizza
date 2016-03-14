@@ -69,7 +69,6 @@ public class PizzaCrustResource extends PizzaComponentResource<PizzaCrust> {
 		if (entity == null) {
 			return null;
 		}
-		System.out.println("HERE--entity to object");
 		PizzaCrust component = new PizzaCrust();
 		component.setIdentifier((String) entity.getProperty("identifier"));
 		component.setDescription((String) entity.getProperty("description"));
