@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import pizza.PizzaComponent;
 
 /**
+ * Pizza Meat Topping Class
  * @author Geurney
  *
  */

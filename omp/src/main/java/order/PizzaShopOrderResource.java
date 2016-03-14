@@ -4,22 +4,20 @@
 package order;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import rest.RestResponse;
 import user.UserUtils;
 
 import com.google.appengine.api.datastore.DatastoreService;
@@ -33,9 +31,6 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
-import com.google.appengine.api.taskqueue.Queue;
-import com.google.appengine.api.taskqueue.QueueFactory;
-import com.google.appengine.api.taskqueue.TaskOptions;
 
 /**
  * Order REST service
@@ -64,7 +59,7 @@ public class PizzaShopOrderResource {
 	@GET
 	@Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML,
 			MediaType.APPLICATION_JSON })
-	public List<Order> getOrders() {
+	public Response getOrders() {
 		String hash_uid = UserUtils.getCurrentUserObscureID();
 		return findOrders(hash_uid);
 	}
@@ -78,7 +73,9 @@ public class PizzaShopOrderResource {
 	 */
 	@Path("/authorize/{token}")
 	@GET
-	public List<Order> getOrders(@PathParam("token") String token) {
+	@Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML,
+			MediaType.APPLICATION_JSON })
+	public Response getOrders(@PathParam("token") String token) {
 		return findOrders(token);
 	}
 
@@ -89,9 +86,11 @@ public class PizzaShopOrderResource {
 	 *            Order number
 	 * @return Order
 	 */
-	@Path("{number}")
+	@Path("/findbynumber/{number}")
 	@GET
-	public Order getOrder(@PathParam("nubmer") String number) {
+	@Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML,
+			MediaType.APPLICATION_JSON })
+	public Response getOrder(@PathParam("nubmer") String number) {
 		String hash_uid = UserUtils.getCurrentUserObscureID();
 		return findOrder(hash_uid, number);
 	}
@@ -105,75 +104,13 @@ public class PizzaShopOrderResource {
 	 *            Order number
 	 * @return Order
 	 */
-	@Path("{number}/authorize/{token}")
+	@Path("/findbynumber/{number}/authorize/{token}")
 	@GET
-	public Order getOrder(String token, @PathParam("nubmer") String number) {
+	@Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML,
+			MediaType.APPLICATION_JSON })
+	public Response getOrder(@PathParam("token") String token,
+			@PathParam("nubmer") String number) {
 		return findOrder(token, number);
-	}
-
-	/**
-	 * Update the Order status
-	 * 
-	 * @param num
-	 *            Order number
-	 * @param status
-	 *            New Order status
-	 */
-	@Path("{number}")
-	@PUT
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public void putOrder(@PathParam("number") String num,
-			@FormParam("status") String status) {
-		String hash_uid = UserUtils.getCurrentUserObscureID();
-		updateOrder(hash_uid, num, status);
-	}
-
-	/**
-	 * Update the Order status
-	 * 
-	 * @param token
-	 *            PizzaShop token
-	 * @param num
-	 *            Order number
-	 * @param status
-	 *            New Order status
-	 */
-	@Path("{number}/authorize/{token}")
-	@PUT
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public void putOrder(@PathParam("token") String token,
-			@PathParam("number") String num, @FormParam("status") String status) {
-		updateOrder(token, num, status);
-	}
-
-	/**
-	 * Update order status
-	 * 
-	 * @param token
-	 *            PizzaShop token
-	 * @param num
-	 *            Order number
-	 * @param status
-	 *            New Order status
-	 */
-	private void updateOrder(String token, String num, String status) {
-		DatastoreService datastore = DatastoreServiceFactory
-				.getDatastoreService();
-		Key p_key = KeyFactory.createKey("PizzaShop", token);
-		try {
-			Entity pizzaShop = datastore.get(p_key);
-			Key o_key = KeyFactory.createKey("Order", num);
-			Entity order = datastore.get(o_key);
-			if (!((String) pizzaShop.getProperty("identifier"))
-					.equals((String) order.getProperty("pizzashop"))) {
-				return;
-			}
-			Queue queue = QueueFactory.getDefaultQueue();
-			queue.add(TaskOptions.Builder.withUrl("/worker")
-					.param("number", num).param("status", status));
-		} catch (EntityNotFoundException e) {
-			return;
-		}
 	}
 
 	/**
@@ -183,9 +120,9 @@ public class PizzaShopOrderResource {
 	 *            PizzaShop token
 	 * @return List of orders
 	 */
-	private List<Order> findOrders(String token) {
+	private Response findOrders(String token) {
 		if (token == null) {
-			return null;
+			return RestResponse.FORBIDDEN;
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -202,9 +139,14 @@ public class PizzaShopOrderResource {
 				Order order = entityToObject(result);
 				orders.add(order);
 			}
+			GenericEntity<List<Order>> lists = new GenericEntity<List<Order>>(
+					orders) {
+			};
+			response = RestResponse.OK(lists);
 		} catch (EntityNotFoundException e) {
+			response = RestResponse.NOT_FOUND;
 		}
-		return orders;
+		return response;
 	}
 
 	/**
@@ -216,9 +158,9 @@ public class PizzaShopOrderResource {
 	 *            Order number
 	 * @return Order
 	 */
-	private Order findOrder(String token, String number) {
-		if (token == null || number == null) {
-			return null;
+	private Response findOrder(String token, String number) {
+		if (token == null) {
+			return RestResponse.FORBIDDEN;
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -226,16 +168,18 @@ public class PizzaShopOrderResource {
 			Key key = KeyFactory.createKey("PizzaShop", token);
 			datastore.get(key);
 		} catch (EntityNotFoundException e) {
-			return null;
+			return RestResponse.NOT_FOUND;
 		}
 		Key key = KeyFactory.createKey("Order", number);
 		Order order = null;
 		try {
 			Entity entity = datastore.get(key);
 			order = entityToObject(entity);
+			response = RestResponse.OK(order);
 		} catch (EntityNotFoundException e) {
+			response = RestResponse.NOT_FOUND;
 		}
-		return order;
+		return response;
 	}
 
 	/**
@@ -271,9 +215,9 @@ public class PizzaShopOrderResource {
 			}
 		}
 		order.setStatus((String) entity.getProperty("status"));
-		order.setDate((Date) entity.getProperty("date"));
+		order.setDate((String) entity.getProperty("date"));
 		order.setPrice((double) entity.getProperty("price"));
-		order.setPrice((double) entity.getProperty("cost"));
+		order.setCost((double) entity.getProperty("cost"));
 		return order;
 	}
 }

@@ -1,8 +1,8 @@
 /**
- * 
+ * PizzaCrust datasturcture and REST service
  */
 /**
- * @author user
+ * @author Geurney
  *
  */
 package pizza.crust;

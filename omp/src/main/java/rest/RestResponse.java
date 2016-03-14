@@ -26,8 +26,8 @@ public final class RestResponse {
 	/**
 	 * Wrong parameters
 	 */
-	public static Response BAD = Response.status(
-			Response.Status.BAD_REQUEST).build();
+	public static Response BAD = Response.status(Response.Status.BAD_REQUEST)
+			.build();
 
 	/**
 	 * OK
@@ -44,6 +44,7 @@ public final class RestResponse {
 	public static Response OK(Object object) {
 		return Response.ok(object).build();
 	}
+
 
 	private RestResponse() {
 

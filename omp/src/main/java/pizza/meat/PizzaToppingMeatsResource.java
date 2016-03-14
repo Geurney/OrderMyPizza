@@ -17,6 +17,12 @@ import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+/**
+ * Pizza Meat Toppings REST Resource
+ * 
+ * @author Geurney
+ *
+ */
 public class PizzaToppingMeatsResource extends
 		PizzaComponentsResource<PizzaToppingMeat, PizzaToppingMeatResource> {
 
@@ -50,7 +56,8 @@ public class PizzaToppingMeatsResource extends
 			if (list != null) {
 				System.out.println("HERE--list is not null");
 				for (EmbeddedEntity e : list) {
-					PizzaToppingMeat component = PizzaToppingMeatResource.entityToObject(e);
+					PizzaToppingMeat component = PizzaToppingMeatResource
+							.entityToObject(e);
 					components.add(component);
 				}
 			}

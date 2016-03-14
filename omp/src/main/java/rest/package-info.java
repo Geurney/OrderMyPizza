@@ -1,8 +1,8 @@
 /**
- * 
+ * REST Response Class
  */
 /**
- * @author user
+ * @author Geurney
  *
  */
 package rest;

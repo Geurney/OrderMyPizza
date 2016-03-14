@@ -1,8 +1,8 @@
 /**
- * 
+ * PizzaFactory datastructure and REST service
  */
 /**
- * @author user
+ * @author Geurney
  *
  */
 package pizzafactory;

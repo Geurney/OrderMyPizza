@@ -293,8 +293,21 @@ public class Pizza {
 	 * @param size
 	 *            the size to set
 	 */
-	public void setSize(PizzaComponentSize size) {
-		this.size = size;
+	public void setSize(String size) {
+		if (size == null) {
+			this.size = PizzaComponent.PizzaComponentSize.MEDIUM;
+			return;
+		}
+		switch (size) {
+		case "small":
+			this.size = PizzaComponent.PizzaComponentSize.SMALL;
+			break;
+		case "large":
+			this.size = PizzaComponent.PizzaComponentSize.LARGE;
+			break;
+		case "medium":
+			this.size = PizzaComponent.PizzaComponentSize.MEDIUM;
+		}
 	}
 
 }

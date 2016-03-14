@@ -29,6 +29,7 @@ import pizza.sauce.PizzaSauce;
 import pizza.sauce.PizzaSaucesResource;
 import pizza.veg.PizzaToppingVeg;
 import pizza.veg.PizzaToppingVegsResource;
+import rest.RestResponse;
 import user.UserUtils;
 
 import com.google.appengine.api.datastore.DatastoreService;
@@ -62,22 +63,23 @@ public class PizzaFactoryResource {
 	@GET
 	@Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML,
 			MediaType.APPLICATION_JSON })
-	public PizzaFactory getPizzaFactory() {
+	public Response getPizzaFactory() {
 		String hash_uid = UserUtils.getCurrentUserObscureID();
 		return findPizzaFactory(hash_uid);
 	}
 
 	/**
-	 * Get the current Pizza Factory profile with token
+	 * Get the current Pizza Factory profile
 	 * 
 	 * @return Pizza Factory profile
 	 */
-	@Path("/authorize/{token}")
+	@Path("/findbyidentifier/{identifier}")
 	@GET
 	@Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML,
 			MediaType.APPLICATION_JSON })
-	public PizzaFactory getPizzaFactory(@PathParam("token") String token) {
-		return findPizzaFactory(token);
+	public Response getPizzaFactory(@PathParam("identifier") String identifier) {
+		String hash_uid = UserUtils.getCurrentUserObscureID();
+		return findPizzaFactory(hash_uid);
 	}
 
 	/**
@@ -86,9 +88,9 @@ public class PizzaFactoryResource {
 	 * 3. Pizza Factory already exsits.
 	 */
 	@POST
-	public void postPizzaFactory() {
+	public Response postPizzaFactory() {
 		String hash_uid = UserUtils.getCurrentUserObscureID();
-		newPizzaFactory(hash_uid);
+		return newPizzaFactory(hash_uid);
 	}
 
 	/**
@@ -98,8 +100,8 @@ public class PizzaFactoryResource {
 	 */
 	@Path("/authorize/{token}")
 	@POST
-	public void postPizzaFactory(@PathParam("token") String token) {
-		newPizzaFactory(token);
+	public Response postPizzaFactory(@PathParam("token") String token) {
+		return newPizzaFactory(token);
 	}
 
 	/**
@@ -107,9 +109,9 @@ public class PizzaFactoryResource {
 	 * 
 	 */
 	@DELETE
-	public void deletePizzaShop() {
+	public Response deletePizzaShop() {
 		String hash_uid = UserUtils.getCurrentUserObscureID();
-		removePizzaShop(hash_uid);
+		return removePizzaShop(hash_uid);
 	}
 
 	/**
@@ -118,8 +120,8 @@ public class PizzaFactoryResource {
 	 */
 	@Path("/authorize/{token}")
 	@DELETE
-	public void deletePizzaShop(@PathParam("token") String token) {
-		removePizzaShop(token);
+	public Response deletePizzaShop(@PathParam("token") String token) {
+		return removePizzaShop(token);
 	}
 
 	/**
@@ -203,9 +205,9 @@ public class PizzaFactoryResource {
 	 * 
 	 * @return Pizza Factory profile
 	 */
-	private PizzaFactory findPizzaFactory(String token) {
+	private Response findPizzaFactory(String token) {
 		if (token == null) {
-			return null;
+			return RestResponse.FORBIDDEN;
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -214,9 +216,11 @@ public class PizzaFactoryResource {
 		try {
 			Entity entity = datastore.get(key);
 			pizzaFactory = entityToObject(entity);
+			response = RestResponse.OK(pizzaFactory);
 		} catch (EntityNotFoundException e) {
+			response = RestResponse.NOT_FOUND;
 		}
-		return pizzaFactory;
+		return response;
 	}
 
 	/**
@@ -224,9 +228,9 @@ public class PizzaFactoryResource {
 	 * operation fails on following condition: 1.Pizza Shop not exists. 2.Pizza
 	 * Shop doesn't have identifier. 3. Pizza Factory already exsits.
 	 */
-	private void newPizzaFactory(String token) {
+	private Response newPizzaFactory(String token) {
 		if (token == null) {
-			return;
+			return RestResponse.FORBIDDEN;
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -241,14 +245,16 @@ public class PizzaFactoryResource {
 				pizzaFactory = new Entity("PizzaFactory", token);
 				String id = (String) pizzaShop.getProperty("identifier");
 				if (id == null) {
-					return;
+					return RestResponse.NOT_FOUND;
 				}
 				pizzaFactory.setProperty("identifier", id);
 				datastore.put(pizzaFactory);
+				response = RestResponse.OK;
 			}
 		} catch (EntityNotFoundException e) {
+			response = RestResponse.NOT_FOUND;
 		}
-		return;
+		return response;
 	}
 
 	/**
@@ -257,17 +263,21 @@ public class PizzaFactoryResource {
 	 * @param token
 	 *            Pizza Factory token
 	 */
-	private void removePizzaShop(String token) {
+	private Response removePizzaShop(String token) {
 		if (token == null) {
-			return;
+			return RestResponse.FORBIDDEN;
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		try {
 			Key key = KeyFactory.createKey("PizzaFactory", token);
 			datastore.delete(key);
+			response = RestResponse.OK;
 		} catch (Exception e) {
+			response = RestResponse.NOT_FOUND;
 		}
+		return response;
+
 	}
 
 	/**

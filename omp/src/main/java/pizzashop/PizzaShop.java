@@ -9,10 +9,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
 import order.Order;
-import pizza.Pizza;
 import pizzafactory.PizzaFactory;
 import user.User;
 
+/**
+ * PizzaShop Class
+ * 
+ * @author Geurney
+ *
+ */
 @XmlRootElement(name = "PizzaShop")
 @XmlSeeAlso(User.class)
 @XmlAccessorType(XmlAccessType.NONE)
@@ -85,19 +90,6 @@ public class PizzaShop extends User {
 		boolean isAvailable = true;
 		isAvailable &= pizzaFactory.hasCheese(order.getCheese());
 		return isAvailable;
-	}
-
-	/**
-	 * Create Pizza
-	 * 
-	 * @param order
-	 *            Order
-	 * @return Pizza
-	 */
-	public Pizza createPizza(Order order) {
-		Pizza pizza = pizzaFactory.preparePizza();
-		pizzaFactory.buildCheese(order.getCheese(), pizza);
-		return pizza;
 	}
 
 	/**

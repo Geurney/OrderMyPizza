@@ -1,5 +1,5 @@
 /**
- * 
+ * User datastructure
  */
 /**
  * @author Geurney

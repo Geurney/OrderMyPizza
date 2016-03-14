@@ -335,10 +335,14 @@ public class PizzaFactory {
 	/**
 	 * Prepare a raw pizza
 	 * 
+	 * @param size
+	 *            Pizza Size: small, medium, large
 	 * @return pizza
 	 */
-	public Pizza preparePizza() {
-		return new Pizza();
+	public Pizza preparePizza(String size) {
+		Pizza pizza = new Pizza();
+		pizza.setSize(size);
+		return pizza;
 	}
 
 	/**
@@ -352,10 +356,14 @@ public class PizzaFactory {
 		if (pizza == null) {
 			return false;
 		}
+		if (id == null) {
+			return true;
+		}
 		PizzaCrust crust = crusts.get(id);
 		if (crust == null) {
 			return false;
 		}
+		crust.setSize(pizza.getSize());
 		pizza.setCurst(crust);
 		return true;
 	}
@@ -371,10 +379,14 @@ public class PizzaFactory {
 		if (pizza == null) {
 			return false;
 		}
+		if (id == null) {
+			return true;
+		}
 		PizzaCheese cheese = cheeses.get(id);
 		if (cheese == null) {
 			return false;
 		}
+		cheese.setSize(pizza.getSize());
 		pizza.setCheese(cheese);
 		return true;
 	}
@@ -390,10 +402,14 @@ public class PizzaFactory {
 		if (pizza == null) {
 			return false;
 		}
+		if (id == null) {
+			return true;
+		}
 		PizzaSauce sauce = sauces.get(id);
 		if (sauce == null) {
 			return false;
 		}
+		sauce.setSize(pizza.getSize());
 		pizza.setSauce(sauce);
 		return true;
 	}
@@ -409,10 +425,14 @@ public class PizzaFactory {
 		if (pizza == null) {
 			return false;
 		}
+		if (id == null) {
+			return true;
+		}
 		PizzaToppingMeat topping = meats.get(id);
 		if (topping == null) {
 			return false;
 		}
+		topping.setSize(pizza.getSize());
 		pizza.addToppingMeat(topping);
 		return true;
 	}
@@ -428,10 +448,14 @@ public class PizzaFactory {
 		if (pizza == null) {
 			return false;
 		}
+		if (id == null) {
+			return true;
+		}
 		PizzaToppingVeg topping = vegs.get(id);
 		if (topping == null) {
 			return false;
 		}
+		topping.setSize(pizza.getSize());
 		pizza.addToppingVeg(topping);
 		return true;
 	}
@@ -443,6 +467,9 @@ public class PizzaFactory {
 	 *            meat toppings
 	 */
 	public void buildToppingMeat(List<String> meats, Pizza pizza) {
+		if (meats == null) {
+			return;
+		}
 		for (String meat : meats) {
 			buildToppingMeat(meat, pizza);
 		}
@@ -455,6 +482,9 @@ public class PizzaFactory {
 	 *            vegetable toppings
 	 */
 	public void buildToppingVeg(List<String> vegs, Pizza pizza) {
+		if (vegs == null) {
+			return;
+		}
 		for (String veg : vegs) {
 			buildToppingMeat(veg, pizza);
 		}
@@ -468,6 +498,9 @@ public class PizzaFactory {
 	 * @return True if contains
 	 */
 	public boolean hasCrust(String crust) {
+		if (crust == null) {
+			return false;
+		}
 		return crusts.containsKey(crust);
 	}
 
@@ -479,6 +512,9 @@ public class PizzaFactory {
 	 * @return True if contains
 	 */
 	public boolean hasCheese(String cheese) {
+		if (cheese == null) {
+			return false;
+		}
 		return cheeses.containsKey(cheese);
 	}
 
@@ -490,6 +526,9 @@ public class PizzaFactory {
 	 * @return True if contains
 	 */
 	public boolean hasSauce(String sauce) {
+		if (sauce == null) {
+			return false;
+		}
 		return sauces.containsKey(sauce);
 	}
 
@@ -501,6 +540,9 @@ public class PizzaFactory {
 	 * @return True if contains
 	 */
 	public boolean hasMeat(String meat) {
+		if (meat == null) {
+			return false;
+		}
 		return meats.containsKey(meat);
 	}
 
@@ -512,6 +554,9 @@ public class PizzaFactory {
 	 * @return True if contains
 	 */
 	public boolean hasVeg(String veg) {
+		if (veg == null) {
+			return false;
+		}
 		return vegs.containsKey(veg);
 	}
 

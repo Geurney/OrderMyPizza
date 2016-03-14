@@ -1,8 +1,8 @@
 /**
- * 
+ * Pizza Cheese datastructure and REST service
  */
 /**
- * @author user
+ * @author Geurney
  *
  */
 package pizza.cheese;

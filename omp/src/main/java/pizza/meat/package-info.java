@@ -1,8 +1,8 @@
 /**
- * 
+ * Pizza Meat Topping datastructure and REST Resource
  */
 /**
- * @author user
+ * @author Geurney
  *
  */
 package pizza.meat;

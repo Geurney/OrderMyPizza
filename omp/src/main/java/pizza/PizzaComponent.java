@@ -2,9 +2,9 @@ package pizza;
 
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  * PizzaCompoment is the abstraction of all pizza components.
@@ -72,6 +72,25 @@ public class PizzaComponent {
 	 */
 	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
+	}
+
+	/**
+	 * Get size
+	 * 
+	 * @return Size
+	 */
+	public PizzaComponentSize getSize() {
+		return size;
+	}
+
+	/**
+	 * Set size
+	 * 
+	 * @param size
+	 *            Size
+	 */
+	public void setSize(PizzaComponentSize size) {
+		this.size = size;
 	}
 
 	/**

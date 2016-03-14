@@ -1,5 +1,5 @@
 /**
- * 
+ * Pizza datastructure and REST service
  */
 /**
  * @author user

@@ -80,6 +80,8 @@
 	</form>
 	<button onclick="fieldset_enable()">Edit</button>
 	<button onclick="delete_req('/rest/pizzashop', '/ordermypizza.jsp')">Delete</button>
+    <br><br>
+    <div id="orderList">My Orders</div>
 
 	<%
 		}
@@ -94,11 +96,12 @@
 	var user = '<%=user%>';
 	if (user != "null") {
 	  $(document).ready(loadUser);
+	  $(document).ready(loadOrder);
 	}
 	function loadUser() {
 		$.ajax({
             dataType: "json",
-            url: "pizzashop/rest/pizzashop",
+            url: "/pizzashop/rest/pizzashop",
 			method : 'GET',
             success: function(data) {
             	document.getElementById('identifier').value = data.identifier;
@@ -118,6 +121,33 @@
             }
         });
 	}
+	function loadOrder() {
+		$.ajax({
+            dataType: "json",
+            url: "/pizzashop/rest/pizzashop/order",
+			method : 'GET',
+            success: function(data) {
+		        function makeUL(array) {
+			    	var list = document.createElement('ul');
+			   		 for(var i = 0; i < array.length; i++) {
+						var item = document.createElement('li');
+						var s = "Num.: " + array[i].number + " Crust: "+ array[i].crust +  " Cheese: "+ array[i].cheese + " Sauce: "+ array[i].sauce + " Meats: "+ array[i].meats + " Vegs: "+ array[i].vegs + " Price: " + array[i].price + " Cost: " + array[i].cost + " Profits: " + array[i].profit + " Date: " + array[i].date + " Status:"  + array[i].status;
+						item.appendChild(document.createTextNode(s));
+						list.appendChild(item);
+					}
+					return list;
+		        }
+		        document.getElementById('orderList').appendChild(makeUL(data));
+				},
+            error: function(jqXHR, textStatus, errorThrown) {
+			   	if (jqXHR.status == "404") {
+					fieldset_enable();
+				} else {
+					 alert(" " + jqXHR.status + " " + textStatus + " " +errorThrown);
+				}
+            }
+        });
+	}
 	function findmylocation() {
 		if(google.loader.ClientLocation) {
 			document.getElementById('city').value = google.loader.ClientLocation.address.city;
@@ -127,10 +157,10 @@
 			alert('Location not available');
 		}
 	}
-	function mysubmit(form) {
+	function mysubmit() {
 		$.ajax({
 			data: $('form').serializeArray(),
-			url: "pizzashop/rest/pizzashop",
+			url: "/pizzashop/rest/pizzashop",
 			method : 'POST',
 			success: function(data) {
 				  alert("Successful!");

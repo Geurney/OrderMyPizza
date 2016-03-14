@@ -78,7 +78,8 @@
 	</form>
 	<button onclick="fieldset_enable()">Edit</button>
 	<button onclick="delete_req('/rest/customer', '/ordermypizza.jsp')">Delete</button>
-
+	<br><br>
+   <div id="orderList">My Orders:</div>
 	<%
 		}
 	%>
@@ -92,6 +93,7 @@
 	var user = '<%=user%>';
 	if (user != "null") {
 	  $(document).ready(loadUser);
+	  $(document).ready(loadOrder);
 	}
 	function loadUser() {
 		$.ajax({
@@ -114,6 +116,33 @@
 				}
 			}
           });
+	}
+	function loadOrder() {
+		$.ajax({
+            dataType: "json",
+            url: "/customer/rest/customer/order",
+			method : 'GET',
+            success: function(data) {
+		        function makeUL(array) {
+			    	var list = document.createElement('ul');
+			   		 for(var i = 0; i < array.length; i++) {
+						var item = document.createElement('li');
+						var s = "Num.: " + array[i].number +"\tShop: " +array[i].pizzaShop +"\nDescription: " + array[i].description + "\nPrice: " + array[i].price + " Date: " + array[i].date + "\tStatus:"  + array[i].status;
+						item.appendChild(document.createTextNode(s));
+						list.appendChild(item);
+					}
+					return list;
+		        }
+		        document.getElementById('orderList').appendChild(makeUL(data));
+				},
+            error: function(jqXHR, textStatus, errorThrown) {
+			   	if (jqXHR.status == "404") {
+					fieldset_enable();
+				} else {
+					 alert(" " + jqXHR.status + " " + textStatus + " " +errorThrown);
+				}
+            }
+        });
 	}
 	function findmylocation() {
 		if(google.loader.ClientLocation) {

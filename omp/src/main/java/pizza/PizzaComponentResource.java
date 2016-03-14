@@ -28,10 +28,12 @@ import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
-/** When using for browser, user must login
- * as pizzashop to be authorized. When using for curl, user must provide token
- * associated with its pizzashop to be authorized with path /authorize/{token}.
- * Note PUT method with form should also be implemented.
+/**
+ * When using for browser, user must login as pizzashop to be authorized. When
+ * using for curl, user must provide token associated with its pizzashop to be
+ * authorized with path /authorize/{token}. Note PUT method with form should
+ * also be implemented.
+ * 
  * @author Geurney
  *
  */

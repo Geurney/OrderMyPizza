@@ -1,8 +1,8 @@
 /**
- * 
+ * PizzaShop datastructure and REST service
  */
 /**
- * @author user
+ * @author Geurney
  *
  */
 package pizzashop;

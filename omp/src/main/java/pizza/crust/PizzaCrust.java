@@ -9,10 +9,12 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import pizza.PizzaComponent;
 
 /**
+ * Pizza Crust Class
+ * 
  * @author Geurney
  *
  */
-@XmlRootElement(name="PizzaCrust")
+@XmlRootElement(name = "PizzaCrust")
 @XmlSeeAlso(PizzaComponent.class)
 public class PizzaCrust extends PizzaComponent {
 	public PizzaCrust() {

@@ -17,6 +17,12 @@ import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+/**
+ * Pizza Sauces REST Resource
+ * 
+ * @author Geurney
+ *
+ */
 public class PizzaSaucesResource extends
 		PizzaComponentsResource<PizzaSauce, PizzaSauceResource> {
 

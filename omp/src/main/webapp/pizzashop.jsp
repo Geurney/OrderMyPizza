@@ -69,14 +69,14 @@
 		<input type="radio" name="size" value="medium"> Medium<br />
 		<input type="radio" name="size" value="large"> Large<br />
 	  Select Your Pizza Crust:
-	  <select name="crust"></select><br/>
+	  <select id=crusts name="crust"></select><br/>
 	  Select Your Pizza Cheese:
-	  <select name="cheese"></select><br/>
+	  <select id=cheeses name="cheese"></select><br/>
 	  Select Your Pizza Sauce:
-	  <select name="sauce"></select><br/><br/>
+	  <select id=sauces name="sauce"></select><br/><br/>
 	  <div id="topping_meat">
 			<div id="topping_meat1">
-				Select your meat topping: <select name="meat1">
+				Select your meat topping: <select id=tm1 name="meat1">
 				</select> <br />
 			</div>
 	  </div>
@@ -86,14 +86,15 @@
 		<br />
 		<div id="topping_veg">
 			<div id="topping_veg1">
-				Select your vegetable topping: <select name="veg1">
+				Select your vegetable topping: <select id=tv1 name="veg1">
 				</select> <br />
 			</div>
 		</div>
 		<button type="button" value="Add another veg topping" onclick="addTopping('topping_veg');">Add another vegetable topping</button>
      	<button type="button" value="Remove last veg topping" onclick="removeTopping('topping_veg');">Remove last vegetable topping</button>
      	<br />
-      <input type="submit">
+		<input type="hidden" name="pizzashop" value="<%=identifier%>"></input>
+      <input type="submit" onclick="mysubmit(); return false;">
     </form>
 	<br />
 	<%
@@ -118,16 +119,19 @@
 	    function loadShop() {
 	    	$.ajax({
 	            dataType: "json",
-	            url: "/rest/pizzafactory",
+	            url: "/pizzafactory/rest/pizzafactory/findbyidentifier/" + identifier,
 				method : 'GET',
 	            success: function(data) {
-	            	??
-	            	document.getElementById('identifier').value = data.identifier;
-					document.getElementById('name').value = data.name;
-					document.getElementById('phone').value = data.phone;
-					document.getElementById('city').value = data.city;
-					document.getElementById('latitude').value = data.latitude;
-					document.getElementById('longitude').value = data.longitude;
+	            	crusts = data['crusts'];
+	            	cheeses = data['cheeses'];
+	            	sauces =  data['sauces'];
+	            	meats = data['meats'];
+	            	vegs = data['vegs'];
+	            	makeSelect(crusts, 'crusts', 'crust', false);
+	            	makeSelect(cheeses, 'cheeses', 'cheese', false);
+	            	makeSelect(sauces, 'sauces', 'sauce', false);
+	            	makeSelect(meats, 'tm1', 'meat',true);
+	            	makeSelect(vegs, 'tv1', 'veg',true);
 				 },
 	            error: function(jqXHR, textStatus, errorThrown) {
 				   	if (jqXHR.status == "404") {
@@ -139,6 +143,38 @@
 	            }
 	        });
 	    }
+	    function mysubmit() {
+			$.ajax({
+				data: $('form').serializeArray(),
+				url: "/order/rest/enqueue",
+				method : 'POST',
+				success: function(data) {
+					  alert("Successful!");
+					  window.location.href = "/ordermypizza.jsp";
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					alert(" " + jqXHR.status + " " + textStatus + " " +errorThrown);
+				}
+			});
+	    }
+		
+	    function makeSelect(array, parent, type, hasNone) {
+	    	var select = document.getElementById(parent);
+			if (hasNone == true) {
+	    	  var nopt = document.createElement('option');
+	    	  nopt.value='None';
+	    	  nopt.innerHTML = 'None';
+	    	  select.appendChild(nopt);
+			}
+	    	for (var i = 0; i < array.length; i++) {
+	    		var opt = document.createElement('option');
+		        opt.value = array[i].identifier; 
+				opt.name = type+i;
+		        opt.innerHTML = array[i].description; 
+		        select.appendChild(opt);
+	    	}
+	    }
+	    
 		var counter_meat = 1;
 		var counter_veg = 1;
 		var limit = 3;
@@ -157,8 +193,13 @@
 					}
 					newDiv.innerHTML = "Select your "
 							+ num
-							+ " meat topping:<select name='meat" + counter_meat + "'><option value='no_meat'>None</option><option value='meat_topping1'>Meat1</option><option value='meat_topping2'>Meat2</option><option value='meat_topping3'>Meat3</option></select><br />";
+							+ " meat topping:";
+					var newSelect = document.createElement('select');
+					newSelect.setAttribute('id', 'tm' + counter_meat);
+					newSelect.setAttribute('name', 'meat' + counter_meat);
+					newDiv.appendChild(newSelect);
 					document.getElementById(divName).appendChild(newDiv);
+					makeSelect(meats, 'tm' + counter_meat, 'meat', true);
 				}
 			} else if (divName == 'topping_veg') {
 				if (counter_veg >= limit) {
@@ -173,9 +214,14 @@
 						num = 'third';
 					}
 					newDiv.innerHTML = "Select your "
-							+ num
-							+ " vegetable topping:<select name='veg" + counter_veg + "'><option value='no_veg'>None</option><option value='veg_topping1'>Veg1</option><option value='veg_topping2'>Veg2</option><option value='veg_topping3'>Veg3</option></select><br />";
-					document.getElementById(divName).appendChild(newDiv);
+						+ num
+						+ " vegetable topping:";
+				    var newSelect = document.createElement('select');
+				    newSelect.setAttribute('id', 'tv' + counter_veg);
+				    newSelect.setAttribute('name', 'veg' + counter_veg);
+				    newDiv.appendChild(newSelect);
+				    document.getElementById(divName).appendChild(newDiv);
+				    makeSelect(meats, 'tv' + counter_veg, 'veg', true);
 				}
 			}
 		}

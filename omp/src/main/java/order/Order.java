@@ -1,6 +1,6 @@
 package order;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -56,7 +56,7 @@ public class Order {
 	/**
 	 * Date
 	 */
-	private Date date;
+	private String date;
 
 	/**
 	 * Price
@@ -82,6 +82,11 @@ public class Order {
 	 * Order number
 	 */
 	private String number;
+
+	public Order() {
+		meats = new ArrayList<String>();
+		vegs = new ArrayList<String>();
+	}
 
 	/**
 	 * Get PizzaShop
@@ -200,6 +205,9 @@ public class Order {
 	 *            the meat identifier
 	 */
 	public void addMeat(String meat) {
+		if (meat == null) {
+			return;
+		}
 		meats.add(meat);
 	}
 
@@ -220,6 +228,9 @@ public class Order {
 	 *            the vegetable topping identifier
 	 */
 	public void addVeg(String veg) {
+		if (veg == null) {
+			return;
+		}
 		vegs.add(veg);
 	}
 
@@ -261,7 +272,7 @@ public class Order {
 	 * @return the date
 	 */
 	@XmlElement
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
@@ -271,7 +282,7 @@ public class Order {
 	 * @param date
 	 *            the date to set
 	 */
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 

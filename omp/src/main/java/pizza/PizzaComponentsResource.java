@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.GET;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
@@ -32,7 +32,9 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 /**
- * @author user
+ * PizzaCompoents Resource abstract class
+ * 
+ * @author Geurney
  *
  */
 public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
@@ -275,16 +277,16 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 		if (identifier == null || description == null || cost1 == null
 				|| cost2 == null || cost3 == null || price1 == null
 				|| price2 == null || price3 == null) {
-					if (identifier == null) {
-					System.out.println("HERE--identifier is null");
-				  }
-				  if (description == null)  {
-					  System.out.println("HERE--description is null");
-				  }
-				  if (cost1 == null)  {
-					  System.out.println("HERE--cost1 is null");
-				  }
-					System.out.println("HERE--Null Parameter");
+			if (identifier == null) {
+				System.out.println("HERE--identifier is null");
+			}
+			if (description == null) {
+				System.out.println("HERE--description is null");
+			}
+			if (cost1 == null) {
+				System.out.println("HERE--cost1 is null");
+			}
+			System.out.println("HERE--Null Parameter");
 			return RestResponse.BAD;
 		}
 		double ct1 = Double.valueOf(cost1);
