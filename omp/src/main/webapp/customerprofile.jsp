@@ -78,7 +78,7 @@
 	</form>
 	<button onclick="fieldset_enable()">Edit</button>
 	<button onclick="delete_req('/rest/customer', '/ordermypizza.jsp')">Delete</button>
-	<br><br>
+	<div style="height: 100px"></div>
    <div id="orderList">My Orders:</div>
 	<%
 		}

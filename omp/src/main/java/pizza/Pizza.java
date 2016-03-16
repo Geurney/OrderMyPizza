@@ -18,7 +18,7 @@ import pizza.veg.PizzaToppingVeg;
 /**
  * Pizza Definition
  * 
- * @author geurney
+ * @author Geurney
  *
  */
 @XmlRootElement

@@ -55,6 +55,7 @@
 		} else {
 		}
     %>
+    <div style="height: 100px"></div>
 	<br>
     <div id="factoryList"></div>
     <br>

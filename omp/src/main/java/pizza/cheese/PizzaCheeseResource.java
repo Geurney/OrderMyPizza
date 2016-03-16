@@ -32,6 +32,13 @@ public class PizzaCheeseResource extends PizzaComponentResource<PizzaCheese> {
 		type = "cheese";
 	}
 
+	/**
+	 * Find Pizza Component in pizza factory
+	 * 
+	 * @param token
+	 *            PizzaFactory token
+	 * @return response
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Response findPizzaComponent(String token) {
@@ -64,6 +71,13 @@ public class PizzaCheeseResource extends PizzaComponentResource<PizzaCheese> {
 		return response;
 	}
 
+	/**
+	 * Convert entity to object
+	 * 
+	 * @param entity
+	 *            Entity
+	 * @return Object
+	 */
 	@SuppressWarnings("unchecked")
 	public static PizzaCheese entityToObject(EmbeddedEntity entity) {
 		if (entity == null) {

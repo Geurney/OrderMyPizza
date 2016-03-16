@@ -36,6 +36,12 @@ import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 
+/**
+ * Enqueue an order REST service
+ * 
+ * @author Geurney
+ *
+ */
 @Path("/enqueue")
 public class EnqueueResource {
 	@Context
@@ -70,6 +76,7 @@ public class EnqueueResource {
 	 *            Pizza Topping Vegetable2
 	 * @param veg3
 	 *            Pizza Topping Vegetable3
+	 * @return response
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -112,6 +119,7 @@ public class EnqueueResource {
 	 *            Pizza Topping Vegetable2
 	 * @param veg3
 	 *            Pizza Topping Vegetable3
+	 * @return response
 	 */
 	@Path("/authorize/{token}")
 	@POST
@@ -133,6 +141,7 @@ public class EnqueueResource {
 	 * 
 	 * @param order
 	 *            Order
+	 * @return response
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -187,6 +196,7 @@ public class EnqueueResource {
 	 * 
 	 * @param order
 	 *            Order
+	 * @return response
 	 */
 	@Path("/authorize/{token}")
 	@POST
@@ -243,6 +253,7 @@ public class EnqueueResource {
 	 *            Order number
 	 * @param status
 	 *            New Order status
+	 * @return response
 	 */
 	@Path("/findbynumber/{number}")
 	@PUT
@@ -262,6 +273,7 @@ public class EnqueueResource {
 	 *            Order number
 	 * @param status
 	 *            New Order status
+	 * @return response
 	 */
 	@Path("/findbynumber/{number}/authorize/{token}")
 	@PUT
@@ -366,6 +378,7 @@ public class EnqueueResource {
 	 *            Order number
 	 * @param status
 	 *            New Order status
+	 * @return response
 	 */
 	private Response updateOrder(String token, String num, String status) {
 		if (token == null) {

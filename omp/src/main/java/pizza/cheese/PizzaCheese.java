@@ -17,6 +17,9 @@ import pizza.PizzaComponent;
 @XmlRootElement(name = "PizzaCheese")
 @XmlSeeAlso(PizzaComponent.class)
 public class PizzaCheese extends PizzaComponent {
+	/**
+	 * Constructor
+	 */
 	public PizzaCheese() {
 		super();
 	}

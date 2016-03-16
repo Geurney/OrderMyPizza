@@ -26,6 +26,13 @@ import com.google.appengine.api.datastore.KeyFactory;
  */
 public class PizzaCrustResource extends PizzaComponentResource<PizzaCrust> {
 
+	/**
+	 * Pizza Crust Resource Constructor
+	 * 
+	 * @param uriInfo
+	 * @param request
+	 * @param identifier
+	 */
 	public PizzaCrustResource(UriInfo uriInfo, Request request,
 			String identifier) {
 		super(uriInfo, request, identifier);

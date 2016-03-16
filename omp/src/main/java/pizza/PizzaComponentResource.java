@@ -124,7 +124,7 @@ public abstract class PizzaComponentResource<T extends PizzaComponent> {
 	 *            PizzaComponent large size cost. Should not be negative
 	 * @param price3
 	 *            PizzaComponent large size price. Should not be negative
-	 * 
+	 * @return response
 	 */
 	@PUT
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -167,7 +167,7 @@ public abstract class PizzaComponentResource<T extends PizzaComponent> {
 	 *            PizzaComponent large size cost. Should not be negative
 	 * @param price3
 	 *            PizzaComponent large size price. Should not be negative
-	 * 
+	 * @return response
 	 */
 	@Path("/authorize/{token}")
 	@PUT
@@ -190,6 +190,7 @@ public abstract class PizzaComponentResource<T extends PizzaComponent> {
 	 * 
 	 * @param component
 	 *            Pizza Component
+	 * @return response
 	 */
 	public Response putPizzaComponent(PizzaComponent component) {
 		String hash_uid = UserUtils.getCurrentUserObscureID();
@@ -209,6 +210,7 @@ public abstract class PizzaComponentResource<T extends PizzaComponent> {
 	 *            Pizza Factory token
 	 * @param component
 	 *            Pizza Component
+	 * @return response
 	 */
 	public Response putPizzaComponent(@PathParam("token") String token,
 			PizzaComponent component) {
@@ -235,6 +237,7 @@ public abstract class PizzaComponentResource<T extends PizzaComponent> {
 	 * 
 	 * @param token
 	 *            Pizza Factory token
+	 * @return response
 	 */
 	public Response deletePizzaComponentToken(@PathParam("token") String token) {
 		return removePizzaComponent(token);
@@ -356,6 +359,7 @@ public abstract class PizzaComponentResource<T extends PizzaComponent> {
 	 * 
 	 * @param token
 	 *            Pizza Factory token
+	 * @return response
 	 */
 	@SuppressWarnings("unchecked")
 	protected Response removePizzaComponent(String token) {

@@ -59,6 +59,8 @@ public class PizzaComponent {
 	}
 
 	/**
+	 * Get Pizza Component identifier
+	 * 
 	 * @return the identifier
 	 */
 	@XmlElement
@@ -67,6 +69,8 @@ public class PizzaComponent {
 	}
 
 	/**
+	 * Set Pizza Component identifier
+	 * 
 	 * @param identifier
 	 *            the identifier to set
 	 */

@@ -27,6 +27,12 @@ import com.google.appengine.api.datastore.KeyFactory;
 public class PizzaToppingVegResource extends
 		PizzaComponentResource<PizzaToppingVeg> {
 
+	/**
+	 * Constructor 
+	 * @param uriInfo uriInfo
+	 * @param request request
+	 * @param identifier identifier
+	 */
 	public PizzaToppingVegResource(UriInfo uriInfo, Request request,
 			String identifier) {
 		super(uriInfo, request, identifier);

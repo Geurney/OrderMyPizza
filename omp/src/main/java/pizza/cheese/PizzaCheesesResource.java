@@ -26,11 +26,17 @@ import com.google.appengine.api.datastore.KeyFactory;
 public class PizzaCheesesResource extends
 		PizzaComponentsResource<PizzaCheese, PizzaCheeseResource> {
 
+	/**
+	 * Constructor
+	 */
 	public PizzaCheesesResource() {
 		super();
 		type = "cheese";
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public PizzaCheeseResource handleComponent(String identifier) {
 		return new PizzaCheeseResource(uriInfo, request, identifier);

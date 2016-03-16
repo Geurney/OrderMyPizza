@@ -26,6 +26,9 @@ import com.google.appengine.api.datastore.KeyFactory;
 public class PizzaToppingMeatsResource extends
 		PizzaComponentsResource<PizzaToppingMeat, PizzaToppingMeatResource> {
 
+	/**
+	 * Constructor
+	 */
 	public PizzaToppingMeatsResource() {
 		super();
 		type = "meat";

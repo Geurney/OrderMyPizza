@@ -101,6 +101,7 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 	 *            PizzaComponent large size cost. Should not be negative
 	 * @param price3
 	 *            PizzaComponent large size price. Should not be negative
+	 * @return response
 	 * 
 	 */
 	@POST
@@ -141,6 +142,7 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 	 *            PizzaComponent large size cost. Should not be negative
 	 * @param price3
 	 *            PizzaComponent large size price. Should not be negative
+	 * @return response
 	 * 
 	 */
 	@Path("/authorize/{token}")
@@ -165,6 +167,7 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 	 * 
 	 * @param component
 	 *            T
+	 * @return response
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -188,6 +191,7 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 	 *            Pizza Factory token
 	 * @param component
 	 *            T
+	 * @return response
 	 */
 	@Path("/authorize/{token}")
 	@POST
@@ -206,6 +210,7 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 	/**
 	 * Delete All Pizza Components
 	 * 
+	 * @return response
 	 */
 	@DELETE
 	public Response deletePizzaComponents() {
@@ -218,6 +223,7 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 	 * 
 	 * @param token
 	 *            Pizza Factory token
+	 * @return response
 	 */
 	@Path("/authorize/{token}")
 	@DELETE
@@ -264,6 +270,7 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 	 *            PizzaComponent large size cost. Should not be negative
 	 * @param price3
 	 *            PizzaComponent large size price. Should not be negative
+	 * @return response
 	 * 
 	 */
 	@SuppressWarnings("unchecked")
@@ -336,6 +343,7 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 	 * 
 	 * @param token
 	 *            Pizza Factory token
+	 * @return response
 	 */
 	protected Response removePizzaComponents(String token) {
 		if (token == null) {
