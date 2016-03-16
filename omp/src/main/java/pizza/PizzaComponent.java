@@ -110,7 +110,7 @@ public class PizzaComponent {
 	/**
 	 * Set component description
 	 * 
-	 * @param descripition
+	 * @param description
 	 *            the description to set
 	 */
 	public void setDescription(String description) {
@@ -174,7 +174,7 @@ public class PizzaComponent {
 	/**
 	 * Set component costs
 	 * 
-	 * @param cost
+	 * @param costs
 	 *            Costs
 	 */
 	public void setCosts(List<Double> costs) {

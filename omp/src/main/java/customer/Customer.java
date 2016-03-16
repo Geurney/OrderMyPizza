@@ -33,8 +33,6 @@ public class Customer extends User {
 	/**
 	 * Default constructor
 	 * 
-	 * @param token
-	 *            Token
 	 */
 	public Customer() {
 		super();

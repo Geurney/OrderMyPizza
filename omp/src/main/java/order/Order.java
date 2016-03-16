@@ -329,8 +329,6 @@ public class Order {
 	/**
 	 * Set profit
 	 * 
-	 * @param profit
-	 *            Profit
 	 */
 	@XmlElement
 	public float getProfit() {

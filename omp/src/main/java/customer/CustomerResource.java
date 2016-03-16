@@ -202,8 +202,6 @@ public class CustomerResource {
 	 *            Customer Hash ID
 	 * @param customer
 	 *            Customer
-	 * @param phone
-	 *            Customer phone
 	 * @return Response
 	 * 
 	 */

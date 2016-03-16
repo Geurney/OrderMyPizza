@@ -29,9 +29,9 @@ public class PizzaCrustResource extends PizzaComponentResource<PizzaCrust> {
 	/**
 	 * Pizza Crust Resource Constructor
 	 * 
-	 * @param uriInfo
-	 * @param request
-	 * @param identifier
+	 * @param uriInfo uriInfo
+	 * @param request request
+	 * @param identifier identifier
 	 */
 	public PizzaCrustResource(UriInfo uriInfo, Request request,
 			String identifier) {

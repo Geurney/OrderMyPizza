@@ -106,9 +106,7 @@ public abstract class PizzaComponentResource<T extends PizzaComponent> {
 	 * found. 4.New identifier(different from current) already exists. 5.
 	 * Original costs/prices are not set.
 	 * 
-	 * @param token
-	 *            Pizza Factory token
-	 * @param newIdentifier
+	 * @param identifier
 	 *            PizzaComponent identifier. Should be unique.
 	 * @param description
 	 *            PizzaComponent description
@@ -151,7 +149,7 @@ public abstract class PizzaComponentResource<T extends PizzaComponent> {
 	 * 
 	 * @param token
 	 *            Pizza Factory token
-	 * @param newIdentifier
+	 * @param identifier
 	 *            PizzaComponent identifier. Should be unique.
 	 * @param description
 	 *            PizzaComponent description
@@ -280,6 +278,7 @@ public abstract class PizzaComponentResource<T extends PizzaComponent> {
 	 *            PizzaComponent large size cost. Should not be negative
 	 * @param price3
 	 *            PizzaComponent large size price. Should not be negative
+	 *            @return Response
 	 * 
 	 */
 	@SuppressWarnings("unchecked")

@@ -19,8 +19,6 @@ public class Admin extends User {
 	/**
 	 * Default constructor
 	 * 
-	 * @param token
-	 *            Token
 	 */
 	public Admin() {
 		super();

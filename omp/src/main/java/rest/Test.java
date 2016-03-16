@@ -79,7 +79,7 @@ public class Test {
 	}
 
 	/**
-	 * @param key the key to set
+	 * @param keyname the key to set
 	 */
 	public void setKeyName(String keyname) {
 		this.keyname = keyname;

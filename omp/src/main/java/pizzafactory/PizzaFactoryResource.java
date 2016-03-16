@@ -262,6 +262,7 @@ public class PizzaFactoryResource {
 	 * 
 	 * @param token
 	 *            Pizza Factory token
+	 *  @return response
 	 */
 	private Response removePizzaShop(String token) {
 		if (token == null) {

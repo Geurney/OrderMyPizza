@@ -33,8 +33,6 @@ public class UserUtils {
 	 * @param uid
 	 *            User ID
 	 * @return Obscured UID
-	 * @throws NoSuchAlgorithmException
-	 *             Hash function not available.
 	 */
 	public static String obsecure(String uid) {
 		if (uid != null) {

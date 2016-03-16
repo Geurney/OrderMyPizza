@@ -116,7 +116,7 @@ public class CustomerOrderResource {
 
 	/**
 	 * Delete an order
-	 * 
+	 * @param number Order number
 	 */
 	@Path("/findbynumber/{number}")
 	@DELETE
@@ -127,6 +127,8 @@ public class CustomerOrderResource {
 
 	/**
 	 * Delete an order with token for curl
+	 * @param token Customer token
+	 * @param number order number
 	 * 
 	 */
 	@Path("/findbynumber/{number}/authorize/{token}")

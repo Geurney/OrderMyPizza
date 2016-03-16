@@ -104,7 +104,7 @@ public class PizzaShopResource {
 	/**
 	 * Search shops within 5000 meters
 	 * 
-	 * @warning Not available on Google App Engine
+	 * Not available on Google App Engine
 	 * @param latlnt
 	 *            Center
 	 * @return
@@ -426,7 +426,8 @@ public class PizzaShopResource {
 
 	/**
 	 * Create/Update new PizzaShop
-	 * 
+	 * @param identifier 
+	 * PizzaShop identifier
 	 * @param name
 	 *            PizzaShop name
 	 * @param phone

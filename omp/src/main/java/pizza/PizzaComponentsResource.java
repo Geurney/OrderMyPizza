@@ -83,9 +83,7 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 	 * conditions:1.Token is null 2.Parameters are missing 3.costs/prices are
 	 * negative 4.Identifier already exists
 	 * 
-	 * @param token
-	 *            Pizza Factory token. Should not be null
-	 * @param newIdentifier
+	 * @param identifier
 	 *            PizzaComponent identifier. Should be unique.
 	 * @param description
 	 *            PizzaComponent description. Should not be null
@@ -254,7 +252,7 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 	 * 
 	 * @param token
 	 *            Pizza Factory token. Should not be null
-	 * @param newIdentifier
+	 * @param identifier
 	 *            PizzaComponent identifier. Should be unique.
 	 * @param description
 	 *            PizzaComponent description. Should not be null
