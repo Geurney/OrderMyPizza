@@ -1,0 +1,39 @@
+1. Datastore
+Get data from datastore(not affect memcache):
+curl -H "Accept: application/json" -X GET http://ordermypizza-y.appspot.com/curl/test/ds
+Should be empty
+
+Write data to datastore(not affect memcache):
+curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"keyName":"key1","name":"test1", "phone":"123456", "address": "Goleta"}'  http://ordermypizza-y.appspot.com/curl/test/ds
+
+Get data from datastore(not affect memcache):
+curl -H "Accept: application/json" -X GET http://ordermypizza-y.appspot.com/curl/test/ds
+Should receive key1 data
+
+2. Memcache
+Get data from memcache(not affect datastore):
+curl -H "Accept: application/json" -X GET http://ordermypizza-y.appspot.com/curl/test/mc/key2
+Should be empty
+
+Write data to memcache(not affect datastore):
+curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"keyName":"key2","name":"test2", "phone":"234561", "address": "Santa Barbara"}'  http://ordermypizza-y.appspot.com/curl/test/mc
+
+Get data from memcache(not affect datastore):
+curl -H "Accept: application/json" -X GET http://ordermypizza-y.appspot.com/curl/test/mc/key2
+Should receive key2 data
+
+3. TaskQueue
+Get data from taskqueue:
+curl -H "Accept: application/json" -X GET http://ordermypizza-y.appspot.com/curl/test/qu
+Should receive: {"queuename":"default","numoftasks":"0"}
+
+Write a task to taskqueue(store key3 data in datastore and in memcache):
+curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"keyName":"key3","name":"test3", "phone":"345612", "address": "New York"}'  http://ordermypizza-y.appspot.com/curl/test/qu
+
+Get data from datastore(not affect memcache):
+curl -H "Accept: application/json" -X GET http://ordermypizza-y.appspot.com/curl/test/ds
+Should receive key1 and key3 data
+
+Get data from memcache(not affect datastore):
+curl -H "Accept: application/json" -X GET http://ordermypizza-y.appspot.com/curl/test/mc/key3
+Should receive  key3 data

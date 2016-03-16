@@ -1,72 +1,21 @@
-text/xml application/xml
-application/json
+Get all pizzashops:
+curl -H "Accept: application/json" -X GET http://ordermypizza-y.appspot.com/pizzashop/rest/pizzashop/all
 
-Customer:
-Login in 
-GET Accept: text/xml http://localhost:8080/rest/customer 
-GET Accept: application/xml http://localhost:8080/rest/customer
-GET Accept: application/json http://localhost:8080/rest/customer
-curl -H "Accept: text/xml" -X GET http://localhost:8080/rest/customer/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
-curl -H "Accept: application/xml" -X GET http://localhost:8080/rest/customer/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
-curl -H "Accept: application/json" -X GET http://localhost:8080/rest/customer/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
+Find pizzashops in Goleta:
+curl -H "Accept: application/json" -X GET http://ordermypizza-y.appspot.com/pizzashop/rest/pizzashop/city/Goleta
 
-_ah admin untest
+Find pizzashop by its identifier:
+curl -H "Accept: application/json" -X GET http://ordermypizza-y.appspot.com/pizzashop/rest/pizzashop/findbyidentifier/SPS
 
-POST http://localhost:8080/rest/customer 
-Content-Type: application/x-www-form-urlencoded 
-name=Geurney&address=Unviersity+Of+California%2C+Santa+Barbara&phone=123456789
+Find pizza factory by its identifier:
+curl -H "Accept: application/json" -X GET http://ordermypizza-y.appspot.com/pizzafactory/rest/pizzafactory/findbyidentifier/SPS
 
-POST http://localhost:8080/rest/customer 
-Content-Type: application/json 
-{"name":"Geurney", "address":"UCSB","phone":"876543255"}
+After login in as a customer in web browser use Rest Client plug in for Chrome:
+Get user profile:
+GET http://ordermypizza-y.appspot.com/customer/rest/customer/
+"Accept: application/json" 
 
-PUT http://localhost:8080/rest/customer/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
-Content-Type: application/x-www-form-urlencoded 
-name=Geurney&address=Unviersity+Of+California%2C+Santa+Barbara&phone=123456789
-
-PUT http://localhost:8080/rest/customer/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
-Content-Type: application/json 
-{"name":"Geurney", "address":"UCSB","phone":"876543255"}
-
-curl -H "Content-type: application/json" -X PUT -d '{"name":"Geurney", "address":"UCSB","phone":"876543255"}' http://localhost:8080/rest/customer/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
-
-DELETE http://localhost:8080/rest/customer
-
-PizzaShop
-Login in as PizzaShop
-GET Accept: text/xml http://localhost:8080/rest/pizzashop
-GET Accept: application/xml http://localhost:8080/rest/pizzashop
-GET Accept: application/json http://localhost:8080/rest/pizzashop
-
-GET Accept: text/xml http://localhost:8080/rest/pizzashop/all
-GET Accept: application/xml http://localhost:8080/rest/pizzashop/all
-GET Accept: application/json http://localhost:8080/rest/pizzashop/all
-
-curl -H "Accept: text/xml" -X GET http://localhost:8080/rest/pizzashop/findbyname/name
-curl -H "Accept: text/xml" -X GET http://localhost:8080/rest/pizzashop/findbytoken/token
-curl -H "Accept: text/xml" -X GET http://localhost:8080/rest/pizzashop/all
-curl -H "Accept: text/xml" -X GET http://localhost:8080/rest/pizzashop/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
-curl -H "Accept: application/xml" -X GET http://localhost:8080/rest/pizzashop/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
-curl -H "Accept: application/json" -X GET http://localhost:8080/rest/pizzashop/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
-
-POST http://localhost:8080/rest/pizzashop
-Content-Type: application/x-www-form-urlencoded 
-name=Geurney&address=Unviersity+Of+California%2C+Santa+Barbara&phone=123456789
-
-POST http://localhost:8080/rest/pizzashop 
-Content-Type: application/json 
-{"name":"Geurney", "address":"UCSB","phone":"876543255"}
-
-PUT http://localhost:8080/rest/pizzashop/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
-Content-Type: application/x-www-form-urlencoded 
-name=Geurney&address=Unviersity+Of+California%2C+Santa+Barbara&phone=123456789
-
-PUT http://localhost:8080/rest/pizzashop/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
-Content-Type: application/json 
-{"name":"Geurney", "address":"UCSB","phone":"876543255"}
-
-curl -H "Content-type: application/json" -X PUT -d '{"name":"Geurney", "address":"UCSB","phone":"876543255"}' http://localhost:8080/rest/pizzashop/e9c6424c805158a0d9ceef283141d076ffb750814c2039b716b80c863454ab1b
-
-DELETE http://localhost:8080/rest/pizzashop
-DELETE http://localhost:8080/rest/pizzashop/findbytoken/token
-
+Update user profile:
+POST http://ordermypizza-y.appspot.com/customer/rest/customer
+"Content-Type: application/json" 
+'{"name":"New Name","phone":"987654321"}'
