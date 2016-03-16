@@ -564,6 +564,8 @@ public class PizzaShopResource {
 				.getDatastoreService();
 		try {
 			Key key = KeyFactory.createKey("PizzaShop", token);
+			Entity entity = datastore.get(key);
+			syncCache.delete((String)entity.getProperty("city") + "list");
 			datastore.delete(key);
 			syncCache.delete(token + "pizzashop");
 			response = RestResponse.OK;
