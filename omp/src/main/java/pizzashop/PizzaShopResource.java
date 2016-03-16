@@ -483,6 +483,7 @@ public class PizzaShopResource {
 				entity.setProperty("location", location);
 			}
 			entityToCache(syncCache, entity);
+			syncCache.delete(city + "list");
 			datastore.put(entity);
 		}
 		return RestResponse.OK;
