@@ -39,6 +39,11 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 /**
  * Pizza Factory REST service
@@ -78,8 +83,18 @@ public class PizzaFactoryResource {
 	@Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML,
 			MediaType.APPLICATION_JSON })
 	public Response getPizzaFactory(@PathParam("identifier") String identifier) {
-		String hash_uid = UserUtils.getCurrentUserObscureID();
-		return findPizzaFactory(hash_uid);
+		if (identifier == null) {
+			return RestResponse.BAD();
+		}
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		Filter identifierFilter = new FilterPredicate("identifier",
+				FilterOperator.EQUAL, identifier);
+		Query q = new Query("PizzaFactory").setFilter(identifierFilter);
+		PreparedQuery pq = datastore.prepare(q);
+		Entity result = pq.asSingleEntity();
+		PizzaFactory pizzaFactory = entityToObject(result);
+		return RestResponse.OK(pizzaFactory);
 	}
 
 	/**
@@ -262,7 +277,7 @@ public class PizzaFactoryResource {
 	 * 
 	 * @param token
 	 *            Pizza Factory token
-	 *  @return response
+	 * @return response
 	 */
 	private Response removePizzaShop(String token) {
 		if (token == null) {
