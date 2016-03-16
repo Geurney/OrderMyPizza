@@ -147,7 +147,7 @@ public class EnqueueResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response postOrder(Order order) {
 		if (order == null) {
-			return RestResponse.BAD;
+			return RestResponse.BAD();
 		}
 		String hash_uid = UserUtils.getCurrentUserObscureID();
 		List<String> meats = order.getMeats();
@@ -203,7 +203,7 @@ public class EnqueueResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response postOrder(@PathParam("token") String token, Order order) {
 		if (order == null) {
-			return RestResponse.BAD;
+			return RestResponse.BAD();
 		}
 		List<String> meats = order.getMeats();
 		String meat1 = null;
@@ -287,11 +287,11 @@ public class EnqueueResource {
 			String crust, String cheese, String sauce, String meat1,
 			String meat2, String meat3, String veg1, String veg2, String veg3) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		if (pizzaShop == null || size == null || crust == null
 				|| cheese == null || sauce == null) {
-			return RestResponse.BAD;
+			return RestResponse.BAD();
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -300,7 +300,7 @@ public class EnqueueResource {
 		try {
 			customer = datastore.get(key);
 		} catch (EntityNotFoundException e) {
-			return RestResponse.NOT_FOUND;
+			return RestResponse.NOT_FOUND();
 		}
 
 		Filter identifierFilter = new FilterPredicate("identifier",
@@ -309,7 +309,7 @@ public class EnqueueResource {
 		PreparedQuery pq = datastore.prepare(q);
 		Entity entity = pq.asSingleEntity();
 		if (entity == null) {
-			return RestResponse.NOT_FOUND;
+			return RestResponse.NOT_FOUND();
 		}
 		PizzaFactory pizzaFactory = PizzaFactoryResource.entityToObject(entity);
 
@@ -319,47 +319,47 @@ public class EnqueueResource {
 				.param("customer", (String) customer.getProperty("email"))
 				.param("size", size);
 		if (crust != null && !pizzaFactory.hasCrust(crust)) {
-			return RestResponse.BAD;
+			return RestResponse.BAD();
 		} else {
 			task.param("crust", crust);
 		}
 		if (cheese != null && !pizzaFactory.hasCheese(cheese)) {
-			return RestResponse.BAD;
+			return RestResponse.BAD();
 		} else if (cheese != null) {
 			task.param("cheese", cheese);
 		}
 		if (sauce != null && !pizzaFactory.hasSauce(sauce)) {
-			return RestResponse.BAD;
+			return RestResponse.BAD();
 		} else if (sauce != null) {
 			task.param("sauce", sauce);
 		}
-		if (meat1 != null && !pizzaFactory.hasMeat(meat1)) {
-			return RestResponse.BAD;
+		if (meat1 != null && !meat1.equals("None") && !pizzaFactory.hasMeat(meat1)) {
+			return RestResponse.BAD();
 		} else if (meat1 != null) {
 			task.param("meat1", meat1);
 		}
-		if (meat2 != null && !pizzaFactory.hasMeat(meat2)) {
-			return RestResponse.BAD;
+		if (meat2 != null && !meat2.equals("None") && !pizzaFactory.hasMeat(meat2)) {
+			return RestResponse.BAD();
 		} else if (meat2 != null) {
 			task.param("meat2", meat2);
 		}
-		if (meat3 != null && !pizzaFactory.hasMeat(meat3)) {
-			return RestResponse.BAD;
+		if (meat3 != null && !meat3.equals("None") && !pizzaFactory.hasMeat(meat3)) {
+			return RestResponse.BAD();
 		} else if (meat3 != null) {
 			task.param("meat3", meat3);
 		}
-		if (veg1 != null && !pizzaFactory.hasVeg(veg1)) {
-			return RestResponse.BAD;
+		if (veg1 != null && !veg1.equals("None") && !pizzaFactory.hasVeg(veg1)) {
+			return RestResponse.BAD();
 		} else if (veg1 != null) {
 			task.param("veg1", veg1);
 		}
-		if (veg2 != null && !pizzaFactory.hasVeg(veg2)) {
-			return RestResponse.BAD;
+		if (veg2 != null && !veg2.equals("None") && !pizzaFactory.hasVeg(veg2)) {
+			return RestResponse.BAD();
 		} else if (veg2 != null) {
 			task.param("veg2", veg2);
 		}
-		if (veg3 != null && !pizzaFactory.hasVeg(veg3)) {
-			return RestResponse.BAD;
+		if (veg3 != null && !veg3.equals("None") && !pizzaFactory.hasVeg(veg3)) {
+			return RestResponse.BAD();
 		} else if (veg3 != null) {
 			task.param("veg3", veg3);
 		}
@@ -382,10 +382,10 @@ public class EnqueueResource {
 	 */
 	private Response updateOrder(String token, String num, String status) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		if (num == null || status == null) {
-			return RestResponse.BAD;
+			return RestResponse.BAD();
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -396,14 +396,14 @@ public class EnqueueResource {
 			Entity order = datastore.get(o_key);
 			if (!((String) pizzaShop.getProperty("identifier"))
 					.equals((String) order.getProperty("pizzashop"))) {
-				return RestResponse.BAD;
+				return RestResponse.BAD();
 			}
 			Queue queue = QueueFactory.getDefaultQueue();
 			queue.add(TaskOptions.Builder.withUrl("/worker")
 					.param("number", num).param("status", status));
 			response = RestResponse.OK;
 		} catch (EntityNotFoundException e) {
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 		}
 		return response;
 	}

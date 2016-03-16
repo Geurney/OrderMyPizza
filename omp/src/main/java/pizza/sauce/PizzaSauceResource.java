@@ -42,7 +42,7 @@ public class PizzaSauceResource extends PizzaComponentResource<PizzaSauce> {
 	@Override
 	protected Response findPizzaComponent(String token) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		PizzaComponent component = null;
 		DatastoreService datastore = DatastoreServiceFactory
@@ -53,9 +53,9 @@ public class PizzaSauceResource extends PizzaComponentResource<PizzaSauce> {
 			List<EmbeddedEntity> list = (List<EmbeddedEntity>) pizzaFactory
 					.getProperty(type);
 			if (list == null) {
-				return RestResponse.NOT_FOUND;
+				return RestResponse.NOT_FOUND();
 			}
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 			for (EmbeddedEntity e : list) {
 				String id = (String) e.getProperty("identifier");
 				if (id != null && id.equals(identifier)) {
@@ -65,7 +65,7 @@ public class PizzaSauceResource extends PizzaComponentResource<PizzaSauce> {
 				}
 			}
 		} catch (EntityNotFoundException e) {
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 		}
 		return response;
 	}

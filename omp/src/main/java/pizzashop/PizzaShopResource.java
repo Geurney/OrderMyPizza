@@ -115,11 +115,11 @@ public class PizzaShopResource {
 			MediaType.APPLICATION_JSON })
 	public Response getShopbyCenter(@PathParam("latlnt") String latlnt) {
 		if (latlnt == null) {
-			return RestResponse.BAD;
+			return RestResponse.BAD();
 		}
 		String[] latlnt_split = latlnt.split(",");
 		if (latlnt_split.length != 2) {
-			return RestResponse.BAD;
+			return RestResponse.BAD();
 		}
 		GeoPt center = new GeoPt(Float.valueOf(latlnt_split[0]),
 				Float.valueOf(latlnt_split[1]));
@@ -401,7 +401,7 @@ public class PizzaShopResource {
 	 */
 	private Response findPizzaShop(String token) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 		syncCache.setErrorHandler(ErrorHandlers
@@ -444,7 +444,7 @@ public class PizzaShopResource {
 			String city, String latitude, String longitude) {
 		String hash_uid = UserUtils.getCurrentUserObscureID();
 		if (hash_uid == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 		syncCache.setErrorHandler(ErrorHandlers
@@ -553,7 +553,7 @@ public class PizzaShopResource {
 	 */
 	private Response removePizzaShop(String token) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 		syncCache.setErrorHandler(ErrorHandlers

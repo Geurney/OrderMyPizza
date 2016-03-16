@@ -122,7 +122,7 @@ public class PizzaShopOrderResource {
 	 */
 	private Response findOrders(String token) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -144,7 +144,7 @@ public class PizzaShopOrderResource {
 			};
 			response = RestResponse.OK(lists);
 		} catch (EntityNotFoundException e) {
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 		}
 		return response;
 	}
@@ -160,7 +160,7 @@ public class PizzaShopOrderResource {
 	 */
 	private Response findOrder(String token, String number) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -168,7 +168,7 @@ public class PizzaShopOrderResource {
 			Key key = KeyFactory.createKey("PizzaShop", token);
 			datastore.get(key);
 		} catch (EntityNotFoundException e) {
-			return RestResponse.NOT_FOUND;
+			return RestResponse.NOT_FOUND();
 		}
 		Key key = KeyFactory.createKey("Order", number);
 		Order order = null;
@@ -177,7 +177,7 @@ public class PizzaShopOrderResource {
 			order = entityToObject(entity);
 			response = RestResponse.OK(order);
 		} catch (EntityNotFoundException e) {
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 		}
 		return response;
 	}

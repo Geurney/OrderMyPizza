@@ -145,7 +145,7 @@ public class CustomerOrderResource {
 	 */
 	private Response findOrders(String token) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -167,7 +167,7 @@ public class CustomerOrderResource {
 			};
 			response = RestResponse.OK(lists);
 		} catch (EntityNotFoundException e) {
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 		}
 		return response;
 	}
@@ -183,10 +183,10 @@ public class CustomerOrderResource {
 	 */
 	private Response findOrder(String token, String number) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		if (number == null) {
-			return RestResponse.BAD;
+			return RestResponse.BAD();
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -194,7 +194,7 @@ public class CustomerOrderResource {
 			Key key = KeyFactory.createKey("Customer", token);
 			datastore.get(key);
 		} catch (EntityNotFoundException e) {
-			return RestResponse.NOT_FOUND;
+			return RestResponse.NOT_FOUND();
 		}
 		Key key = KeyFactory.createKey("Order", number);
 		Order order = null;
@@ -203,7 +203,7 @@ public class CustomerOrderResource {
 			order = entityToObject(entity);
 			response = RestResponse.OK(order);
 		} catch (EntityNotFoundException e) {
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 		}
 		return response;
 	}
@@ -218,10 +218,10 @@ public class CustomerOrderResource {
 	 */
 	private Response removeOrder(String token, String num) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		if (num == null) {
-			return RestResponse.NOT_FOUND;
+			return RestResponse.NOT_FOUND();
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -231,13 +231,13 @@ public class CustomerOrderResource {
 			Key o_key = KeyFactory.createKey("Order", num);
 			Entity order = datastore.get(o_key);
 			if (customer.getProperty("email") != order.getProperty("customer")) {
-				response = RestResponse.FORBIDDEN;
+				response = RestResponse.FORBIDDEN();
 			} else {
 				datastore.delete(o_key);
 				response = RestResponse.OK;
 			}
 		} catch (Exception e) {
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 		}
 		return response;
 	}

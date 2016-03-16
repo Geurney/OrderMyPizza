@@ -63,20 +63,21 @@
 			} else {
 				
 	%>
+	  <div style="height: 100px"></div>
 	  <form id="form">
-	  Select Your Pizza Size:
-		<input type="radio" name="size" value="small" checked> Small<br />
-		<input type="radio" name="size" value="medium"> Medium<br />
-		<input type="radio" name="size" value="large"> Large<br />
+	  Select Your Pizza Size:<br />
+		<input id="small" type="radio" name="size" value="small" onchange="getSize(this)" checked> Small<br />
+		<input id="medium" type="radio" name="size" value="medium" onchange="getSize(this)"> Medium<br />
+		<input id="large" type="radio" name="size" value="large" onchange="getSize(this)"> Large<br />
 	  Select Your Pizza Crust:
-	  <select id=crusts name="crust"></select><br/>
+	  <select id=crusts name="crust" onchange="getPrice(this, 'crust')"></select><br/>
 	  Select Your Pizza Cheese:
-	  <select id=cheeses name="cheese"></select><br/>
+	  <select id=cheeses name="cheese" onchange="getPrice(this, 'cheese')"></select><br/>
 	  Select Your Pizza Sauce:
-	  <select id=sauces name="sauce"></select><br/><br/>
+	  <select id=sauces name="sauce" onchange="getPrice(this, 'sauce')"></select><br/><br/>
 	  <div id="topping_meat">
 			<div id="topping_meat1">
-				Select your meat topping: <select id=tm1 name="meat1">
+				Select your meat topping: <select id=tm1 name="meat1" onchange="getPrice(this, 'meat')">
 				</select> <br />
 			</div>
 	  </div>
@@ -86,16 +87,28 @@
 		<br />
 		<div id="topping_veg">
 			<div id="topping_veg1">
-				Select your vegetable topping: <select id=tv1 name="veg1">
+				Select your vegetable topping: <select id=tv1 name="veg1" onchange="getPrice(this, 'veg')">
 				</select> <br />
 			</div>
 		</div>
 		<button type="button" value="Add another veg topping" onclick="addTopping('topping_veg');">Add another vegetable topping</button>
      	<button type="button" value="Remove last veg topping" onclick="removeTopping('topping_veg');">Remove last vegetable topping</button>
      	<br />
-		<input type="hidden" name="pizzashop" value="<%=identifier%>"></input>
+		<input type="hidden" name="pizzashop" value="<%=identifier%>"></input><br/>
       <input type="submit" onclick="mysubmit(); return false;">
     </form>
+    <br />
+    <div id="selected_size"></div>
+    <div id="selected_crust"></div>
+    <div id="selected_cheese"></div>
+    <div id="selected_sauce"></div>
+    <div id="selected_meat1"></div>
+    <div id="selected_meat2"></div>
+    <div id="selected_meat3"></div>
+    <div id="selected_veg1"></div>
+    <div id="selected_veg2"></div>
+    <div id="selected_veg3"></div>
+    <div id="total_price"></div>
 	<br />
 	<%
 			}
@@ -108,14 +121,17 @@
 	</div>
 	<script>
 	    var identifier = "<%=identifier%>";
-	    if (identifier != "null") {
-	    	$(document).ready(loadShop);
-	    }
+	    var selected_size = 0;
+	    var selected_price =[0,0,0,0,0,0,0,0,0];
 	    var crusts = [];
 	    var cheeses = [];
 	    var sauces = [];
 	    var meats = [];
 	    var vegs = [];
+	    if (identifier != "null") {
+	    	$(document).ready(loadShop);
+	    }
+
 	    function loadShop() {
 	    	$.ajax({
 	            dataType: "json",
@@ -132,6 +148,7 @@
 	            	makeSelect(sauces, 'sauces', 'sauce', false);
 	            	makeSelect(meats, 'tm1', 'meat',true);
 	            	makeSelect(vegs, 'tv1', 'veg',true);
+	            	loadPrice();
 				 },
 	            error: function(jqXHR, textStatus, errorThrown) {
 				   	if (jqXHR.status == "404") {
@@ -142,6 +159,17 @@
 					}
 	            }
 	        });
+	    	
+	    }
+	    function loadPrice() {
+	    	getSize(document.getElementById('small'));
+	    	getSize(document.getElementById('medium'));
+	    	getSize(document.getElementById('large'));
+	    	getPrice(document.getElementById('crusts'), 'crust');
+	    	getPrice(document.getElementById('cheeses'),'cheese');
+	    	getPrice(document.getElementById('sauces'), 'sauce');
+	    	getPrice(document.getElementById('tm1'), 'meat');
+	    	getPrice(document.getElementById('tv1'), 'veg');
 	    }
 	    function mysubmit() {
 			$.ajax({
@@ -168,10 +196,117 @@
 			}
 	    	for (var i = 0; i < array.length; i++) {
 	    		var opt = document.createElement('option');
+	    		opt.id = '';
 		        opt.value = array[i].identifier; 
 				opt.name = type+i;
 		        opt.innerHTML = array[i].description; 
 		        select.appendChild(opt);
+	    	}
+	    }
+	    function buildPrice(prefix, array, index) {
+	    	return prefix + ':    ' +array[index].identifier + ": " + array[index].description + " (" + array[index].prices[selected_size] + ")";	
+	    }
+	    function getPrice(sel, type) {
+	    	switch(type) {
+	    	case 'crust':
+	    		var div = document.getElementById('selected_crust');
+	    		div.innerHTML = buildPrice('Crust', crusts, sel.selectedIndex);
+	    		selected_price[0] = crusts[sel.selectedIndex].prices[selected_size];
+	    		break;
+	    	case 'cheese':
+	    		var div = document.getElementById('selected_cheese');
+	    		div.innerHTML = buildPrice('Cheese', cheeses, sel.selectedIndex);
+	    		selected_price[1] = cheeses[sel.selectedIndex].prices[selected_size];
+	    		break;
+	    	case 'sauce':
+	    		var div = document.getElementById('selected_sauce');
+	    		div.innerHTML = buildPrice('Sauce', sauces, sel.selectedIndex);
+	    		selected_price[2] = sauces[sel.selectedIndex].prices[selected_size];
+	    		break;
+	    	case 'meat':
+	    		var div;
+	    		switch(sel.id) {
+	    		case 'tm1' :  
+	    			div = document.getElementById('selected_meat1');
+	    			if (sel.selectedIndex == 0) {
+	    				div.innerHTML='';
+		    			selected_price[3] = 0;
+	    			} else {
+	    				div.innerHTML = buildPrice('Meat1', meats, sel.selectedIndex - 1);
+	    				selected_price[3] = meats[sel.selectedIndex - 1].prices[selected_size];
+	    			}
+	    			break;
+	    		case 'tm2' :  
+	    			div = document.getElementById('selected_meat2');
+	    			if (sel.selectedIndex == 0) {
+	    				div.innerHTML='';
+		    			selected_price[4] = 0;
+	    			} else {
+	    				div.innerHTML = buildPrice('Meat2', meats, sel.selectedIndex - 1);
+	    				selected_price[4] = meats[sel.selectedIndex - 1].prices[selected_size];
+	    			}
+	    			break;
+	    		case 'tm3' :  
+	    			div = document.getElementById('selected_meat3');
+	    			if (sel.selectedIndex == 0) {
+	    				div.innerHTML='';
+		    			selected_price[5] = 0;
+	    			} else {
+	    				div.innerHTML = buildPrice('Meat3', meats, sel.selectedIndex - 1);
+	    				selected_price[5] = meats[sel.selectedIndex - 1].prices[selected_size];
+	    			}
+	    			break;
+	    		}
+    			break;
+	    	case 'veg':
+	    		var div;
+	    		switch(sel.id) {
+	    		case 'tv1' :  
+	    			div = document.getElementById('selected_veg1');
+	    			if (sel.selectedIndex == 0) {
+	    				div.innerHTML='';
+	    				selected_price[6] = 0;
+	    			} else {
+	    				div.innerHTML = buildPrice('Veg1', vegs, sel.selectedIndex - 1);
+	    				selected_price[6] = vegs[sel.selectedIndex - 1].prices[selected_size];
+	    			}
+	    			break;
+	    		case 'tv2' :  
+	    			div = document.getElementById('selected_veg2');
+	    			if (sel.selectedIndex == 0) {
+	    				div.innerHTML='';
+	    				selected_price[7] = 0;
+	    			} else {
+	    				div.innerHTML = buildPrice('Veg2', vegs, sel.selectedIndex - 1);
+	    				selected_price[7] = vegs[sel.selectedIndex - 1].prices[selected_size];
+	    			}
+	    			break;
+	    		case 'tv3' :  
+	    			div = document.getElementById('selected_veg3');
+	    			if (sel.selectedIndex == 0) {
+	    				div.innerHTML='';
+	    				selected_price[8] = 0;
+	    			} else {
+	    				div.innerHTML = buildPrice('Veg3', vegs, sel.selectedIndex - 1);
+	    				selected_price[8] = vegs[sel.selectedIndex - 1].prices[selected_size];
+	    			}
+	    			break;
+	    		}
+    			break;
+	    	}
+	    	var div = document.getElementById('total_price');
+	    	var total = 0;
+	    	for (var i = 0; i < 9; i++) {
+	    		total += selected_price[i];
+	    	}
+	    	div.innerHTML = "Total: " + total;
+	    }
+	    
+	    function getSize(sel) {
+	    	switch(sel.value) {
+	    	case 'small': selected_size = 0;break;
+	    	case 'medium': selected_size = 1;break;
+	    	case 'large': selected_size = 2;break;
 	    	}
 	    }
 	    
@@ -197,6 +332,7 @@
 					var newSelect = document.createElement('select');
 					newSelect.setAttribute('id', 'tm' + counter_meat);
 					newSelect.setAttribute('name', 'meat' + counter_meat);
+					newSelect.setAttribute('onchange', "getPrice(this, 'meat')");
 					newDiv.appendChild(newSelect);
 					document.getElementById(divName).appendChild(newDiv);
 					makeSelect(meats, 'tm' + counter_meat, 'meat', true);
@@ -219,9 +355,10 @@
 				    var newSelect = document.createElement('select');
 				    newSelect.setAttribute('id', 'tv' + counter_veg);
 				    newSelect.setAttribute('name', 'veg' + counter_veg);
+				    newSelect.setAttribute('onchange', "getPrice(this, 'veg')");
 				    newDiv.appendChild(newSelect);
 				    document.getElementById(divName).appendChild(newDiv);
-				    makeSelect(meats, 'tv' + counter_veg, 'veg', true);
+				    makeSelect(vegs, 'tv' + counter_veg, 'veg', true);
 				}
 			}
 		}

@@ -207,7 +207,7 @@ public class PizzaFactoryResource {
 	 */
 	private Response findPizzaFactory(String token) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -218,7 +218,7 @@ public class PizzaFactoryResource {
 			pizzaFactory = entityToObject(entity);
 			response = RestResponse.OK(pizzaFactory);
 		} catch (EntityNotFoundException e) {
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 		}
 		return response;
 	}
@@ -230,7 +230,7 @@ public class PizzaFactoryResource {
 	 */
 	private Response newPizzaFactory(String token) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -245,14 +245,14 @@ public class PizzaFactoryResource {
 				pizzaFactory = new Entity("PizzaFactory", token);
 				String id = (String) pizzaShop.getProperty("identifier");
 				if (id == null) {
-					return RestResponse.NOT_FOUND;
+					return RestResponse.NOT_FOUND();
 				}
 				pizzaFactory.setProperty("identifier", id);
 				datastore.put(pizzaFactory);
 				response = RestResponse.OK;
 			}
 		} catch (EntityNotFoundException e) {
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 		}
 		return response;
 	}
@@ -265,7 +265,7 @@ public class PizzaFactoryResource {
 	 */
 	private Response removePizzaShop(String token) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -274,7 +274,7 @@ public class PizzaFactoryResource {
 			datastore.delete(key);
 			response = RestResponse.OK;
 		} catch (Exception e) {
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 		}
 		return response;
 

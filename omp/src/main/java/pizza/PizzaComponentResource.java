@@ -287,7 +287,7 @@ public abstract class PizzaComponentResource<T extends PizzaComponent> {
 			String description, String cost1, String price1, String cost2,
 			String price2, String cost3, String price3) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -297,7 +297,7 @@ public abstract class PizzaComponentResource<T extends PizzaComponent> {
 			List<EmbeddedEntity> list = (List<EmbeddedEntity>) pizzaFactory
 					.getProperty(type);
 			if (list == null) {
-				return RestResponse.NOT_FOUND;
+				return RestResponse.NOT_FOUND();
 			}
 			for (EmbeddedEntity e : list) {
 				String id = (String) e.getProperty("identifier");
@@ -307,7 +307,7 @@ public abstract class PizzaComponentResource<T extends PizzaComponent> {
 						for (EmbeddedEntity f : list) {
 							id = (String) f.getProperty("identifier");
 							if (id != null && id.equals(newIdentifier)) {
-								return RestResponse.BAD;
+								return RestResponse.BAD();
 							}
 						}
 						e.setProperty("identifier", newIdentifier);
@@ -317,7 +317,7 @@ public abstract class PizzaComponentResource<T extends PizzaComponent> {
 					}
 					List<Double> costs = (List<Double>) e.getProperty("costs");
 					if (costs == null || costs.size() != 3) {
-						return RestResponse.BAD;
+						return RestResponse.BAD();
 					}
 					if (cost1 != null && Double.valueOf(cost1) >= 0) {
 						costs.set(0, Double.valueOf(cost1));
@@ -331,7 +331,7 @@ public abstract class PizzaComponentResource<T extends PizzaComponent> {
 					List<Double> prices = (List<Double>) e
 							.getProperty("prices");
 					if (prices == null || prices.size() != 3) {
-						return RestResponse.BAD;
+						return RestResponse.BAD();
 					}
 					if (price1 != null && Double.valueOf(price1) >= 0) {
 						prices.set(0, Double.valueOf(price1));
@@ -348,7 +348,7 @@ public abstract class PizzaComponentResource<T extends PizzaComponent> {
 			}
 			response = RestResponse.OK;
 		} catch (EntityNotFoundException e) {
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 		}
 		return response;
 
@@ -364,7 +364,7 @@ public abstract class PizzaComponentResource<T extends PizzaComponent> {
 	@SuppressWarnings("unchecked")
 	protected Response removePizzaComponent(String token) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -374,9 +374,9 @@ public abstract class PizzaComponentResource<T extends PizzaComponent> {
 			List<EmbeddedEntity> list = (List<EmbeddedEntity>) pizzaFactory
 					.getProperty(type);
 			if (list == null) {
-				return RestResponse.NOT_FOUND;
+				return RestResponse.NOT_FOUND();
 			}
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 			Iterator<EmbeddedEntity> iterator = list.iterator();
 			while (iterator.hasNext()) {
 				String id = (String) iterator.next().getProperty("identifier");
@@ -389,7 +389,7 @@ public abstract class PizzaComponentResource<T extends PizzaComponent> {
 				}
 			}
 		} catch (EntityNotFoundException e) {
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 		}
 		return response;
 	}

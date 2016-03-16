@@ -79,7 +79,7 @@
 		</fieldset>
 	</form>
 	<button onclick="fieldset_enable()">Edit</button>
-	<button onclick="delete_req('/rest/pizzashop', '/ordermypizza.jsp')">Delete</button>
+	<button onclick="delete_req('/pizzashop/rest/pizzashop', '/ordermypizza.jsp')">Delete</button>
     <br><br>
     <div style="height: 100px"></div>
     <div id="orderList">My Orders</div>
@@ -120,6 +120,19 @@
             }
         });
 	}
+	function acceptOrder(order_number, button) {
+		document.getElementById(button).disabled = "true";
+		$.ajax({
+            dataType: "json",
+            url: "/order/rest/enqueue/findbynumber/" + order_number,
+			method : 'PUT',
+			data: { "status": "done" },
+            success: function(data) {
+			},
+            error: function(jqXHR, textStatus, errorThrown) {
+            }
+        });
+	}
 	function loadOrder() {
 		$.ajax({
             dataType: "json",
@@ -130,8 +143,27 @@
 			    	var list = document.createElement('ul');
 			   		 for(var i = 0; i < array.length; i++) {
 						var item = document.createElement('li');
-						var s = "Num.: " + array[i].number + " Crust: "+ array[i].crust +  " Cheese: "+ array[i].cheese + " Sauce: "+ array[i].sauce + " Meats: "+ array[i].meats + " Vegs: "+ array[i].vegs + " Price: " + array[i].price + " Cost: " + array[i].cost + " Profits: " + array[i].profit + " Date: " + array[i].date + " Status:"  + array[i].status;
-						item.appendChild(document.createTextNode(s));
+						var p = document.createElement('p');
+						p.innerHTML = "<p>Num.: " + array[i].number +"</p>" + 
+						"<p>Date: " + array[i].date +"</p>" +
+						"<p>Crust: " + array[i].crust +"</p>" + 
+						"<p>Cheese: " + array[i].cheese +"</p>" + 
+						"<p>Sauce: " + array[i].sauce +"</p>" + 
+						"<p>Meat: " + array[i].meats +"</p>" + 
+						"<p>Veg: " + array[i].vegs +"</p>" + 
+						"<p>Price: " + array[i].price +"</p>" +
+						"<p>Cost: " + array[i].cost +"</p>" +
+						"<p>Profit: " + array[i].profit +"</p>" +
+						"<p>Status: " + array[i].status +"</p>";
+						item.appendChild(p);
+						if (array[i].status == 'new') {
+							var b = document.createElement("button");
+							b.appendChild(document.createTextNode("Done"));
+							var bid = "order"+i;
+							b.setAttribute("id",bid);
+							b.setAttribute("onclick", "acceptOrder(\'" + array[i].number +"\',\'" + bid + "\')");
+							item.appendChild(b);
+						}
 						list.appendChild(item);
 					}
 					return list;

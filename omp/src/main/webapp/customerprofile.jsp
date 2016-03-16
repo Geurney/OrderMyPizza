@@ -77,7 +77,7 @@
 		<input type="hidden" id="longitude" name="longitude"><br>
 	</form>
 	<button onclick="fieldset_enable()">Edit</button>
-	<button onclick="delete_req('/rest/customer', '/ordermypizza.jsp')">Delete</button>
+	<button onclick="delete_req('/customer/rest/customer', '/ordermypizza.jsp')">Delete</button>
 	<div style="height: 100px"></div>
    <div id="orderList">My Orders:</div>
 	<%
@@ -125,8 +125,17 @@
 			    	var list = document.createElement('ul');
 			   		 for(var i = 0; i < array.length; i++) {
 						var item = document.createElement('li');
-						var s = "Num.: " + array[i].number +"\tShop: " +array[i].pizzaShop +"\nDescription: " + array[i].description + "\nPrice: " + array[i].price + " Date: " + array[i].date + "\tStatus:"  + array[i].status;
-						item.appendChild(document.createTextNode(s));
+						var p = document.createElement('p');
+						p.innerHTML = "<p>Num.: " + array[i].number +"</p>" + 
+						"<p>Date: " + array[i].date +"</p>" +
+						"<p>Crust: " + array[i].crust +"</p>" + 
+						"<p>Cheese: " + array[i].cheese +"</p>" + 
+						"<p>Sauce: " + array[i].sauce +"</p>" + 
+						"<p>Meat: " + array[i].meats +"</p>" + 
+						"<p>Veg: " + array[i].vegs +"</p>" + 
+						"<p>Price: " + array[i].price +"</p>" +
+						"<p>Status: " + array[i].status +"</p>";
+						item.appendChild(p);
 						list.appendChild(item);
 					}
 					return list;

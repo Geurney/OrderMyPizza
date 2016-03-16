@@ -333,8 +333,8 @@ public class Order {
 	 *            Profit
 	 */
 	@XmlElement
-	public double getProfit() {
-		return price - cost;
+	public float getProfit() {
+		return (float)price - (float)cost;
 	}
 
 	/**

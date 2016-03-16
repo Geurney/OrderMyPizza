@@ -46,7 +46,7 @@ public class PizzaCheesesResource extends
 	@Override
 	protected Response findPizzaComponents(String token) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -69,7 +69,7 @@ public class PizzaCheesesResource extends
 			};
 			response = RestResponse.OK(lists);
 		} catch (EntityNotFoundException e) {
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 		}
 		return response;
 	}

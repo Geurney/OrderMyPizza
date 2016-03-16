@@ -45,6 +45,34 @@ public final class RestResponse {
 		return Response.ok(object).build();
 	}
 
+	/**
+	 * Forbidden
+	 * 
+	 * @return Response
+	 */
+	public static Response FORBIDDEN() {
+		return Response.status(Response.Status.FORBIDDEN)
+				.entity("{\"Error\":\"You must log in!\"}").build();
+	}
+
+	/**
+	 * Not found
+	 * 
+	 * @return response
+	 */
+	public static Response NOT_FOUND() {
+		return Response
+				.status(Response.Status.NOT_FOUND)
+				.entity("{\"Error\":\"The resource you are looking for doesn't exist!\"}")
+				.build();
+	}
+	
+	public static Response BAD() {
+		return Response
+				.status(Response.Status.BAD_REQUEST)
+				.entity("{\"Error\":\"The input parameters you provide are invalid!\"}")
+				.build();
+	}
 
 	private RestResponse() {
 

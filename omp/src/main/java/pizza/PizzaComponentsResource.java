@@ -278,12 +278,12 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 			String description, String cost1, String price1, String cost2,
 			String price2, String cost3, String price3) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		if (identifier == null || description == null || cost1 == null
 				|| cost2 == null || cost3 == null || price1 == null
 				|| price2 == null || price3 == null) {
-			return RestResponse.BAD;
+			return RestResponse.BAD();
 		}
 		double ct1 = Double.valueOf(cost1);
 		double ct2 = Double.valueOf(cost2);
@@ -292,7 +292,7 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 		double pc2 = Double.valueOf(price2);
 		double pc3 = Double.valueOf(price3);
 		if (ct1 < 0 || ct2 < 0 || ct3 < 0 || pc1 < 0 || pc2 < 0 || pc3 < 0) {
-			return RestResponse.BAD;
+			return RestResponse.BAD();
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -308,7 +308,7 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 				for (EmbeddedEntity e : list) {
 					String id = (String) e.getProperty("identifier");
 					if (id != null && id.equals(identifier)) {
-						return RestResponse.BAD;
+						return RestResponse.BAD();
 					}
 				}
 			}
@@ -333,7 +333,7 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 			datastore.put(pizzaFactory);
 			response = RestResponse.OK;
 		} catch (EntityNotFoundException e) {
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 		}
 		return response;
 	}
@@ -347,7 +347,7 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 	 */
 	protected Response removePizzaComponents(String token) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -357,7 +357,7 @@ public abstract class PizzaComponentsResource<T extends PizzaComponent, R> {
 			pizzaFactory.removeProperty(type);
 			response = RestResponse.OK;
 		} catch (Exception e) {
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 		}
 		return response;
 	}

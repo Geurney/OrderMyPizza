@@ -96,7 +96,7 @@ public class CustomerResource {
 			MediaType.APPLICATION_JSON })
 	public Response getCustomerAh(@PathParam("token") String token) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -120,7 +120,7 @@ public class CustomerResource {
 			};
 			response = RestResponse.OK(list);
 		} catch (EntityNotFoundException e) {
-			response = RestResponse.FORBIDDEN;
+			response = RestResponse.FORBIDDEN();
 		}
 		return response;
 	}
@@ -261,7 +261,7 @@ public class CustomerResource {
 	 */
 	private Response findCustomer(String token) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 		syncCache.setErrorHandler(ErrorHandlers
@@ -279,7 +279,7 @@ public class CustomerResource {
 			entityToCache(syncCache, entity);
 			response = RestResponse.OK(customer);
 		} catch (EntityNotFoundException e) {
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 		}
 		return response;
 	}
@@ -304,7 +304,7 @@ public class CustomerResource {
 			String latitude, String longitude) {
 		String hash_uid = UserUtils.getCurrentUserObscureID();
 		if (hash_uid == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 		syncCache.setErrorHandler(ErrorHandlers
@@ -359,7 +359,7 @@ public class CustomerResource {
 	private Response updateCustomer(String token, String name, String phone,
 			String city, String latitude, String longitude) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 		syncCache.setErrorHandler(ErrorHandlers
@@ -387,7 +387,7 @@ public class CustomerResource {
 			entityToCache(syncCache, entity);
 			response = RestResponse.OK;
 		} catch (EntityNotFoundException e) {
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 		}
 		return response;
 	}
@@ -401,7 +401,7 @@ public class CustomerResource {
 	 */
 	private Response removeCustomer(String token) {
 		if (token == null) {
-			return RestResponse.FORBIDDEN;
+			return RestResponse.FORBIDDEN();
 		}
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 		syncCache.setErrorHandler(ErrorHandlers
@@ -414,7 +414,7 @@ public class CustomerResource {
 			syncCache.delete(token + "customer");
 			response = RestResponse.OK;
 		} catch (Exception e) {
-			response = RestResponse.NOT_FOUND;
+			response = RestResponse.NOT_FOUND();
 		}
 		return response;
 	}
