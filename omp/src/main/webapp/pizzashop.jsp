@@ -148,7 +148,7 @@
 	            	makeSelect(sauces, 'sauces', 'sauce', false);
 	            	makeSelect(meats, 'tm1', 'meat',true);
 	            	makeSelect(vegs, 'tv1', 'veg',true);
-	            	loadPrice();
+	            	getSize(document.getElementById('small'));
 				 },
 	            error: function(jqXHR, textStatus, errorThrown) {
 				   	if (jqXHR.status == "404") {
@@ -160,16 +160,6 @@
 	            }
 	        });
 	    	
-	    }
-	    function loadPrice() {
-	    	getSize(document.getElementById('small'));
-	    	getSize(document.getElementById('medium'));
-	    	getSize(document.getElementById('large'));
-	    	getPrice(document.getElementById('crusts'), 'crust');
-	    	getPrice(document.getElementById('cheeses'),'cheese');
-	    	getPrice(document.getElementById('sauces'), 'sauce');
-	    	getPrice(document.getElementById('tm1'), 'meat');
-	    	getPrice(document.getElementById('tv1'), 'veg');
 	    }
 	    function mysubmit() {
 			$.ajax({
@@ -307,6 +297,23 @@
 	    	case 'small': selected_size = 0;break;
 	    	case 'medium': selected_size = 1;break;
 	    	case 'large': selected_size = 2;break;
+	    	}
+	    	getPrice(document.getElementById('crusts'), 'crust');
+	    	getPrice(document.getElementById('cheeses'),'cheese');
+	    	getPrice(document.getElementById('sauces'), 'sauce');
+	    	getPrice(document.getElementById('tm1'), 'meat');
+	    	getPrice(document.getElementById('tv1'), 'veg');
+	    	if (document.getElementById('tm2') != null) {
+	    		getPrice(document.getElementById('tm2'), 'meat');
+	    	}
+	    	if (document.getElementById('tm3') != null) {
+	    		getPrice(document.getElementById('tm3'), 'meat');
+	    	}
+	    	if (document.getElementById('tv2') != null) {
+	    		getPrice(document.getElementById('tv2'), 'veg');
+	    	}
+	    	if (document.getElementById('tv3') != null) {
+	    		getPrice(document.getElementById('tv3'), 'veg');
 	    	}
 	    }
 	    
