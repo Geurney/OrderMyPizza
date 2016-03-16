@@ -98,6 +98,7 @@
 var map, infoWindow;
 var markers = [];
 var autocomplete;
+var loc={};
 var countryRestrict = {
   'country': 'us'
 };
@@ -139,6 +140,7 @@ function initMap() {
 }
 
 function getLocation() {
+  findmylocation();
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(showPosition);
   } else {
@@ -150,7 +152,8 @@ function showPosition(position) {
   var lng = position.coords.longitude;
   map.setCenter(new google.maps.LatLng(lat, lng));
   map.setZoom(11);
-  search_center(lat, lng);
+  search_center();
+  //search_center(lat, lng);
 }
 
 function onPlaceChanged() {
@@ -158,14 +161,16 @@ function onPlaceChanged() {
   if (place.geometry) {
     map.panTo(place.geometry.location);
     map.setZoom(15);
-    search_center(place.geometry.location.lat(),place.geometry.location.lng());
+    loc.city = place.name;
+    search_center();
+   // search_center(place.geometry.location.lat(),place.geometry.location.lng());
+    
   } else {
     document.getElementById('citylocation').placeholder = 'Enter a city';
   }
 }
-var loc={};
-function search_center(latitude, longitude){
-	findmylocation();
+
+function search_center(){
 	$.ajax({
         dataType: "json",
 		url: "/pizzashop/rest/pizzashop/city/" + loc.city,

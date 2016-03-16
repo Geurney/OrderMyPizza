@@ -95,7 +95,7 @@
 	letter-spacing: -0.55px;
 	background: none repeat scroll 0 0 #ed1c24;
 	color: #fff;
-	cursor: pointer;
+	cursor: none;
 	display: inline-block;
 	text-align: center;
 	white-space: nowrap;
