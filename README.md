@@ -8,7 +8,7 @@ http://ordermypizza-y.appspot.com/
 
 For pizzashop, pizzafactory and customer, most operations require user authenticiation (login with google account). So I tested using "Advanced REST client", a Chrome plug in to send request after signing in google account using browser.
 
-For API test, use the file under test folder.
+For API test, use the curl.txt under test folder.
 
 
 Get all pizzashops:
