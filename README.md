@@ -1,5 +1,5 @@
 # OrderMyPizza
-Online Pizza Order web application for CS264 Runtime System Project
+Online Pizza Order web application for CS264 Runtime System Project.  Dongqiao Ma
 
 # Application
 http://ordermypizza-y.appspot.com/
