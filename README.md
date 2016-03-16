@@ -31,6 +31,11 @@ Find pizza factory by its identifier:
 
 curl -H "Accept: application/json" -X GET http://ordermypizza-y.appspot.com/pizzafactory/rest/pizzafactory/findbyidentifier/SPS
 
+Get pizzashop profile authorized with token:
+
+curl -H "Accept: application/json" -X GET http://ordermypizza-y.appspot.com/pizzashop/rest/pizzashop/authorize/e284ff361a12fc5a0c1bb59c4bedf811fc13df22d6159d40559f295bf659620e
+
+
 After login in as a customer in web browser use Rest Client plug in for Chrome:
 
 
